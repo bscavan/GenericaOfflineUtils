@@ -5,17 +5,16 @@ export class Job {
     name: string;
     affectedAttributes: Set<{affectedAttribute: Attributes, pointsPerLevel: number}>;
     affectedDefenses: Set<{affectedDefense: Defenses, pointsPerLevel: number}>;
-    affectedPools: Set<{affectedPool: Pools, pointsPerLevel: number}>;
-    //pointsPerLevel: number;
+    basePools: Set<{affectedPool: Pools, baseValue: number}>;
     // skills go here?
 
     constructor(name: string,
     affectedAttributes: Set<{affectedAttribute: Attributes, pointsPerLevel: number}>,
     affectedDefenses: Set<{affectedDefense: Defenses, pointsPerLevel: number}>,
-    affectedPools: Set<{affectedPool: Pools, pointsPerLevel: number}>) {
+    basePools: Set<{affectedPool: Pools, baseValue: number}>) {
         this.name = name;
         this.affectedAttributes = affectedAttributes;
         this.affectedDefenses = affectedDefenses;
-        this.affectedPools = affectedPools;
+        this.basePools = basePools;
     }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AttributeType, Attributes, Defenses, Pools, AttributeKeys } from '../attribute-keys';
 import { Attribute } from '@angular/compiler';
 import { AttributeSet } from '../attribute-set';
+import { Jaxby } from '../jaxby';
 
 
 @Component({
@@ -17,6 +18,7 @@ export class CharacterPageComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		let jaxby = new Jaxby();
 	}
 
 }

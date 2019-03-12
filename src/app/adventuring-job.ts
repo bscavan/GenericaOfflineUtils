@@ -4,7 +4,8 @@ import { Attributes } from "./attribute-keys";
 export class AdventuringJob extends Job {
 
     // Adventuring jobs only affect attributes.
-    constructor(name: string, affectedAttributes: Set<{affectedAttribute: Attributes, pointsPerLevel: number}>,) {
+	constructor(name: string, affectedAttributes: Set<{affectedAttribute: Attributes,
+	pointsPerLevel: number}>,) {
         super(name, affectedAttributes, new Set(), new Set());
 	}
 	
