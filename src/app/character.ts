@@ -81,12 +81,6 @@ export class Character {
 			totalPools.set(currentAttribute.pool, 0);
 		});
 
-		// TODO: apply racial base attributes (ex: 25's across the board for humans...)
-		/*
-		this.racialJobLevels.forEach((currentRacialJob) => {
-			currentRacialJob.
-		})
-		*/
 		console.log("printing keys of racial job levels:")
 		let racialJobIterator = this.racialJobLevels.keys();
 		let racialJobIteratorResult = racialJobIterator.next();
@@ -138,24 +132,11 @@ export class Character {
 				baseDefensesIteratorResult = baseDefensesIterator.next();
 			}
 
+			currentJob.affectedDefenses
+			currentJob.basePools
+
 			racialJobIteratorResult = racialJobIterator.next();
 		}
-		/*
-		let racialJobKeys = Object.keys(this.racialJobLevels);
-		racialJobKeys.forEach((currentKey, currentIndex) =>
-			{
-				console.log("Current Key: [" + currentKey + "]; Current value: ["
-				//+ this.racialJobLevels.get(currentKey) + "];"
-				);
-				console.log("Current Index: [" + currentIndex + "];");
-			}
-		);*/
-
-		/*
-		baseAttributes.forEach((value, currentAttribute) => {
-			totalAttributes.set(currentAttribute, value);
-		});
-		*/
 
 		// Handle base attributes and defenses (set by race):
 		this.addJobLevelsToAttributes(baseAttributes, this.racialJobLevels);
@@ -165,7 +146,7 @@ export class Character {
 		// TODO: Handle skill-point increases, the initial 2d10 added to your base, and the initial 100 stats added to that...
 
 		// Handle non-racial job-increased attributes
-		// TODO: Add racial job levels to pools
+		// TODO: Add racial base pool values
 		this.addJobLevelsToAttributes(totalAttributes, this.adventuringJobLevels);
 		this.addJobLevelsToAttributes(totalAttributes, this.craftingJobLevels);
 		this.addJobLevelsToDefenses(totalDefenses, this.adventuringJobLevels);
