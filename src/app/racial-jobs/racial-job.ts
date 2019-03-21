@@ -1,5 +1,5 @@
-import { Job } from "./job";
-import { Attributes, Defenses, Pools } from "./attribute-keys";
+import { Job } from "../job";
+import { Attributes, Defenses, Pools } from "../attribute-keys";
 
 export class RacialJob extends Job {
 	protected baseAttributes: Set<{affectedAttribute: Attributes, baseValue: number}>;

@@ -1,5 +1,5 @@
 
-import { AdventuringJob } from "../adventuring-job";
+import { AdventuringJob } from "./adventuring-job";
 import { Attributes } from "../attribute-keys";
 
 export class Duelist extends AdventuringJob {

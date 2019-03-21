@@ -1,5 +1,5 @@
 import { Attributes, Defenses, Pools } from "../attribute-keys";
-import { RacialJob } from "../racial-job";
+import { RacialJob } from "./racial-job";
 
 export class Peskie extends RacialJob {
 	// TODO: Refactor these into static methods?

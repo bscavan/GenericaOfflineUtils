@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Character } from './character/character';
+import { Jaxby } from './character/jaxby';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +9,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+  public firstCharacter: Character;
+
+  ngOnInit() {
+	  this.firstCharacter = new Jaxby();
+  }
 }

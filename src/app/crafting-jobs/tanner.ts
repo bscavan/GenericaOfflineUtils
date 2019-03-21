@@ -1,5 +1,5 @@
 import { Attributes } from "../attribute-keys";
-import { CraftingJob } from "../crafting-job";
+import { CraftingJob } from "./crafting-job";
 
 export class Tanner extends CraftingJob {
 	// TODO: Refactor these into static methods?
