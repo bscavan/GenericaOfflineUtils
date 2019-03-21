@@ -119,6 +119,9 @@ export class Character {
 				attributeIteratorResult = attributeIterator.next();
 			}
 
+			// TODO: Refactor the sets and maps in Job to allow them to be
+			// iterated over in a helper method like the one below.
+			// this.incrementSetValuesFromMap(currentJob.getBaseDefenses(), baseDefenses);
 			let baseDefensesIterator = currentJob.getBaseDefenses().keys();
 			let baseDefensesIteratorResult = baseDefensesIterator.next();
 
@@ -216,6 +219,29 @@ export class Character {
 			console.log("level [" + currentJob + "] ");
 		});
 		console.log("]")
+	}
+
+	public incrementSetValuesFromMap(
+		setContainingValues: Set<{
+			target;
+			value: number;}>, 
+		mapToAddTo: Map<any, any>)
+	// TODO: determine if setting this to a map of <any, any> works.
+	// If not, I need to strip out the type sepecification.
+	{
+		//let baseDefensesIterator = currentJob.getBaseDefenses().keys();
+		let setIterator = setContainingValues.keys();
+		let setIteratorResult = setIterator.next();
+
+		// Iterate over each base entry in setToIterateOver
+		while(setIteratorResult.done == false) {
+			// Increase the current base defense by the amount this class provides...
+			let currentBaseAttribute = setIteratorResult.value;
+			let currentBaseAttributeValue = mapToAddTo.get(currentBaseAttribute.target)
+				+ (currentBaseAttribute.value);
+			mapToAddTo.set(currentBaseAttribute.target, currentBaseAttributeValue);
+			setIteratorResult = setIterator.next();
+		}
 	}
 
 	private addAttributeSetsTogether(
