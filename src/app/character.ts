@@ -17,6 +17,16 @@ export class Character {
 	protected adventuringJobLevels: Map<AdventuringJob, number>;
 	protected craftingJobLevels: Map<CraftingJob, number>;
 
+	protected baseAttributes: Map<Attributes, number> = new Map();
+	protected totalAttributes: Map<Attributes, number> = new Map();
+
+	protected baseDefenses: Map<Defenses, number> = new Map();
+	protected totalDefenses: Map<Defenses, number> = new Map();
+
+	// Some races, like manabeasts, have base values added to their pools
+	protected basePools: Map<Pools, number> = new Map();
+	protected totalPools: Map<Pools, number> = new Map();
+
 	//TODO: Add support for listing the skills each class brings, along with their levels?
 	// support for spending level points (calculating costs) and grind points (on skills or stats)?
 
@@ -57,56 +67,54 @@ export class Character {
 	}
 
 	private recalculateAttributes() {
-		let baseAttributes: Map<Attributes, number> = new Map();
-		let totalAttributes: Map<Attributes, number> = new Map();
+		this.baseAttributes = new Map();
+		this.totalAttributes = new Map();
 
-		let baseDefenses: Map<Defenses, number> = new Map();
-		let totalDefenses: Map<Defenses, number> = new Map();
+		this.baseDefenses = new Map();
+		this.totalDefenses = new Map();
 
-		// Some races, like manabeasts, have base values added to their pools
-		let basePools: Map<Pools, number> = new Map();
-		let totalPools: Map<Pools, number> = new Map();
+		this.basePools = new Map();
+		this.totalPools = new Map();
 		
 		ATTRIBUTE_SETS.forEach((currentAttribute) => {
-			baseAttributes.set(currentAttribute.offensiveAttribute, 0);
-			totalAttributes.set(currentAttribute.offensiveAttribute, 0);
+			this.baseAttributes.set(currentAttribute.offensiveAttribute, 0);
+			this.totalAttributes.set(currentAttribute.offensiveAttribute, 0);
 
-			baseAttributes.set(currentAttribute.defensiveAttribute, 0);
-			totalAttributes.set(currentAttribute.defensiveAttribute, 0);
+			this.baseAttributes.set(currentAttribute.defensiveAttribute, 0);
+			this.totalAttributes.set(currentAttribute.defensiveAttribute, 0);
 
-			baseDefenses.set(currentAttribute.defense, 0);
-			totalDefenses.set(currentAttribute.defense, 0);
+			this.baseDefenses.set(currentAttribute.defense, 0);
+			this.totalDefenses.set(currentAttribute.defense, 0);
 
-			basePools.set(currentAttribute.pool, 0);
-			totalPools.set(currentAttribute.pool, 0);
+			this.basePools.set(currentAttribute.pool, 0);
+			this.totalPools.set(currentAttribute.pool, 0);
 		});
 
 		// Adding racial job base values to attributes, defenses, and pools
-		this.addRacialJobLevelsToBaseAttributes(baseAttributes, this.racialJobLevels);
-		this.addRacialJobLevelsToBaseDefenses(baseDefenses, this.racialJobLevels);
-		this.addRacialJobLevelsToPools(basePools, this.racialJobLevels);
+		this.addRacialJobLevelsToBaseAttributes(this.baseAttributes, this.racialJobLevels);
+		this.addRacialJobLevelsToBaseDefenses(this.baseDefenses, this.racialJobLevels);
+		this.addRacialJobLevelsToPools(this.basePools, this.racialJobLevels);
 
 		// TODO: Handle skill-point increases, the initial 2d10 added to your base, and the initial 100 stats added to that...
 
 		// Adding job level-based increases to attributes
-		this.addJobLevelsToAttributes(totalAttributes, this.racialJobLevels);
-		this.addJobLevelsToAttributes(totalAttributes, this.adventuringJobLevels);
-		this.addJobLevelsToAttributes(totalAttributes, this.craftingJobLevels);
+		this.addJobLevelsToAttributes(this.totalAttributes, this.racialJobLevels);
+		this.addJobLevelsToAttributes(this.totalAttributes, this.adventuringJobLevels);
+		this.addJobLevelsToAttributes(this.totalAttributes, this.craftingJobLevels);
 
 		// Adding job level-based increases to defenses
-		this.addJobLevelsToDefenses(totalDefenses, this.racialJobLevels);
-		this.addJobLevelsToDefenses(totalDefenses, this.adventuringJobLevels);
-		this.addJobLevelsToDefenses(totalDefenses, this.craftingJobLevels);
-		
+		this.addJobLevelsToDefenses(this.totalDefenses, this.racialJobLevels);
+		this.addJobLevelsToDefenses(this.totalDefenses, this.adventuringJobLevels);
+		this.addJobLevelsToDefenses(this.totalDefenses, this.craftingJobLevels);
 
 		// Adding base attributes to totals
-		this.addAttributeSetsTogether(totalAttributes, baseAttributes);
+		this.addAttributeSetsTogether(this.totalAttributes, this.baseAttributes);
 
 		// Adding base defenses to totals
-		this.addDefensesSetsTogether(totalDefenses, baseDefenses);
+		this.addDefensesSetsTogether(this.totalDefenses, this.baseDefenses);
 
 		// Calculating pools:
-		totalPools = this.calcualtePools(basePools, totalAttributes);
+		this.totalPools = this.calcualtePools(this.basePools, this.totalAttributes);
 
 		//TODO: Check and update FATE, as it's a special case!
 
@@ -126,7 +134,31 @@ export class Character {
 		// It doesn't do anything permenant...
 
 		// Print stats here:
-		this.printFullStats(totalAttributes, totalDefenses, totalPools);
+		this.printFullStats();
+	}
+
+	public getBaseAttribute(attribute: Attributes): number {
+		return this.baseAttributes.get(attribute);
+	}
+
+	public getAttribute(attribute: Attributes): number {
+		return this.totalAttributes.get(attribute);
+	}
+
+	public getBaseDefense(defense: Defenses): number {
+		return this.baseDefenses.get(defense);
+	}
+
+	public getDefense(defense: Defenses): number {
+		return this.totalDefenses.get(defense);
+	}
+
+	public getBasePool(pool: Pools): number {
+		return this.basePools.get(pool);
+	}
+
+	public getPool(pool: Pools): number {
+		return this.totalPools.get(pool);
 	}
 
 	private addAttributeSetsTogether(
@@ -239,9 +271,7 @@ export class Character {
 		});
 	}
 
-	private printFullStats(totalAttributes: Map<Attributes, number>,
-	totalDefenses: Map<Defenses, number>,
-	totalPools: Map<Pools, number>): void {
+	private printFullStats(): void {
 		console.log("Printing character information:");
 		console.log("name: " + this.name);
 		console.log("title: " + this.title);
@@ -250,13 +280,13 @@ export class Character {
 			console.log("Type: " + currentAttribute.type);
 
 			console.log(currentAttribute.offensiveAttribute + ": "
-				+ totalAttributes.get(currentAttribute.offensiveAttribute));
+				+ this.totalAttributes.get(currentAttribute.offensiveAttribute));
 			console.log(currentAttribute.defensiveAttribute + ": "
-				+ totalAttributes.get(currentAttribute.defensiveAttribute));
+				+ this.totalAttributes.get(currentAttribute.defensiveAttribute));
 			console.log(currentAttribute.defense + ": "
-				+ totalDefenses.get(currentAttribute.defense));
+				+ this.totalDefenses.get(currentAttribute.defense));
 			console.log(currentAttribute.pool + ": "
-				+ totalPools.get(currentAttribute.pool));
+				+ this.totalPools.get(currentAttribute.pool));
 		});
 		console.log("]");
 

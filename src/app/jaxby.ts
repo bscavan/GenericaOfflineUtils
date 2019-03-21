@@ -9,10 +9,6 @@ import { Tanner } from "./crafting-jobs/tanner";
 export class Jaxby extends Character{
 
 	constructor() {
-		// (name: string, title: string,
-		// 	racialJobLevels: Map<RacialJob, number>,
-		// 	adventuringJobLevels: Map<AdventuringJob, number>,
-		// 	craftingJobLevels: Map<CraftingJob, number>) {
 		let racialJobLevels = new Map();
 		racialJobLevels.set(Peskie.getPeskieRace(), 1);
 
