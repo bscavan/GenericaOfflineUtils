@@ -1,5 +1,5 @@
-import { Job } from "./job";
-import { Attributes } from "./attribute-keys";
+import { Job } from "../job";
+import { Attributes } from "../attribute-keys";
 
 export class CraftingJob extends Job {
 

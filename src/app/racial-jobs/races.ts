@@ -1,6 +1,4 @@
-import { RacialJob } from "./racial-job";
-import { Attributes, Defenses, AttributeKeys, Pools } from "./attribute-keys";
-import { Peskie } from "./racial-jobs/peskie";
+import { Peskie } from "./peskie";
 
 export class Races {
 	public readonly ALL_RACES = this.compileRaces();
@@ -14,7 +12,7 @@ export class Races {
 	}
 
 	// Use this to iterate over all the racial job options offered in the front-end
-	public getRaces() {
+	public getAllRaces() {
 		return this.ALL_RACES;
 	}
 }

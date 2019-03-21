@@ -1,10 +1,10 @@
 import { Character } from "./character";
-import { Job } from "./job";
-import { Attributes } from "./attribute-keys";
-import { RacialJob } from "./racial-job";
-import { Peskie } from "./racial-jobs/peskie";
-import { Duelist } from "./adventuring-jobs/duelist";
-import { Tanner } from "./crafting-jobs/tanner";
+import { Job } from "../job";
+import { Attributes } from "../attribute-keys";
+import { RacialJob } from "../racial-jobs/racial-job";
+import { Peskie } from "../racial-jobs/peskie";
+import { Duelist } from "../adventuring-jobs/duelist";
+import { Tanner } from "../crafting-jobs/tanner";
 
 export class Jaxby extends Character{
 

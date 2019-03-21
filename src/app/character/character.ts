@@ -1,8 +1,8 @@
-import { Attributes, Defenses, Pools, AttributeKeys } from "./attribute-keys";
-import { Job } from "./job";
-import { AdventuringJob } from "./adventuring-job";
-import { RacialJob } from "./racial-job";
-import { CraftingJob } from "./crafting-job";
+import { Attributes, Defenses, Pools, AttributeKeys } from "../attribute-keys";
+import { Job } from "../job";
+import { AdventuringJob } from "../adventuring-jobs/adventuring-job";
+import { RacialJob } from "../racial-jobs/racial-job";
+import { CraftingJob } from "../crafting-jobs/crafting-job";
 
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
