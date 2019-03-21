@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AttributeType, Attributes, Defenses, Pools, AttributeKeys } from '../attribute-keys';
 import { Attribute } from '@angular/compiler';
 import { AttributeSet } from '../attribute-set';
-import { Jaxby } from '../jaxby';
+import { Jaxby } from '../character/jaxby';
 
 
 @Component({

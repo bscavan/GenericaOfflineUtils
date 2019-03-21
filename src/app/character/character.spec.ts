@@ -2,12 +2,12 @@ import { async, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
-import { AppComponent } from './app.component';
-import { Peskie } from './racial-jobs/peskie';
-import { Duelist } from './adventuring-jobs/duelist';
-import { Tanner } from './crafting-jobs/tanner';
+import { AppComponent } from '../app.component';
+import { Peskie } from '../racial-jobs/peskie';
+import { Duelist } from '../adventuring-jobs/duelist';
+import { Tanner } from '../crafting-jobs/tanner';
 import { Character } from './character';
-import { Attributes, Pools } from './attribute-keys';
+import { Attributes, Pools } from '../attribute-keys';
 
 class TestCharacter extends Character {
 	// TODO: Mock out these job classes for testing...
