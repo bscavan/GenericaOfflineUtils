@@ -81,87 +81,31 @@ export class Character {
 			totalPools.set(currentAttribute.pool, 0);
 		});
 
-		console.log("printing keys of racial job levels:")
-		let racialJobIterator = this.racialJobLevels.keys();
-		let racialJobIteratorResult = racialJobIterator.next();
-
-		// Iterate over all racial jobs
-		while(racialJobIteratorResult.done == false) {
-			let currentJob = racialJobIteratorResult.value;
-			let currentJobLevel = this.racialJobLevels.get(currentJob);
-			console.log("Job: [" + currentJob.name + "], level: [" + currentJobLevel + "];")
-
-			// TODO: Disect these sections and convert them to helper methods...
-			// This will help you handle applying the same approach to the adventuring and crafting jobs...
-			let baseAttributeIterator = currentJob.getBaseAttributes().keys();
-			let baseAttributeIteratorResult = baseAttributeIterator.next();
-
-			// Iterate over each base attribute value the current job increases
-			while(baseAttributeIteratorResult.done == false) {
-				// Increase the current base attribute by the amount this class provides...
-				let currentBaseAttribute = baseAttributeIteratorResult.value;
-				let currentBaseAttributeValue = baseAttributes.get(currentBaseAttribute.affectedAttribute)
-					+ (currentBaseAttribute.baseValue);
-				baseAttributes.set(currentBaseAttribute.affectedAttribute, currentBaseAttributeValue);
-				baseAttributeIteratorResult = baseAttributeIterator.next();
-			}
-
-			let attributeIterator = currentJob.affectedAttributes.keys();
-			let attributeIteratorResult = attributeIterator.next();
-
-			// Iterate over each attribute the current job increases
-			while(attributeIteratorResult.done == false) {
-				// Increase the current attribute by the amount this many levels in this class provides...
-				let currentAffectedAttribute = attributeIteratorResult.value;
-				let currentAttributeValue = totalAttributes.get(currentAffectedAttribute.affectedAttribute);
-				currentAttributeValue = currentAttributeValue + (currentAffectedAttribute.pointsPerLevel * currentJobLevel);
-				totalAttributes.set(currentAffectedAttribute.affectedAttribute, currentAttributeValue);
-				attributeIteratorResult = attributeIterator.next();
-			}
-
-			// TODO: Refactor the sets and maps in Job to allow them to be
-			// iterated over in a helper method like the one below.
-			// this.incrementSetValuesFromMap(currentJob.getBaseDefenses(), baseDefenses);
-			let baseDefensesIterator = currentJob.getBaseDefenses().keys();
-			let baseDefensesIteratorResult = baseDefensesIterator.next();
-
-			// Iterate over each base defense value the current job increases
-			while(baseDefensesIteratorResult.done == false) {
-				// Increase the current base defense by the amount this class provides...
-				let currentBaseAttribute = baseDefensesIteratorResult.value;
-				let currentBaseAttributeValue = baseDefenses.get(currentBaseAttribute.affectedDefense)
-					+ (currentBaseAttribute.baseValue);
-				baseDefenses.set(currentBaseAttribute.affectedDefense, currentBaseAttributeValue);
-				baseDefensesIteratorResult = baseDefensesIterator.next();
-			}
-
-			currentJob.affectedDefenses
-			currentJob.basePools
-
-			racialJobIteratorResult = racialJobIterator.next();
-		}
-
-		// Handle base attributes and defenses (set by race):
-		this.addJobLevelsToAttributes(baseAttributes, this.racialJobLevels);
-		this.addJobLevelsToDefenses(baseDefenses, this.racialJobLevels);
-		// TODO: Add racial job levels to pools
+		// Adding racial job base values to attributes, defenses, and pools
+		this.addRacialJobLevelsToBaseAttributes(baseAttributes, this.racialJobLevels);
+		this.addRacialJobLevelsToBaseDefenses(baseDefenses, this.racialJobLevels);
+		this.addRacialJobLevelsToPools(basePools, this.racialJobLevels);
 
 		// TODO: Handle skill-point increases, the initial 2d10 added to your base, and the initial 100 stats added to that...
 
-		// Handle non-racial job-increased attributes
-		// TODO: Add racial base pool values
+		// Adding job level-based increases to attributes
+		this.addJobLevelsToAttributes(totalAttributes, this.racialJobLevels);
 		this.addJobLevelsToAttributes(totalAttributes, this.adventuringJobLevels);
 		this.addJobLevelsToAttributes(totalAttributes, this.craftingJobLevels);
+
+		// Adding job level-based increases to defenses
+		this.addJobLevelsToDefenses(totalDefenses, this.racialJobLevels);
 		this.addJobLevelsToDefenses(totalDefenses, this.adventuringJobLevels);
 		this.addJobLevelsToDefenses(totalDefenses, this.craftingJobLevels);
+		
 
-		// Add base attributes and defenses to totals:
+		// Adding base attributes to totals
 		this.addAttributeSetsTogether(totalAttributes, baseAttributes);
 
-		// Add defenses together:
+		// Adding base defenses to totals
 		this.addDefensesSetsTogether(totalDefenses, baseDefenses);
 
-		// Calculate pools:
+		// Calculating pools:
 		totalPools = this.calcualtePools(basePools, totalAttributes);
 
 		//TODO: Check and update FATE, as it's a special case!
@@ -176,72 +120,13 @@ export class Character {
 		// Should that just fall under increases?
 		// Should they get a list of equip slots?
 
+		// TODO: Handle racial stat caps, like Beast's max INT, and Peskie's max STR
 
-		// FIXME: this method is useless right now.
+		// FIXME: this entire method is useless right now.
 		// It doesn't do anything permenant...
 
 		// Print stats here:
-		console.log("Printing character information:");
-		console.log("name: " + this.name);
-		console.log("title: " + this.title);
-		console.log("stats: [");
-		ATTRIBUTE_SETS.forEach((currentAttribute) => {
-			console.log("Type: " + currentAttribute.type);
-
-			console.log(currentAttribute.offensiveAttribute + ": "
-				+ totalAttributes.get(currentAttribute.offensiveAttribute));
-			console.log(currentAttribute.defensiveAttribute + ": "
-				+ totalAttributes.get(currentAttribute.defensiveAttribute));
-			console.log(currentAttribute.defense + ": "
-				+ totalDefenses.get(currentAttribute.defense));
-			console.log(currentAttribute.pool + ": "
-				+ totalPools.get(currentAttribute.pool));
-		});
-		console.log("]");
-
-		console.log("race(s): [");
-		this.racialJobLevels.forEach((currentRace) => {
-			// TODO: find a way to print the race names here...
-			console.log("level [" + currentRace + "] ");
-		});
-		console.log("]")
-
-		console.log("adventuring job levels(s): [");
-		this.adventuringJobLevels.forEach((currentJob) => {
-			// TODO: find a way to print the race names here...
-			console.log("level [" + currentJob + "] ");
-		});
-		console.log("]")
-
-		console.log("crafting job levels(s): [");
-		this.craftingJobLevels.forEach((currentJob) => {
-			// TODO: find a way to print the race names here...
-			console.log("level [" + currentJob + "] ");
-		});
-		console.log("]")
-	}
-
-	public incrementSetValuesFromMap(
-		setContainingValues: Set<{
-			target;
-			value: number;}>, 
-		mapToAddTo: Map<any, any>)
-	// TODO: determine if setting this to a map of <any, any> works.
-	// If not, I need to strip out the type sepecification.
-	{
-		//let baseDefensesIterator = currentJob.getBaseDefenses().keys();
-		let setIterator = setContainingValues.keys();
-		let setIteratorResult = setIterator.next();
-
-		// Iterate over each base entry in setToIterateOver
-		while(setIteratorResult.done == false) {
-			// Increase the current base defense by the amount this class provides...
-			let currentBaseAttribute = setIteratorResult.value;
-			let currentBaseAttributeValue = mapToAddTo.get(currentBaseAttribute.target)
-				+ (currentBaseAttribute.value);
-			mapToAddTo.set(currentBaseAttribute.target, currentBaseAttributeValue);
-			setIteratorResult = setIterator.next();
-		}
+		this.printFullStats(totalAttributes, totalDefenses, totalPools);
 	}
 
 	private addAttributeSetsTogether(
@@ -295,6 +180,20 @@ export class Character {
 		});
 	}
 
+	public addRacialJobLevelsToBaseAttributes(attributesMap: Map<Attributes, number>, jobMap: Map<RacialJob, number>)
+	{
+		jobMap.forEach((levelsInCurrentJob, currentJob) =>
+		{
+			currentJob.getBaseAttributes().forEach((currentAttributeElement) =>
+			{
+				// TODO: Ensure the value exists in this map now, or this line will result in a NullPointerException...
+				attributesMap.set(currentAttributeElement.affectedAttribute,
+					attributesMap.get(currentAttributeElement.affectedAttribute)
+					+ currentAttributeElement.baseValue);
+			});
+		});
+	}
+
 	public addJobLevelsToDefenses(defensesMap: Map<Defenses, number>, jobMap: Map<Job, number>)
 	{
 		// todo: handle base values for these stats
@@ -310,10 +209,23 @@ export class Character {
 		});
 	}
 
-	public addJobLevelsToPools(poolsMap: Map<Pools, number>, jobMap: Map<Job, number>)
+	public addRacialJobLevelsToBaseDefenses(defensesMap: Map<Defenses, number>, jobMap: Map<RacialJob, number>)
 	{
-		// FIXME: Rewrite this method.
-		/*
+		// todo: handle base values for these stats
+		jobMap.forEach((levelsInCurrentJob, currentJob) =>
+		{
+			currentJob.getBaseDefenses().forEach((currentDefenseElement) =>
+			{
+				// TODO: Ensure the value exists in this map now, or this line will result in a NullPointerException...
+				defensesMap.set(currentDefenseElement.affectedDefense,
+					defensesMap.get(currentDefenseElement.affectedDefense)
+					+ currentDefenseElement.baseValue);
+			});
+		});
+	}
+
+	public addRacialJobLevelsToPools(poolsMap: Map<Pools, number>, jobMap: Map<RacialJob, number>)
+	{
 		jobMap.forEach((levelsInCurrentJob, currentJob) =>
 		{
 			// Do we need to account for currentJob.affectedPools?
@@ -322,9 +234,52 @@ export class Character {
 				// TODO: Ensure the value exists in this map now, or this line will result in a NullPointerException...
 				poolsMap.set(currentPoolElement.affectedPool,
 					poolsMap.get(currentPoolElement.affectedPool)
-					+ levelsInCurrentJob * currentPoolElement.pointsPerLevel);
+					+ currentPoolElement.baseValue);
 			});
 		});
-		*/
+	}
+
+	private printFullStats(totalAttributes: Map<Attributes, number>,
+	totalDefenses: Map<Defenses, number>,
+	totalPools: Map<Pools, number>): void {
+		console.log("Printing character information:");
+		console.log("name: " + this.name);
+		console.log("title: " + this.title);
+		console.log("stats: [");
+		ATTRIBUTE_SETS.forEach((currentAttribute) => {
+			console.log("Type: " + currentAttribute.type);
+
+			console.log(currentAttribute.offensiveAttribute + ": "
+				+ totalAttributes.get(currentAttribute.offensiveAttribute));
+			console.log(currentAttribute.defensiveAttribute + ": "
+				+ totalAttributes.get(currentAttribute.defensiveAttribute));
+			console.log(currentAttribute.defense + ": "
+				+ totalDefenses.get(currentAttribute.defense));
+			console.log(currentAttribute.pool + ": "
+				+ totalPools.get(currentAttribute.pool));
+		});
+		console.log("]");
+
+		console.log("race(s): [");
+		this.racialJobLevels.forEach((currentRace) => {
+			// TODO: find a way to print the race names here...
+			console.log("level [" + currentRace + "] ");
+		});
+		console.log("]")
+
+		console.log("adventuring job levels(s): [");
+		this.adventuringJobLevels.keys();
+		this.adventuringJobLevels.forEach((currentJob) => {
+			// TODO: find a way to print the race names here...
+			console.log("level [" + currentJob + "] ");
+		});
+		console.log("]")
+
+		console.log("crafting job levels(s): [");
+		this.craftingJobLevels.forEach((currentJob) => {
+			// TODO: find a way to print the race names here...
+			console.log("level [" + currentJob + "] ");
+		});
+		console.log("]")
 	}
 }
