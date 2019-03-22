@@ -1,17 +1,60 @@
-<app-attribute-bar [characterFocus]="characterFocus"></app-attribute-bar>
+<!-- TODO: Align these text boxes! -->
+<div>
+	<b>name:</b>
+	<input style="width: 200px" type="text"
+	[(ngModel)]="this.characterFocus.name"/>
+</div>
+<div>
+	<b>title:</b>
+	<input style="width: 200px" type="text"
+	[(ngModel)]="this.characterFocus.title"/>
+</div>
 
-<div>name:</div>
-<div>title:</div>
-<div>Race levels:</div>
-<div>Job levels:</div>
-<div>Profession levels:</div>
+<div class="tooltip">
+	<span class="tooltiptext tooltip">Write your character's bio here!</span>
+	<table style="vertical-align: top">
+		<td>
+			<b>Bio:</b>
+		</td>
+		<td>
+			<!-- TODO: Wire this up to an actual variable in the character. -->
+			<textarea></textarea>
+		</td>
+	</table>
+</div>
+
+<div>
+	<b>Race:</b>
+	<select>
+		<option *ngFor="let x of this.allRacialJobs">{{x.name}}</option>
+	</select>
+</div>
+<!-- TODO: Add additonal "job slots" for special cases based off properties to be later
+		added into RacialJob. Jobs like Toy Golem and Manabeast allow for a second racial job,
+		whereas half-breed is a non-statted "job" that gives two additional slots.
+		Also link the number of generated Adventuring and Crafting Job selection dropdowns
+		to the values the primary race allows for.
+
+	TODO: Add support for setting the levels the character has in each of these jobs.
+-->
+
+<div>
+	<b>Adventuring Jobs:</b>
+	<select>
+		<option *ngFor="let x of this.allAdventuringJobs">{{x.name}}</option>
+	</select>
+</div>
+
+<div>
+	<b>Crafting Jobs:</b>
+	<select>
+		<option *ngFor="let x of this.allCraftingJobs">{{x.name}}</option>
+	</select>
+</div>
 
 stats:
-<!-- Stats go in this table... -->
-<table>
-	<tr *ngIf="expanded"></tr>
-	<tr>Total:</tr>
-</table>
+<app-attribute-bar [characterFocus]="characterFocus"></app-attribute-bar>
+
 <!-- TODO:
 		Add a button for expanding and collapsing the stats sections.
 -->

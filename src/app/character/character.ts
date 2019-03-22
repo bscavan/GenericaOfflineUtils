@@ -11,8 +11,8 @@ export class Character {
 	// TODO: Write support for banking jobs!
 	// TODO: Write unit-tests for this.
 	// TODO: getter and setter methods for name and title
-	protected name: string;
-	protected title: string;
+	public name: string;
+	public title: string;
 	protected racialJobLevels: Map<RacialJob, number>;
 	protected adventuringJobLevels: Map<AdventuringJob, number>;
 	protected craftingJobLevels: Map<CraftingJob, number>;
