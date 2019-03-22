@@ -1,6 +1,5 @@
 import { async, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { By } from '@angular/platform-browser';
 
 import { AppComponent } from '../app.component';
 import { Peskie } from '../racial-jobs/peskie';
@@ -8,12 +7,17 @@ import { Duelist } from '../adventuring-jobs/duelist';
 import { Tanner } from '../crafting-jobs/tanner';
 import { Character } from './character';
 import { Attributes, Pools } from '../attribute-keys';
+import { RacialJob } from '../racial-jobs/racial-job';
 
 class TestCharacter extends Character {
 	// TODO: Mock out these job classes for testing...
 	constructor() {
-		let racialJobLevels = new Map();
-		racialJobLevels.set(Peskie.getPeskieRace(), 1);
+		let primaryRacialJob = Peskie.getPeskieRace();
+
+		// FIXME: As soon as you figure out how to declare an empty, typed
+		// array, remove this wasteful approach...
+		let supplementalRacialJobsArray: [{ job: RacialJob; level: number; }] = [{job: null, level: null}];
+		supplementalRacialJobsArray.pop();
 
 		let adventuringJobLevels = new Map();
 		adventuringJobLevels.set(Duelist.getDuelistJob(), 1);
@@ -22,7 +26,8 @@ class TestCharacter extends Character {
 		craftingJobLevels.set(Tanner.getTannerJob(), 1);
 
 		super("Jaxby NimbleFingers", "Master Assassin",
-		racialJobLevels, adventuringJobLevels, craftingJobLevels);
+			primaryRacialJob, 1, supplementalRacialJobsArray,
+			adventuringJobLevels, craftingJobLevels);
 	}
 }
 

@@ -3,17 +3,18 @@ import { Job } from "../job";
 import { AdventuringJob } from "../adventuring-jobs/adventuring-job";
 import { RacialJob } from "../racial-jobs/racial-job";
 import { CraftingJob } from "../crafting-jobs/crafting-job";
+import { IfObservable } from "rxjs/observable/IfObservable";
 
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
 export class Character {
 
 	// TODO: Write support for banking jobs!
-	// TODO: Write unit-tests for this.
-	// TODO: getter and setter methods for name and title
 	public name: string;
 	public title: string;
-	protected racialJobLevels: Map<RacialJob, number>;
+	primaryRacialJob: RacialJob;
+	primaryRacialJobLevel: number;
+	supplementalRacialJobLevels: [{job: RacialJob, level: number}];
 	protected adventuringJobLevels: Map<AdventuringJob, number>;
 	protected craftingJobLevels: Map<CraftingJob, number>;
 
@@ -41,27 +42,106 @@ export class Character {
 	protected debuffsToAttributes: Map<string, {targetAttribute: Attributes; value: number}>;
 
 	constructor(name: string, title: string,
-	racialJobLevels: Map<RacialJob, number>,
+	primaryRacialJob: RacialJob,
+	levelsInPrimaryRacialJob: number,
+	supplementalRacialJobLevels: [{ job: RacialJob; level: number; }],
 	adventuringJobLevels: Map<AdventuringJob, number>,
 	craftingJobLevels: Map<CraftingJob, number>) {
 		this.name = name;
 		this.title = title;
-		this.racialJobLevels = racialJobLevels;
+		this.primaryRacialJob = primaryRacialJob;
+		this.primaryRacialJobLevel = levelsInPrimaryRacialJob;
+		this.supplementalRacialJobLevels = supplementalRacialJobLevels
 		this.adventuringJobLevels = adventuringJobLevels;
 		this.craftingJobLevels = craftingJobLevels;
 		this.recalculateAttributes();
+	}
+
+	public addRacialJobLevels(newJob: RacialJob, levelsTaken: number) {
+		if(this.primaryRacialJob == null) {
+			this.primaryRacialJob = newJob;
+			this.primaryRacialJobLevel = levelsTaken;
+		} else if(this.primaryRacialJob == newJob) {
+			this.primaryRacialJobLevel = levelsTaken;
+		} else {
+			let indexOfJob = this.findJobIndex(this.supplementalRacialJobLevels, newJob);
+
+			if (indexOfJob <= 0) {
+				// TODO: Move this assignment to a helper method...
+				this.supplementalRacialJobLevels[indexOfJob] = {
+					job: newJob,
+					level: levelsTaken
+				}
+			} else if(this.supplementalRacialJobLevels.length < this.primaryRacialJob.numberOfJobSlots) {
+				this.supplementalRacialJobLevels.push({job: newJob, level: levelsTaken});
+			} else {
+				console.error("Attempted to add a new RacialJob when the maximum number of jobs has already been reached.")
+				return;
+			}
+		}
+
+		this.recalculateAttributes();
+	}
+
+	/*
+	 * TODO: Make sure to visibly warn the user if they're about to remove the
+	 * primary racial job, as this will clear out all of the other jobs...
+	 */
+	public removeRacialJob(jobToRemove: RacialJob) {
+		if(this.primaryRacialJob == jobToRemove) {
+			if(this.supplementalRacialJobLevels.length <= 0) {
+				this.primaryRacialJob = null;
+				this.primaryRacialJobLevel = 0;
+			} else {
+				// TODO: Warn the user here!
+				// TODO: Handle emptying out the other racial jobs and all of
+				// the adventuring and crafting jobs lists here.
+			}
+		} else {
+			let indexOfJob = this.findJobIndex(this.supplementalRacialJobLevels, jobToRemove);
+
+			if(indexOfJob <= 0) {
+				this.supplementalRacialJobLevels.splice(indexOfJob, 1);
+			} else {
+				console.error("Attempted to remove a racial job: ["
+					+ jobToRemove.name
+					+ "] from the character named: ["
+					+ this.name
+					+ "], but they had no levels in this job.")
+			}
+		}
+
+		this.recalculateAttributes();
+	}
+
+	// TODO: Make this method header less ugly...
+	private findJobIndex(jobArray: [{
+		job: Job;
+		level: number;
+	}], jobToFind: Job): number {
+		let indexOfJob = -1;
+
+		jobArray.forEach((currentJob, currentIndex) => {
+			if(currentJob.job == jobToFind) {
+				indexOfJob = currentIndex;
+				return;
+			}
+		})
+
+		return indexOfJob;
 	}
 
 	public addIncrease(increaseSourceName: string, targetAttribute: Attributes, value: number) {
 		this.increasesToAttributes.set(increaseSourceName, {targetAttribute, value});
 	}
 
-	public addJobLevels(newJob: Job, levelsTaken: number) {
+	public setAdventuringJobLevel(newJob: AdventuringJob, levelsTaken: number) {
+
 		this.adventuringJobLevels.set(newJob, levelsTaken);
 		this.recalculateAttributes();
 	}
 
-	public removeJob(job: Job) {
+	public removeAdventuringJob(job: AdventuringJob) {
 		this.adventuringJobLevels.delete(job);
 		this.recalculateAttributes();
 	}
@@ -91,19 +171,19 @@ export class Character {
 		});
 
 		// Adding racial job base values to attributes, defenses, and pools
-		this.addRacialJobLevelsToBaseAttributes(this.baseAttributes, this.racialJobLevels);
-		this.addRacialJobLevelsToBaseDefenses(this.baseDefenses, this.racialJobLevels);
-		this.addRacialJobLevelsToPools(this.basePools, this.racialJobLevels);
+		this.addRacialJobLevelsToBaseAttributes(this.baseAttributes);
+		this.addRacialJobLevelsToBaseDefenses(this.baseDefenses);
+		this.addRacialJobLevelsToPools(this.basePools);
 
 		// TODO: Handle skill-point increases, the initial 2d10 added to your base, and the initial 100 stats added to that...
 
 		// Adding job level-based increases to attributes
-		this.addJobLevelsToAttributes(this.totalAttributes, this.racialJobLevels);
+		this.addRacialJobLevelsToAttributes_array(this.totalAttributes);
 		this.addJobLevelsToAttributes(this.totalAttributes, this.adventuringJobLevels);
 		this.addJobLevelsToAttributes(this.totalAttributes, this.craftingJobLevels);
 
 		// Adding job level-based increases to defenses
-		this.addJobLevelsToDefenses(this.totalDefenses, this.racialJobLevels);
+		this.addRacialJobLevelsToDefenses_array(this.totalDefenses);
 		this.addJobLevelsToDefenses(this.totalDefenses, this.adventuringJobLevels);
 		this.addJobLevelsToDefenses(this.totalDefenses, this.craftingJobLevels);
 
@@ -118,9 +198,9 @@ export class Character {
 
 		//TODO: Check and update FATE, as it's a special case!
 
-		//TODO: Write a method to apply increases and put that code in a helper method.
+		//TODO: Write a helper method to apply increases.
 
-		//TODO: Write a method to apply the highest buff affecting each stat and put that code in a helper method.
+		//TODO: Write a helper method to apply the highest buff affecting each stat.
 
 		//TODO: Handle how some increases/buffs don't affect an attribute's pool.
 
@@ -130,10 +210,6 @@ export class Character {
 
 		// TODO: Handle racial stat caps, like Beast's max INT, and Peskie's max STR
 
-		// FIXME: this entire method is useless right now.
-		// It doesn't do anything permenant...
-
-		// Print stats here:
 		this.printFullStats();
 	}
 
@@ -197,6 +273,30 @@ export class Character {
 		return poolsSet;
 	}
 
+	public addRacialJobLevelsToAttributes_array(attributesMap: Map<Attributes, number>)
+	{
+		this.primaryRacialJob.affectedAttributes.forEach((currentAttributeElement) =>
+		{
+			attributesMap.set(currentAttributeElement.affectedAttribute,
+				attributesMap.get(currentAttributeElement.affectedAttribute)
+				+ this.primaryRacialJobLevel * currentAttributeElement.pointsPerLevel);
+		});
+
+		this.addJobLevelsToAttributes_array(attributesMap, this.supplementalRacialJobLevels);
+	}
+
+	public addJobLevelsToAttributes_array(attributesMap: Map<Attributes, number>, jobArray: [{job: Job, level: number}])
+	{
+		jobArray.forEach((currentJob) =>
+		{
+			currentJob.job.affectedAttributes.forEach((currentAttributeElement) =>
+			{
+				attributesMap.set(currentAttributeElement.affectedAttribute,
+					attributesMap.get(currentAttributeElement.affectedAttribute)
+					+ currentJob.level * currentAttributeElement.pointsPerLevel);
+			});
+		});
+	}
 
 	public addJobLevelsToAttributes(attributesMap: Map<Attributes, number>, jobMap: Map<Job, number>)
 	{
@@ -204,7 +304,6 @@ export class Character {
 		{
 			currentJob.affectedAttributes.forEach((currentAttributeElement) =>
 			{
-				// TODO: Ensure the value exists in this map now, or this line will result in a NullPointerException...
 				attributesMap.set(currentAttributeElement.affectedAttribute,
 					attributesMap.get(currentAttributeElement.affectedAttribute)
 					+ levelsInCurrentJob * currentAttributeElement.pointsPerLevel);
@@ -212,13 +311,20 @@ export class Character {
 		});
 	}
 
-	public addRacialJobLevelsToBaseAttributes(attributesMap: Map<Attributes, number>, jobMap: Map<RacialJob, number>)
+	public addRacialJobLevelsToBaseAttributes(attributesMap: Map<Attributes, number>)
 	{
-		jobMap.forEach((levelsInCurrentJob, currentJob) =>
+		this.primaryRacialJob.getBaseAttributes().forEach((currentAttributeElement) =>
 		{
-			currentJob.getBaseAttributes().forEach((currentAttributeElement) =>
+			attributesMap.set(currentAttributeElement.affectedAttribute,
+				attributesMap.get(currentAttributeElement.affectedAttribute)
+				+ currentAttributeElement.baseValue);
+		});
+
+
+		this.supplementalRacialJobLevels.forEach((currentJob) =>
+		{
+			currentJob.job.getBaseAttributes().forEach((currentAttributeElement) =>
 			{
-				// TODO: Ensure the value exists in this map now, or this line will result in a NullPointerException...
 				attributesMap.set(currentAttributeElement.affectedAttribute,
 					attributesMap.get(currentAttributeElement.affectedAttribute)
 					+ currentAttributeElement.baseValue);
@@ -226,14 +332,51 @@ export class Character {
 		});
 	}
 
+	/*
+	public addRacialJobLevelsToBaseAttributes_old(attributesMap: Map<Attributes, number>, jobMap: Map<RacialJob, number>)
+	{
+		jobMap.forEach((levelsInCurrentJob, currentJob) =>
+		{
+			currentJob.getBaseAttributes().forEach((currentAttributeElement) =>
+			{
+				attributesMap.set(currentAttributeElement.affectedAttribute,
+					attributesMap.get(currentAttributeElement.affectedAttribute)
+					+ currentAttributeElement.baseValue);
+			});
+		});
+	}
+	*/
+	public addRacialJobLevelsToDefenses_array(defensesMap: Map<Defenses, number>)
+	{
+		this.primaryRacialJob.affectedDefenses.forEach((currentDefenseElement) =>
+		{
+			defensesMap.set(currentDefenseElement.affectedDefense,
+				defensesMap.get(currentDefenseElement.affectedDefense)
+				+ this.primaryRacialJobLevel * currentDefenseElement.pointsPerLevel);
+		});
+
+		this.addJobLevelsToDefenses_array(this.baseDefenses, this.supplementalRacialJobLevels)
+	}
+
+	public addJobLevelsToDefenses_array(defensesMap: Map<Defenses, number>, jobArray: [{job: Job, level: number}])
+	{
+		jobArray.forEach((currentJob) =>
+		{
+			currentJob.job.affectedDefenses.forEach((currentDefenseElement) =>
+			{
+				defensesMap.set(currentDefenseElement.affectedDefense,
+					defensesMap.get(currentDefenseElement.affectedDefense)
+					+ currentJob.level * currentDefenseElement.pointsPerLevel);
+			});
+		});
+	}
+
 	public addJobLevelsToDefenses(defensesMap: Map<Defenses, number>, jobMap: Map<Job, number>)
 	{
-		// todo: handle base values for these stats
 		jobMap.forEach((levelsInCurrentJob, currentJob) =>
 		{
 			currentJob.affectedDefenses.forEach((currentDefenseElement) =>
 			{
-				// TODO: Ensure the value exists in this map now, or this line will result in a NullPointerException...
 				defensesMap.set(currentDefenseElement.affectedDefense,
 					defensesMap.get(currentDefenseElement.affectedDefense)
 					+ levelsInCurrentJob * currentDefenseElement.pointsPerLevel);
@@ -241,14 +384,19 @@ export class Character {
 		});
 	}
 
-	public addRacialJobLevelsToBaseDefenses(defensesMap: Map<Defenses, number>, jobMap: Map<RacialJob, number>)
+	public addRacialJobLevelsToBaseDefenses(defensesMap: Map<Defenses, number>)
 	{
-		// todo: handle base values for these stats
-		jobMap.forEach((levelsInCurrentJob, currentJob) =>
-		{
-			currentJob.getBaseDefenses().forEach((currentDefenseElement) =>
+		this.primaryRacialJob.getBaseDefenses().forEach((currentDefenseElement) =>
 			{
-				// TODO: Ensure the value exists in this map now, or this line will result in a NullPointerException...
+				defensesMap.set(currentDefenseElement.affectedDefense,
+					defensesMap.get(currentDefenseElement.affectedDefense)
+					+ currentDefenseElement.baseValue);
+			});
+
+		this.supplementalRacialJobLevels.forEach((currentJob) =>
+		{
+			currentJob.job.getBaseDefenses().forEach((currentDefenseElement) =>
+			{
 				defensesMap.set(currentDefenseElement.affectedDefense,
 					defensesMap.get(currentDefenseElement.affectedDefense)
 					+ currentDefenseElement.baseValue);
@@ -256,20 +404,57 @@ export class Character {
 		});
 	}
 
-	public addRacialJobLevelsToPools(poolsMap: Map<Pools, number>, jobMap: Map<RacialJob, number>)
+	/**
+	 public addRacialJobLevelsToBaseDefenses_old(defensesMap: Map<Defenses, number>, jobMap: Map<RacialJob, number>)
 	{
 		jobMap.forEach((levelsInCurrentJob, currentJob) =>
 		{
-			// Do we need to account for currentJob.affectedPools?
-			currentJob.basePools.forEach((currentPoolElement) =>
+			currentJob.getBaseDefenses().forEach((currentDefenseElement) =>
 			{
-				// TODO: Ensure the value exists in this map now, or this line will result in a NullPointerException...
+				defensesMap.set(currentDefenseElement.affectedDefense,
+					defensesMap.get(currentDefenseElement.affectedDefense)
+					+ currentDefenseElement.baseValue);
+			});
+		});
+	}
+	 */
+
+	public addRacialJobLevelsToPools(poolsMap: Map<Pools, number>)
+	{
+		this.primaryRacialJob.basePools.forEach((currentPoolElement) =>
+		{
+			poolsMap.set(currentPoolElement.affectedPool,
+				poolsMap.get(currentPoolElement.affectedPool)
+				+ currentPoolElement.baseValue);
+		});
+
+		this.supplementalRacialJobLevels.forEach((currentJob) =>
+		{
+			// Do we need to account for currentJob.affectedPools?
+			currentJob.job.basePools.forEach((currentPoolElement) =>
+			{
 				poolsMap.set(currentPoolElement.affectedPool,
 					poolsMap.get(currentPoolElement.affectedPool)
 					+ currentPoolElement.baseValue);
 			});
 		});
 	}
+
+	/**
+	 public addRacialJobLevelsToPools_old(poolsMap: Map<Pools, number>, jobMap: Map<RacialJob, number>)
+	{
+		jobMap.forEach((levelsInCurrentJob, currentJob) =>
+		{
+			// Do we need to account for currentJob.affectedPools?
+			currentJob.basePools.forEach((currentPoolElement) =>
+			{
+				poolsMap.set(currentPoolElement.affectedPool,
+					poolsMap.get(currentPoolElement.affectedPool)
+					+ currentPoolElement.baseValue);
+			});
+		});
+	}
+	 */
 
 	private printFullStats(): void {
 		console.log("Printing character information:");
@@ -291,23 +476,24 @@ export class Character {
 		console.log("]");
 
 		console.log("race(s): [");
-		this.racialJobLevels.forEach((currentRace) => {
-			// TODO: find a way to print the race names here...
-			console.log("level [" + currentRace + "] ");
+		console.log("primary race: [" + this.primaryRacialJob.name
+			+ "], level: [" + this.primaryRacialJobLevel + "];")
+
+		this.supplementalRacialJobLevels.forEach((currentRace, index) => {
+			console.log("supplemental race " + (index + 1) + "["
+				+ currentRace.job.name + "], level [" + currentRace.level + "] ");
 		});
 		console.log("]")
 
 		console.log("adventuring job levels(s): [");
 		this.adventuringJobLevels.keys();
 		this.adventuringJobLevels.forEach((currentJob) => {
-			// TODO: find a way to print the race names here...
 			console.log("level [" + currentJob + "] ");
 		});
 		console.log("]")
 
 		console.log("crafting job levels(s): [");
 		this.craftingJobLevels.forEach((currentJob) => {
-			// TODO: find a way to print the race names here...
 			console.log("level [" + currentJob + "] ");
 		});
 		console.log("]")

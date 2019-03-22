@@ -21,11 +21,5 @@ export class CharacterPageComponent implements OnInit {
 	constructor() {
 	}
 
-	ngOnInit() {
-		/*
-		this.allRacialJobs = Races.getAllRaces();
-		this.allAdventuringJobs = AdventuringJobs.getAllAdventuringJobs();
-		this.allCraftingJobs = Professions.getAllCraftingJobs();
-		*/
-	}
+	ngOnInit() {}
 }
