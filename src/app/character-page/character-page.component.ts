@@ -1,8 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AttributeType, Attributes, Defenses, Pools, AttributeKeys } from '../attribute-keys';
-import { Attribute } from '@angular/compiler';
-import { AttributeSet } from '../attribute-set';
-import { Jaxby } from '../character/jaxby';
 import { Character } from '../character/character';
 
 
@@ -21,5 +17,4 @@ export class CharacterPageComponent implements OnInit {
 
 	ngOnInit() {
 	}
-
 }

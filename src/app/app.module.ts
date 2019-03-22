@@ -4,12 +4,14 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { CharacterPageComponent } from './character-page/character-page.component';
+import { AttributeBarComponent } from './character-page/attribute-bar/attribute-bar.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    CharacterPageComponent
+    CharacterPageComponent,
+    AttributeBarComponent
   ],
   imports: [
     BrowserModule
