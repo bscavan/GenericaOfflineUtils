@@ -4,7 +4,11 @@ import { Attributes, Defenses, Pools } from "../attribute-keys";
 export class RacialJob extends Job {
 	protected baseAttributes: Set<{affectedAttribute: Attributes, baseValue: number}>;
 	protected baseDefenses: Set<{affectedDefense: Defenses, baseValue: number}>;
-	numberOfJobSlots: number;
+	// TODO: Javadoc these!
+	numberOfsupplementalRacialJobSlots: number;
+	numberOfAdventuringJobSlots: number;
+	numberOfCraftingJobSlots: number;
+
 
 	// Adventuring jobs only affect attributes.
 	constructor(name: string,
@@ -12,11 +16,16 @@ export class RacialJob extends Job {
 	affectedAttributes: Set<{affectedAttribute: Attributes, pointsPerLevel: number}>,
 	baseDefenses: Set<{affectedDefense: Defenses, baseValue: number}>,
 	affectedDefenses: Set<{affectedDefense: Defenses, pointsPerLevel: number}>,
-	basePools: Set<{affectedPool: Pools, baseValue: number}>, numberOfJobSlots) {
+	basePools: Set<{affectedPool: Pools, baseValue: number}>,
+	numberOfsupplementalRacialJobSlots: number,
+	numberOfAdventuringJobSlots: number,
+	numberOfCraftingJobSlots: number) {
 		super(name, affectedAttributes, affectedDefenses, basePools);
 		this.baseAttributes = baseAttributes;
 		this.baseDefenses = baseDefenses;
-		this.numberOfJobSlots = numberOfJobSlots;
+		this.numberOfsupplementalRacialJobSlots = numberOfsupplementalRacialJobSlots;
+		this.numberOfAdventuringJobSlots = numberOfAdventuringJobSlots;
+		this.numberOfCraftingJobSlots = numberOfCraftingJobSlots;
 	}
 
 	getEmptyRacialJob() {
@@ -24,7 +33,7 @@ export class RacialJob extends Job {
 		new Set<{affectedAttribute: Attributes, pointsPerLevel: number}>(),
 		new Set<{affectedDefense: Defenses, baseValue: number}>(),
 		new Set<{affectedDefense: Defenses, pointsPerLevel: number}>(),
-		new Set<{affectedPool: Pools, baseValue: number}>(), 0)
+		new Set<{affectedPool: Pools, baseValue: number}>(), 0, 0, 0)
 	}
 
 	protected setBaseAttributes(baseAttributes: Set<{affectedAttribute: Attributes, baseValue: number}>){

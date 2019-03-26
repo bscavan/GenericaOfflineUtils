@@ -3,6 +3,7 @@ import { Character } from '../character/character';
 import { Races } from '../racial-jobs/races';
 import { AdventuringJobs } from '../adventuring-jobs/adventuring-jobs';
 import { Professions } from '../crafting-jobs/professions';
+import { RacialJob } from '../racial-jobs/racial-job';
 
 
 @Component({
@@ -13,7 +14,7 @@ import { Professions } from '../crafting-jobs/professions';
 export class CharacterPageComponent implements OnInit {
 
 	@Input() characterFocus: Character;
-	allRacialJobs = Races.getAllRaces();
+	allRacialJobs: RacialJob[] = Races.getAllRaces();
 	allAdventuringJobs = AdventuringJobs.getAllAdventuringJobs();
 	allCraftingJobs = Professions.getAllCraftingJobs();
 	expanded: boolean = true;
@@ -22,4 +23,12 @@ export class CharacterPageComponent implements OnInit {
 	}
 
 	ngOnInit() {}
+
+	createRange(number){
+		var items: number[] = [];
+		for(var i = 1; i <= number; i++){
+			items.push(i);
+		}
+		return items;
+	}
 }

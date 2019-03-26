@@ -25,8 +25,13 @@
 
 <div>
 	<b>Race:</b>
-	<select>
-		<option *ngFor="let x of this.allRacialJobs">{{x.name}}</option>
+	<select (change)="this.characterFocus.changePrimaryRace2(event)"
+	[(ngModel)]="this.characterFocus.primaryRacialJob">
+		<!--TODO: Auto-select the option that is the value of this.characterFocus.primaryRacialJob! -->
+		<option *ngFor="let currentRacialJob of allRacialJobs"
+		[ngValue]="currentRacialJob">{{currentRacialJob.name}}</option>
+
+		<!-- TODO: Add an empty option to this so the player can remove the primaryRacialJob... -->
 	</select>
 </div>
 <!-- TODO: Add additonal "job slots" for special cases based off properties to be later
@@ -37,19 +42,26 @@
 
 	TODO: Add support for setting the levels the character has in each of these jobs.
 -->
-
-<div>
-	<b>Adventuring Jobs:</b>
-	<select>
-		<option *ngFor="let x of this.allAdventuringJobs">{{x.name}}</option>
-	</select>
-</div>
-
-<div>
-	<b>Crafting Jobs:</b>
-	<select>
-		<option *ngFor="let x of this.allCraftingJobs">{{x.name}}</option>
-	</select>
+<div *ngIf="this.characterFocus.primaryRacialJob !== undefined">
+	<div>
+		<b>Adventuring Jobs:</b>
+		<div *ngFor="let currentJobSlot of 
+		createRange(this.characterFocus.primaryRacialJob.numberOfAdventuringJobSlots)">
+			<select>
+				<option *ngFor="let x of this.allAdventuringJobs">{{x.name}}</option>
+			</select>
+		</div>
+	</div>
+	
+	<div>
+		<b>Crafting Jobs:</b>
+		<div *ngFor="let currentJobSlot of 
+		createRange(this.characterFocus.primaryRacialJob.numberOfCraftingJobSlots)">
+			<select>
+				<option *ngFor="let x of this.allCraftingJobs">{{x.name}}</option>
+			</select>
+		</div>
+	</div>
 </div>
 
 stats:

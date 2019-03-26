@@ -72,7 +72,7 @@ export class Character {
 					job: newJob,
 					level: levelsTaken
 				}
-			} else if(this.supplementalRacialJobLevels.length < this.primaryRacialJob.numberOfJobSlots) {
+			} else if(this.supplementalRacialJobLevels.length < this.primaryRacialJob.numberOfsupplementalRacialJobSlots) {
 				this.supplementalRacialJobLevels.push({job: newJob, level: levelsTaken});
 			} else {
 				console.error("Attempted to add a new RacialJob when the maximum number of jobs has already been reached.")
@@ -111,6 +111,14 @@ export class Character {
 			}
 		}
 
+		this.recalculateAttributes();
+	}
+
+	public changePrimaryRace2(event) {
+		// TODO: Be sure to account for the difference in the number of
+		// adventuring and crafting job slots here!
+		// If jobs would be lost then be sure to warn the user!
+		console.log("Primary race was set to: " + this.primaryRacialJob.name );
 		this.recalculateAttributes();
 	}
 
