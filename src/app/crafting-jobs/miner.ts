@@ -1,25 +1,25 @@
 import { Attributes } from "../attribute-keys";
 import { CraftingJob } from "./crafting-job";
 
-export class Tanner extends CraftingJob {
-	private static tannerJob = null;
+export class Miner extends CraftingJob {
+	private static minerJob = null;
 
-	public static getTannerJob(): CraftingJob {
-		if(this.tannerJob == null) {
-			this.tannerJob = this.generateTannerJob();
+	public static getMinerJob(): CraftingJob {
+		if(this.minerJob == null) {
+			this.minerJob = this.generateMinerJob();
 		}
 
-		return this.tannerJob;
+		return this.minerJob;
 	}
 
 	// TODO: Refactor these into static methods?
-	public static generateTannerJob(): CraftingJob {
+	public static generateMinerJob(): CraftingJob {
 		let attributesSet = new Set<{affectedAttribute: Attributes, pointsPerLevel: number}>();
 		attributesSet.add({affectedAttribute: Attributes.DEXTERITY, pointsPerLevel: 1});
 		attributesSet.add({affectedAttribute: Attributes.AGILITY, pointsPerLevel: 1});
 
-		let tanner = new CraftingJob("Tanner", attributesSet);
+		let miner = new CraftingJob("Miner", attributesSet);
 
-		return tanner;
+		return miner;
 	}
 }

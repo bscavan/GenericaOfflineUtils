@@ -1,4 +1,5 @@
 import { Duelist } from "./duelist";
+import { Mercenary } from "./mercenary";
 
 export class AdventuringJobs {
 	private static adventuringJobs = null;
@@ -6,6 +7,7 @@ export class AdventuringJobs {
 	static compileRaces() {
 		let allAdventuringJobs = [];
 		allAdventuringJobs.push(Duelist.getDuelistJob());
+		allAdventuringJobs.push(Mercenary.getMercenaryJob());
 		// TODO: Add more races to this list automatically...
 
 		return allAdventuringJobs;

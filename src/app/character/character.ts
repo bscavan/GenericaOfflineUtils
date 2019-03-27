@@ -144,7 +144,6 @@ export class Character {
 	}
 
 	public setAdventuringJobLevel(newJob: AdventuringJob, levelsTaken: number) {
-
 		this.adventuringJobLevels.set(newJob, levelsTaken);
 		this.recalculateAttributes();
 	}

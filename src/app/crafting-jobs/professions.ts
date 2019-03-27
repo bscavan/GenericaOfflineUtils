@@ -1,4 +1,5 @@
 import { Tanner } from "./tanner";
+import { Miner } from "./miner";
 
 export class Professions {
 	private static craftingJobs = null;
@@ -6,6 +7,7 @@ export class Professions {
 	static compileRaces() {
 		let allCraftingJobs = [];
 		allCraftingJobs.push(Tanner.getTannerJob());
+		allCraftingJobs.push(Miner.getMinerJob());
 		// TODO: Add more crafting jobs to this list automatically...
 
 		return allCraftingJobs;

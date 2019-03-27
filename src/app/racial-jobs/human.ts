@@ -2,8 +2,18 @@ import { Attributes, Defenses, Pools } from "../attribute-keys";
 import { RacialJob } from "./racial-job";
 
 export class Human extends RacialJob {
-	// TODO: Refactor these into static helper-methods?
+	private static humanRace = null;
+
 	public static getHumanRace(): RacialJob {
+		if(this.humanRace == null) {
+			this.humanRace = this.generateHumanRace();
+		}
+
+		return this.humanRace;
+	}
+
+	// TODO: Refactor these into static helper-methods?
+	private static generateHumanRace(): RacialJob {
 		let baseAttributes = new Set<{affectedAttribute: Attributes, baseValue: number}>();
 		baseAttributes.add({affectedAttribute: Attributes.STRENGTH, baseValue: 25});
 		baseAttributes.add({affectedAttribute: Attributes.CONSTITUTION, baseValue: 25});

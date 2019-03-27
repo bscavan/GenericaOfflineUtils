@@ -2,8 +2,18 @@ import { Attributes, Defenses, Pools } from "../attribute-keys";
 import { RacialJob } from "./racial-job";
 
 export class Peskie extends RacialJob {
-	// TODO: Refactor these into static methods?
+	private static peskieRace = null;
+
 	public static getPeskieRace(): RacialJob {
+		if(this.peskieRace == null) {
+			this.peskieRace = this.generatePeskieRace();
+		}
+
+		return this.peskieRace;
+	}
+
+	// TODO: Refactor these into static methods?
+	private static generatePeskieRace(): RacialJob {
 		let baseAttributes = new Set<{affectedAttribute: Attributes, baseValue: number}>();
 		baseAttributes.add({affectedAttribute: Attributes.STRENGTH, baseValue: 10});
 		baseAttributes.add({affectedAttribute: Attributes.CONSTITUTION, baseValue: 20});
