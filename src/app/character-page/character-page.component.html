@@ -25,7 +25,7 @@
 
 <div>
 	<b>Race:</b>
-	<select (change)="this.characterFocus.changePrimaryRace2(event)"
+	<select (change)="this.characterFocus.handlePrimaryRaceChange()"
 	[(ngModel)]="this.characterFocus.primaryRacialJob">
 		<!--TODO: Auto-select the option that is the value of this.characterFocus.primaryRacialJob! -->
 		<option *ngFor="let currentRacialJob of allRacialJobs"

@@ -3,7 +3,6 @@ import { Job } from "../job";
 import { AdventuringJob } from "../adventuring-jobs/adventuring-job";
 import { RacialJob } from "../racial-jobs/racial-job";
 import { CraftingJob } from "../crafting-jobs/crafting-job";
-import { IfObservable } from "rxjs/observable/IfObservable";
 
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
@@ -13,10 +12,11 @@ export class Character {
 	public name: string;
 	public title: string;
 	primaryRacialJob: RacialJob;
+	previousPrimaryRacialJob: RacialJob;
 	primaryRacialJobLevel: number;
 	supplementalRacialJobLevels: [{job: RacialJob, level: number}];
-	protected adventuringJobLevels: Map<AdventuringJob, number>;
-	protected craftingJobLevels: Map<CraftingJob, number>;
+	adventuringJobLevels: [{job: AdventuringJob, level: number}];
+	craftingJobLevels: [{job: CraftingJob, level: number}];
 
 	protected baseAttributes: Map<Attributes, number> = new Map();
 	protected totalAttributes: Map<Attributes, number> = new Map();
@@ -45,8 +45,8 @@ export class Character {
 	primaryRacialJob: RacialJob,
 	levelsInPrimaryRacialJob: number,
 	supplementalRacialJobLevels: [{ job: RacialJob; level: number; }],
-	adventuringJobLevels: Map<AdventuringJob, number>,
-	craftingJobLevels: Map<CraftingJob, number>) {
+	adventuringJobLevels: [{ job: AdventuringJob; level: number; }],
+	craftingJobLevels: [{ job: CraftingJob; level: number; }] ) {
 		this.name = name;
 		this.title = title;
 		this.primaryRacialJob = primaryRacialJob;
@@ -55,6 +55,7 @@ export class Character {
 		this.adventuringJobLevels = adventuringJobLevels;
 		this.craftingJobLevels = craftingJobLevels;
 		this.recalculateAttributes();
+		this.printFullStats();
 	}
 
 	public addRacialJobLevels(newJob: RacialJob, levelsTaken: number) {
@@ -114,11 +115,16 @@ export class Character {
 		this.recalculateAttributes();
 	}
 
-	public changePrimaryRace2(event) {
+	public handlePrimaryRaceChange() {
 		// TODO: Be sure to account for the difference in the number of
 		// adventuring and crafting job slots here!
 		// If jobs would be lost then be sure to warn the user!
-		console.log("Primary race was set to: " + this.primaryRacialJob.name );
+		console.log("Primary race was changed from: ["
+			+ this.previousPrimaryRacialJob.name + "] to: ["
+			+ this.primaryRacialJob.name + "]");
+
+		// TODO: Handle the change in jobSlots here...
+
 		this.recalculateAttributes();
 	}
 
@@ -143,14 +149,28 @@ export class Character {
 		this.increasesToAttributes.set(increaseSourceName, {targetAttribute, value});
 	}
 
-	public setAdventuringJobLevel(newJob: AdventuringJob, levelsTaken: number) {
-		this.adventuringJobLevels.set(newJob, levelsTaken);
+	public setAdventuringJobLevel(jobSlot: number, newJob: AdventuringJob, levelsTaken: number) {
+		this.adventuringJobLevels[jobSlot] = {job: newJob, level: levelsTaken};
 		this.recalculateAttributes();
 	}
 
-	public removeAdventuringJob(job: AdventuringJob) {
-		this.adventuringJobLevels.delete(job);
+	public removeAdventuringJob(jobSlot: number) {
+		this.adventuringJobLevels.splice(jobSlot, 1);
 		this.recalculateAttributes();
+	}
+
+	// Searches for a particular job in an array of {job, level} objects
+	public indexOfJob(needle: Job, haystack) {
+		let indexFound = -1;
+
+		haystack.array.forEach((element, currentIndex) => {
+			if(element.job === needle) {
+				indexFound = currentIndex;
+				return;
+			}
+		});
+		
+		return indexFound;
 	}
 
 	private recalculateAttributes() {
@@ -186,13 +206,13 @@ export class Character {
 
 		// Adding job level-based increases to attributes
 		this.addRacialJobLevelsToAttributes_array(this.totalAttributes);
-		this.addJobLevelsToAttributes(this.totalAttributes, this.adventuringJobLevels);
-		this.addJobLevelsToAttributes(this.totalAttributes, this.craftingJobLevels);
+		this.addJobLevelsToAttributes_array(this.totalAttributes, this.adventuringJobLevels);
+		this.addJobLevelsToAttributes_array(this.totalAttributes, this.craftingJobLevels);
 
 		// Adding job level-based increases to defenses
 		this.addRacialJobLevelsToDefenses_array(this.totalDefenses);
-		this.addJobLevelsToDefenses(this.totalDefenses, this.adventuringJobLevels);
-		this.addJobLevelsToDefenses(this.totalDefenses, this.craftingJobLevels);
+		this.addJobLevelsToDefenses_array(this.totalDefenses, this.adventuringJobLevels);
+		this.addJobLevelsToDefenses_array(this.totalDefenses, this.craftingJobLevels);
 
 		// Adding base attributes to totals
 		this.addAttributeSetsTogether(this.totalAttributes, this.baseAttributes);
@@ -217,7 +237,7 @@ export class Character {
 
 		// TODO: Handle racial stat caps, like Beast's max INT, and Peskie's max STR
 
-		this.printFullStats();
+		this.previousPrimaryRacialJob = this.primaryRacialJob;
 	}
 
 	public getBaseAttribute(attribute: Attributes): number {
@@ -495,13 +515,13 @@ export class Character {
 		console.log("adventuring job levels(s): [");
 		this.adventuringJobLevels.keys();
 		this.adventuringJobLevels.forEach((currentJob) => {
-			console.log("level [" + currentJob + "] ");
+			console.log("Job: [" + currentJob.job.name + "], level [" + currentJob.level + "] ");
 		});
 		console.log("]")
 
 		console.log("crafting job levels(s): [");
 		this.craftingJobLevels.forEach((currentJob) => {
-			console.log("level [" + currentJob + "] ");
+			console.log("Job: [" + currentJob.job.name + "], level [" + currentJob.level + "] ");
 		});
 		console.log("]")
 	}
