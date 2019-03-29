@@ -16,9 +16,9 @@ export class Jaxby extends Character{
 		let supplementalRacialJobsArray: [{ job: RacialJob; level: number; }] = [{job: null, level: null}];
 		supplementalRacialJobsArray.pop();
 
-		let adventuringJobLevels: [{job: AdventuringJob, level: number}] = [{job: Duelist.getDuelistJob(), level: 1}];
+		let adventuringJobLevels: [{job: AdventuringJob, level: number}] = [Character.makeAdventuringJobObject(Duelist.getDuelistJob(), 1)];
 
-		let craftingJobLevels: [{job: CraftingJob, level: number}] = [{job: Tanner.getTannerJob(), level:1 }];
+		let craftingJobLevels: [{job: CraftingJob, level: number}] = [Character.makeCraftingJobObject(Tanner.getTannerJob(), 1)];
 
 		super("Jaxby NimbleFingers", "Master Assassin",
 			primaryRacialJob, 1, supplementalRacialJobsArray,

@@ -3,6 +3,9 @@ import { Job } from "../job";
 import { AdventuringJob } from "../adventuring-jobs/adventuring-job";
 import { RacialJob } from "../racial-jobs/racial-job";
 import { CraftingJob } from "../crafting-jobs/crafting-job";
+import { BlankAdventuringJob } from "../adventuring-jobs/blank-adventuring-job";
+import { BlankCraftingJob } from "../crafting-jobs/blank-crafting-job";
+import { BlankRacialJob } from "../racial-jobs/blank-racial-job";
 
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
@@ -54,6 +57,8 @@ export class Character {
 		this.supplementalRacialJobLevels = supplementalRacialJobLevels
 		this.adventuringJobLevels = adventuringJobLevels;
 		this.craftingJobLevels = craftingJobLevels;
+		this.previousPrimaryRacialJob = this.primaryRacialJob;
+		this.enforceJobSlotLimits();
 		this.recalculateAttributes();
 		this.printFullStats();
 	}
@@ -84,11 +89,17 @@ export class Character {
 		this.recalculateAttributes();
 	}
 
+	// Note: this assumes the user isn't being an idiot, entering a negative job slot or something...
+	// TODO: Add defensive coding here.
+	public removeSupplementalRacialJobs(jobSlot: number, jobsToRemove) {
+		this.supplementalRacialJobLevels.splice(jobSlot, jobsToRemove);
+	}
+
 	/*
 	 * TODO: Make sure to visibly warn the user if they're about to remove the
 	 * primary racial job, as this will clear out all of the other jobs...
 	 */
-	public removeRacialJob(jobToRemove: RacialJob) {
+	public removeSpecificRacialJob(jobToRemove: RacialJob) {
 		if(this.primaryRacialJob == jobToRemove) {
 			if(this.supplementalRacialJobLevels.length <= 0) {
 				this.primaryRacialJob = null;
@@ -115,6 +126,64 @@ export class Character {
 		this.recalculateAttributes();
 	}
 
+	private enforceJobSlotLimits() {
+		let supplementalRacialJobSlotDifference = this.primaryRacialJob.numberOfsupplementalRacialJobSlots - this.supplementalRacialJobLevels.length;
+		
+		if(supplementalRacialJobSlotDifference === 0) {
+			// Do nothing.
+		} else if (supplementalRacialJobSlotDifference > 0) {
+			for(let counter = 0; counter < supplementalRacialJobSlotDifference; counter++) {
+				this.addRacialJobLevels(BlankRacialJob.getBlankRacialJob(), 1);
+			}
+		} else {
+			/*
+			for(let indexCounter = this.adventuringJobLevels.length; indexCounter > this.primaryRacialJob.numberOfAdventuringJobSlots; indexCounter--) {
+				this.removeSupplementalRacialJobs(indexCounter, 1);
+				// TODO: Once banking jobs is supported, consider banking these instead of deleting them...
+				// Then, that player can't take levels in those jobs anymore, only re-add them from the bank.
+			}
+			*/
+
+			this.removeSupplementalRacialJobs(this.primaryRacialJob.numberOfsupplementalRacialJobSlots, supplementalRacialJobSlotDifference);
+		}
+
+		let adventuringJobSlotDifference = this.primaryRacialJob.numberOfAdventuringJobSlots - this.previousPrimaryRacialJob.numberOfAdventuringJobSlots;
+
+		if(adventuringJobSlotDifference === 0) {
+			// Do nothing.
+		} else if (adventuringJobSlotDifference > 0) {
+			for(let counter = 0; counter < adventuringJobSlotDifference; counter++) {
+				this.addAdventuringJob(BlankAdventuringJob.getBlankAdventuringJob(), 1);
+			}
+		} else {
+			/*
+			for(let indexCounter = this.adventuringJobLevels.length; indexCounter > this.primaryRacialJob.numberOfAdventuringJobSlots; indexCounter--) {
+				this.removeAdventuringJobs(indexCounter, 1);
+				// TODO: Once banking jobs is supported, consider banking these instead of deleting them...
+				// Then, that player can't take levels in those jobs anymore, only re-add them from the bank.
+			}
+			*/
+			this.removeAdventuringJobs(this.primaryRacialJob.numberOfAdventuringJobSlots + 1, adventuringJobSlotDifference);
+		}
+
+		let craftingJobSlotDifference = this.primaryRacialJob.numberOfCraftingJobSlots - this.previousPrimaryRacialJob.numberOfCraftingJobSlots;
+
+		if(craftingJobSlotDifference === 0) {
+			// Do nothing.
+		} else if (craftingJobSlotDifference > 0) {
+			for(let counter = 0; counter < craftingJobSlotDifference; counter++) {
+				this.addCraftingJob(BlankCraftingJob.getBlankCraftingJob(), 1);
+			}
+		} else {
+			/*
+			for(let indexCounter = this.craftingJobLevels.length; indexCounter > this.primaryRacialJob.numberOfCraftingJobSlots; indexCounter--) {
+				this.removeCraftingJobs(indexCounter, 1);
+			}
+			*/
+			this.removeCraftingJobs(this.primaryRacialJob.numberOfCraftingJobSlots + 1, craftingJobSlotDifference);
+		}
+	}
+
 	public handlePrimaryRaceChange() {
 		// TODO: Be sure to account for the difference in the number of
 		// adventuring and crafting job slots here!
@@ -123,7 +192,49 @@ export class Character {
 			+ this.previousPrimaryRacialJob.name + "] to: ["
 			+ this.primaryRacialJob.name + "]");
 
-		// TODO: Handle the change in jobSlots here...
+		/*
+		// TODO: Handle the change in supplemental racial jobSlots here...
+		if(this.primaryRacialJob.numberOfAdventuringJobSlots === this.previousPrimaryRacialJob.numberOfAdventuringJobSlots) {
+			// Do nothing.
+		} else if (this.primaryRacialJob.numberOfAdventuringJobSlots > this.previousPrimaryRacialJob.numberOfAdventuringJobSlots) {
+			// TODO: Add additional slots
+			// Is this actually necessary? I can just "allow" more jobs to be
+			// added by placing the restrictions on adding jobs...
+
+			// Or, I can just ignore all tracking on adding, but that would
+			// require supporting dead spaces in these arrays.
+			// Actually, that's the best option, since I want to allow the user
+			// to actually use dropdowns like normal.
+			// So, I need to add a default value to the blank dropdowns in
+			// character-page-component.html and upgrade recalculateAttributes
+			// and the methods it uses so they ignore the empty/null jobs.
+		} else {
+			for(let indexCounter = this.adventuringJobLevels.length; indexCounter > this.primaryRacialJob.numberOfAdventuringJobSlots; indexCounter--) {
+				this.removeAdventuringJob(indexCounter);
+			}
+		}
+
+		if(this.primaryRacialJob.numberOfCraftingJobSlots === this.previousPrimaryRacialJob.numberOfCraftingJobSlots) {
+			// Do nothing.
+		} else if (this.primaryRacialJob.numberOfCraftingJobSlots > this.previousPrimaryRacialJob.numberOfCraftingJobSlots) {
+			// TODO: Add additional slots
+			// Is this actually necessary? I can just "allow" more jobs to be
+			// added by placing the restrictions on adding jobs...
+
+			// Or, I can just ignore all tracking on adding, but that would
+			// require supporting dead spaces in these arrays.
+			// Actually, that's the best option, since I want to allow the user
+			// to actually use dropdowns like normal.
+			// So, I need to add a default value to the blank dropdowns in
+			// character-page-component.html and upgrade recalculateAttributes
+			// and the methods it uses so they ignore the empty/null jobs.
+		} else {
+			for(let indexCounter = this.craftingJobLevels.length; indexCounter > this.primaryRacialJob.numberOfCraftingJobSlots; indexCounter--) {
+				this.removeCraftingJob(indexCounter);
+			}
+		}
+		*/
+		this.enforceJobSlotLimits();
 
 		this.recalculateAttributes();
 	}
@@ -145,25 +256,69 @@ export class Character {
 		return indexOfJob;
 	}
 
+	public static makeAdventuringJobObject(newJob: AdventuringJob, levelsTaken: number) {
+		return {job: newJob, level: levelsTaken}
+	}
+
+	public static makeCraftingJobObject(newJob: CraftingJob, levelsTaken: number) {
+		return {job: newJob, level: levelsTaken}
+	}
+
 	public addIncrease(increaseSourceName: string, targetAttribute: Attributes, value: number) {
 		this.increasesToAttributes.set(increaseSourceName, {targetAttribute, value});
 	}
 
+	public addAdventuringJob(newJob: AdventuringJob, levelsTaken: number) {
+		let indexFound = this.indexOfJob(newJob, this.adventuringJobLevels);
+
+		if(indexFound >= 0) {
+			this.setAdventuringJobLevel(indexFound, newJob, levelsTaken);
+		} else if(this.adventuringJobLevels.length < this.primaryRacialJob.numberOfAdventuringJobSlots) {
+			this.adventuringJobLevels.push(Character.makeAdventuringJobObject(newJob, levelsTaken));
+		} else {
+			console.error("Failed to add new adventuring Job: [" + newJob.name
+				+ "] because the maximum number of adventuring jobs has already been reached.")
+		}
+	}
+
 	public setAdventuringJobLevel(jobSlot: number, newJob: AdventuringJob, levelsTaken: number) {
-		this.adventuringJobLevels[jobSlot] = {job: newJob, level: levelsTaken};
+		this.adventuringJobLevels[jobSlot] = Character.makeAdventuringJobObject(newJob, levelsTaken);
 		this.recalculateAttributes();
 	}
 
-	public removeAdventuringJob(jobSlot: number) {
-		this.adventuringJobLevels.splice(jobSlot, 1);
+	public removeAdventuringJobs(jobSlot: number, jobsToRemove) {
+		this.adventuringJobLevels.splice(jobSlot, jobsToRemove);
+		//this.recalculateAttributes();
+	}
+
+	public addCraftingJob(newJob: CraftingJob, levelsTaken: number) {
+		let indexFound = this.indexOfJob(newJob, this.craftingJobLevels);
+
+		if(indexFound >= 0) {
+			this.setCraftingJobLevel(indexFound, newJob, levelsTaken);
+		} else if(this.craftingJobLevels.length < this.primaryRacialJob.numberOfCraftingJobSlots) {
+			this.craftingJobLevels.push(Character.makeCraftingJobObject(newJob, levelsTaken));
+		} else {
+			console.error("Failed to add new crafting Job: [" + newJob.name
+				+ "] because the maximum number of crafting jobs has already been reached.")
+		}
+	}
+
+	public setCraftingJobLevel(jobSlot: number, newJob: AdventuringJob, levelsTaken: number) {
+		this.craftingJobLevels[jobSlot] = Character.makeCraftingJobObject(newJob, levelsTaken);
 		this.recalculateAttributes();
+	}
+
+	public removeCraftingJobs(jobSlot: number, jobsToRemove) {
+		this.craftingJobLevels.splice(jobSlot, jobsToRemove);
+		//this.recalculateAttributes();
 	}
 
 	// Searches for a particular job in an array of {job, level} objects
 	public indexOfJob(needle: Job, haystack) {
 		let indexFound = -1;
 
-		haystack.array.forEach((element, currentIndex) => {
+		haystack.forEach((element, currentIndex) => {
 			if(element.job === needle) {
 				indexFound = currentIndex;
 				return;
@@ -512,6 +667,7 @@ export class Character {
 		});
 		console.log("]")
 
+		// FIXME: Prevent BlankAdventuringJob levels from showing up here...
 		console.log("adventuring job levels(s): [");
 		this.adventuringJobLevels.keys();
 		this.adventuringJobLevels.forEach((currentJob) => {
@@ -519,6 +675,7 @@ export class Character {
 		});
 		console.log("]")
 
+		// FIXME: Prevent BlankCraftingJob levels from showing up here...
 		console.log("crafting job levels(s): [");
 		this.craftingJobLevels.forEach((currentJob) => {
 			console.log("Job: [" + currentJob.job.name + "], level [" + currentJob.level + "] ");
