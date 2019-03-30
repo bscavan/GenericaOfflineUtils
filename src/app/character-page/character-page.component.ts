@@ -13,11 +13,14 @@ import { RacialJob } from '../racial-jobs/racial-job';
 })
 export class CharacterPageComponent implements OnInit {
 
+	// This is a limitation on the rules we have, not the software itself.
+	public readonly MAX_LEVEL = 25;
 	@Input() characterFocus: Character;
 	allRacialJobs: RacialJob[] = Races.getAllRaces();
 	allAdventuringJobs = AdventuringJobs.getAllAdventuringJobs();
 	allCraftingJobs = Professions.getAllCraftingJobs();
 	expanded: boolean = true;
+	expandOptions:boolean = false;
 
 	constructor() {
 	}

@@ -15,7 +15,7 @@ export class Character {
 	public name: string;
 	public title: string;
 	primaryRacialJob: RacialJob;
-	previousPrimaryRacialJob: RacialJob;
+	// TODO: Determine if this is still necessary...
 	primaryRacialJobLevel: number;
 	supplementalRacialJobLevels: [{job: RacialJob, level: number}];
 	adventuringJobLevels: [{job: AdventuringJob, level: number}];
@@ -57,7 +57,6 @@ export class Character {
 		this.supplementalRacialJobLevels = supplementalRacialJobLevels
 		this.adventuringJobLevels = adventuringJobLevels;
 		this.craftingJobLevels = craftingJobLevels;
-		this.previousPrimaryRacialJob = this.primaryRacialJob;
 		this.enforceJobSlotLimits();
 		this.recalculateAttributes();
 		this.printFullStats();
@@ -72,7 +71,8 @@ export class Character {
 		} else {
 			let indexOfJob = this.findJobIndex(this.supplementalRacialJobLevels, newJob);
 
-			if (indexOfJob <= 0) {
+			// If newJob is a BlankRacialJob, then the normal limit doesn't apply to it...
+			if(newJob instanceof BlankRacialJob == false && indexOfJob >= 0) {
 				// TODO: Move this assignment to a helper method...
 				this.supplementalRacialJobLevels[indexOfJob] = {
 					job: newJob,
@@ -133,7 +133,7 @@ export class Character {
 			// Do nothing.
 		} else if (supplementalRacialJobSlotDifference > 0) {
 			for(let counter = 0; counter < supplementalRacialJobSlotDifference; counter++) {
-				this.addRacialJobLevels(BlankRacialJob.getBlankRacialJob(), 1);
+				this.addRacialJobLevels(BlankRacialJob.getBlankRacialJob(), 0);
 			}
 		} else {
 			/*
@@ -147,13 +147,13 @@ export class Character {
 			this.removeSupplementalRacialJobs(this.primaryRacialJob.numberOfsupplementalRacialJobSlots, supplementalRacialJobSlotDifference);
 		}
 
-		let adventuringJobSlotDifference = this.primaryRacialJob.numberOfAdventuringJobSlots - this.previousPrimaryRacialJob.numberOfAdventuringJobSlots;
+		let adventuringJobSlotDifference = this.primaryRacialJob.numberOfAdventuringJobSlots - this.adventuringJobLevels.length;
 
 		if(adventuringJobSlotDifference === 0) {
 			// Do nothing.
 		} else if (adventuringJobSlotDifference > 0) {
 			for(let counter = 0; counter < adventuringJobSlotDifference; counter++) {
-				this.addAdventuringJob(BlankAdventuringJob.getBlankAdventuringJob(), 1);
+				this.addAdventuringJob(BlankAdventuringJob.getBlankAdventuringJob(), 0);
 			}
 		} else {
 			/*
@@ -163,16 +163,16 @@ export class Character {
 				// Then, that player can't take levels in those jobs anymore, only re-add them from the bank.
 			}
 			*/
-			this.removeAdventuringJobs(this.primaryRacialJob.numberOfAdventuringJobSlots + 1, adventuringJobSlotDifference);
+			this.removeAdventuringJobs(this.primaryRacialJob.numberOfAdventuringJobSlots, Math.abs(adventuringJobSlotDifference));
 		}
 
-		let craftingJobSlotDifference = this.primaryRacialJob.numberOfCraftingJobSlots - this.previousPrimaryRacialJob.numberOfCraftingJobSlots;
+		let craftingJobSlotDifference = this.primaryRacialJob.numberOfCraftingJobSlots - this.craftingJobLevels.length;
 
 		if(craftingJobSlotDifference === 0) {
 			// Do nothing.
 		} else if (craftingJobSlotDifference > 0) {
 			for(let counter = 0; counter < craftingJobSlotDifference; counter++) {
-				this.addCraftingJob(BlankCraftingJob.getBlankCraftingJob(), 1);
+				this.addCraftingJob(BlankCraftingJob.getBlankCraftingJob(), 0);
 			}
 		} else {
 			/*
@@ -180,7 +180,7 @@ export class Character {
 				this.removeCraftingJobs(indexCounter, 1);
 			}
 			*/
-			this.removeCraftingJobs(this.primaryRacialJob.numberOfCraftingJobSlots + 1, craftingJobSlotDifference);
+			this.removeCraftingJobs(this.primaryRacialJob.numberOfCraftingJobSlots, Math.abs(craftingJobSlotDifference));
 		}
 	}
 
@@ -188,9 +188,6 @@ export class Character {
 		// TODO: Be sure to account for the difference in the number of
 		// adventuring and crafting job slots here!
 		// If jobs would be lost then be sure to warn the user!
-		console.log("Primary race was changed from: ["
-			+ this.previousPrimaryRacialJob.name + "] to: ["
-			+ this.primaryRacialJob.name + "]");
 
 		/*
 		// TODO: Handle the change in supplemental racial jobSlots here...
@@ -271,7 +268,8 @@ export class Character {
 	public addAdventuringJob(newJob: AdventuringJob, levelsTaken: number) {
 		let indexFound = this.indexOfJob(newJob, this.adventuringJobLevels);
 
-		if(indexFound >= 0) {
+		// If newJob is a BlankAdventuringJob, then the normal limit doesn't apply to it...
+		if(newJob.name !== "" && indexFound >= 0) {
 			this.setAdventuringJobLevel(indexFound, newJob, levelsTaken);
 		} else if(this.adventuringJobLevels.length < this.primaryRacialJob.numberOfAdventuringJobSlots) {
 			this.adventuringJobLevels.push(Character.makeAdventuringJobObject(newJob, levelsTaken));
@@ -294,7 +292,9 @@ export class Character {
 	public addCraftingJob(newJob: CraftingJob, levelsTaken: number) {
 		let indexFound = this.indexOfJob(newJob, this.craftingJobLevels);
 
-		if(indexFound >= 0) {
+		// If newJob is a BlankCraftingJob, then the normal limit doesn't apply to it...
+		// FIXME: Get this working with "newJob instanceof BlankCraftingJob"
+		if(newJob.name !== "" && indexFound >= 0) {
 			this.setCraftingJobLevel(indexFound, newJob, levelsTaken);
 		} else if(this.craftingJobLevels.length < this.primaryRacialJob.numberOfCraftingJobSlots) {
 			this.craftingJobLevels.push(Character.makeCraftingJobObject(newJob, levelsTaken));
@@ -391,8 +391,6 @@ export class Character {
 		// Should they get a list of equip slots?
 
 		// TODO: Handle racial stat caps, like Beast's max INT, and Peskie's max STR
-
-		this.previousPrimaryRacialJob = this.primaryRacialJob;
 	}
 
 	public getBaseAttribute(attribute: Attributes): number {

@@ -33,6 +33,8 @@
 
 		<!-- TODO: Add an empty option to this so the player can remove the primaryRacialJob... -->
 	</select>
+
+	<!-- TODO: Add support for supplemental RacialJobs -->
 </div>
 <!-- TODO: Add additonal "job slots" for special cases based off properties to be later
 		added into RacialJob. Jobs like Toy Golem and Manabeast allow for a second racial job,
@@ -47,26 +49,56 @@
 	<div>
 		<b>Adventuring Jobs:</b>
 		<div *ngFor="let currentJobSlot of 
-		createRange(this.characterFocus.primaryRacialJob.numberOfAdventuringJobSlots)">
-			<select>
-				<option *ngFor="let x of this.allAdventuringJobs">{{x.name}}</option>
+		createRange(this.characterFocus.primaryRacialJob.numberOfAdventuringJobSlots); let i = index">
+			<select [(ngModel)]="this.characterFocus.adventuringJobLevels[i].job"
+			(change)="this.characterFocus.recalculateAttributes()">
+				<option *ngFor="let x of this.allAdventuringJobs" [ngValue]="x">{{x.name}}</option>
 			</select>
+			<input type="number" min="0" max="{{MAX_LEVEL}}"
+			[(ngModel)]="this.characterFocus.adventuringJobLevels[i].level"
+			(change)="this.characterFocus.recalculateAttributes()">
+			<!--
+				FIXME: When rapidly clicking this input, sometimes the change
+				directive is delayed until the mouse moves.
+			-->
 		</div>
 	</div>
 	
 	<div>
 		<b>Crafting Jobs:</b>
 		<div *ngFor="let currentJobSlot of 
-		createRange(this.characterFocus.primaryRacialJob.numberOfCraftingJobSlots)">
-			<select>
-				<option *ngFor="let x of this.allCraftingJobs">{{x.name}}</option>
+		createRange(this.characterFocus.primaryRacialJob.numberOfCraftingJobSlots); let i = index">
+			<select [(ngModel)]="this.characterFocus.craftingJobLevels[i].job"
+			(change)="this.characterFocus.recalculateAttributes()">
+				<option *ngFor="let x of this.allCraftingJobs" [ngValue]="x">{{x.name}}</option>
 			</select>
+			<input type="number" min="0" max="{{MAX_LEVEL}}"
+			[(ngModel)]="this.characterFocus.craftingJobLevels[i].level"
+			(change)="this.characterFocus.recalculateAttributes()">
+			<!--
+				FIXME: When rapidly clicking this input, sometimes the change
+				directive is delayed until the mouse moves.
+			-->
 		</div>
 	</div>
 </div>
 
 stats:
 <app-attribute-bar [characterFocus]="characterFocus"></app-attribute-bar>
+
+<div class="tooltip">
+	<button (click)="expandOptions = ! expandOptions">&#9881;</button>
+	<span class="tooltiptext tooltip">Display optional controls</span>
+	<!--
+		FIXME: The tooltip for this button gets cut off by the left-side of the
+		window.
+		TODO: Just bring in an actual tooltip package.
+	-->
+</div>
+<div *ngIf="expandOptions">
+	<button (click)="this.characterFocus.recalculateAttributes()">Manually recalculate attributes</button>
+	<button (click)="this.characterFocus.printFullStats()">Print attributes to console log</button>
+</div>
 
 <!-- TODO:
 		Add a button for expanding and collapsing the stats sections.
