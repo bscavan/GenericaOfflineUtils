@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Character } from '../../character/character';
-import { Pools } from '../../attribute-keys';
+import { Pools, Attributes } from '../../attribute-keys';
 
 @Component({
 	selector: 'app-attribute-bar',
@@ -34,5 +34,45 @@ export class AttributeBarComponent implements OnInit {
 
 	public getFortune(character: Character): number {
 		return character.getPool(Pools.FORTUNE);
+	}
+
+	public getStrength(character: Character): number {
+		return character.getAttribute(Attributes.STRENGTH);
+	}
+
+	public getConstitution(character: Character): number {
+		return character.getAttribute(Attributes.CONSTITUTION);
+	}
+
+	public getIntelligence(character: Character): number {
+		return character.getAttribute(Attributes.INTELLIGENCE);
+	}
+
+	public getWisdom(character: Character): number {
+		return character.getAttribute(Attributes.WISDOM);
+	}
+
+	public getDexterity(character: Character): number {
+		return character.getAttribute(Attributes.DEXTERITY);
+	}
+
+	public getAgility(character: Character): number {
+		return character.getAttribute(Attributes.AGILITY);
+	}
+
+	public getCharisma(character: Character): number {
+		return character.getAttribute(Attributes.CHARISMA);
+	}
+
+	public getWill(character: Character): number {
+		return character.getAttribute(Attributes.WILL);
+	}
+
+	public getLuck(character: Character): number {
+		return character.getAttribute(Attributes.LUCK);
+	}
+
+	public getPerception(character: Character): number {
+		return character.getAttribute(Attributes.PERCEPTION);
 	}
 }
