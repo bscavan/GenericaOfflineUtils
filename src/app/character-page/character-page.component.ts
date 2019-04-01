@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { AttributeType, Attributes, Defenses, Pools, AttributeKeys } from '../attribute-keys';
-import { Attribute } from '@angular/compiler';
-import { AttributeSet } from '../attribute-set';
-import { Jaxby } from '../character/jaxby';
+import { Component, OnInit, Input } from '@angular/core';
+import { Character } from '../character/character';
+import { Races } from '../racial-jobs/races';
+import { AdventuringJobs } from '../adventuring-jobs/adventuring-jobs';
+import { Professions } from '../crafting-jobs/professions';
+import { RacialJob } from '../racial-jobs/racial-job';
 
 
 @Component({
@@ -12,13 +13,25 @@ import { Jaxby } from '../character/jaxby';
 })
 export class CharacterPageComponent implements OnInit {
 
+	// This is a limitation on the rules we have, not the software itself.
+	public readonly MAX_LEVEL = 25;
+	@Input() characterFocus: Character;
+	allRacialJobs: RacialJob[] = Races.getAllRaces();
+	allAdventuringJobs = AdventuringJobs.getAllAdventuringJobs();
+	allCraftingJobs = Professions.getAllCraftingJobs();
 	expanded: boolean = true;
+	expandOptions:boolean = false;
 
 	constructor() {
 	}
 
-	ngOnInit() {
-		let jaxby = new Jaxby();
-	}
+	ngOnInit() {}
 
+	createRange(number){
+		var items: number[] = [];
+		for(var i = 1; i <= number; i++){
+			items.push(i);
+		}
+		return items;
+	}
 }

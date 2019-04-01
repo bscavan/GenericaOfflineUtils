@@ -1,6 +1,5 @@
 import { async, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { By } from '@angular/platform-browser';
 
 import { AppComponent } from '../app.component';
 import { Peskie } from '../racial-jobs/peskie';
@@ -8,21 +7,27 @@ import { Duelist } from '../adventuring-jobs/duelist';
 import { Tanner } from '../crafting-jobs/tanner';
 import { Character } from './character';
 import { Attributes, Pools } from '../attribute-keys';
+import { RacialJob } from '../racial-jobs/racial-job';
+import { CraftingJob } from '../crafting-jobs/crafting-job';
+import { AdventuringJob } from '../adventuring-jobs/adventuring-job';
 
 class TestCharacter extends Character {
 	// TODO: Mock out these job classes for testing...
 	constructor() {
-		let racialJobLevels = new Map();
-		racialJobLevels.set(Peskie.getPeskieRace(), 1);
+		let primaryRacialJob = Peskie.getPeskieRace();
 
-		let adventuringJobLevels = new Map();
-		adventuringJobLevels.set(Duelist.getDuelistJob(), 1);
+		// FIXME: As soon as you figure out how to declare an empty, typed
+		// array, remove this wasteful approach...
+		let supplementalRacialJobsArray: [{ job: RacialJob; level: number; }] = [{job: null, level: null}];
+		supplementalRacialJobsArray.pop();
 
-		let craftingJobLevels = new Map();
-		craftingJobLevels.set(Tanner.getTannerJob(), 1);
+		let adventuringJobLevels: [{job: AdventuringJob, level: number}] = [Character.makeAdventuringJobObject(Duelist.getDuelistJob(), 1)];
+	
+		let craftingJobLevels: [{job: CraftingJob, level: number}] = [Character.makeCraftingJobObject(Tanner.getTannerJob(), 1)];
 
 		super("Jaxby NimbleFingers", "Master Assassin",
-		racialJobLevels, adventuringJobLevels, craftingJobLevels);
+			primaryRacialJob, 1, supplementalRacialJobsArray,
+			adventuringJobLevels, craftingJobLevels);
 	}
 }
 
@@ -96,4 +101,15 @@ describe('Character', () => {
 		expect(testCharacter.getPool(Pools.MOXIE)).toEqual(46);
 		expect(testCharacter.getPool(Pools.FORTUNE)).toEqual(52);
 	}));
+
+	/*
+	 * TODO: Write the following tests:
+	 	 * Adding adventuring jobs and confirming the stats rose accordingly
+	 	 * removing adventuring jobs and confirming the stas fell accordingly
+		 * Switching an existing adventuring job with a new one and confirming the stats are correct
+		 * Changing race and confirming both the stats and the jobslot counts changed correctly
+		 * Adding adventuring jobs, changing race on one with fewer job slots, and confirming the extra jobs dropped
+		 * 
+		 * similar tests for adding, removing, changing, etc. with crafting jobs...
+	 */
 });

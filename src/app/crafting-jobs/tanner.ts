@@ -1,9 +1,19 @@
 import { Attributes } from "../attribute-keys";
-import { CraftingJob } from "../crafting-job";
+import { CraftingJob } from "./crafting-job";
 
 export class Tanner extends CraftingJob {
-	// TODO: Refactor these into static methods?
+	private static tannerJob = null;
+
 	public static getTannerJob(): CraftingJob {
+		if(this.tannerJob == null) {
+			this.tannerJob = this.generateTannerJob();
+		}
+
+		return this.tannerJob;
+	}
+
+	// TODO: Refactor these into static methods?
+	public static generateTannerJob(): CraftingJob {
 		let attributesSet = new Set<{affectedAttribute: Attributes, pointsPerLevel: number}>();
 		attributesSet.add({affectedAttribute: Attributes.DEXTERITY, pointsPerLevel: 1});
 		attributesSet.add({affectedAttribute: Attributes.AGILITY, pointsPerLevel: 1});
