@@ -8,6 +8,7 @@ export class RacialJob extends Job {
 	numberOfsupplementalRacialJobSlots: number;
 	numberOfAdventuringJobSlots: number;
 	numberOfCraftingJobSlots: number;
+	canBeSupplementalJob: boolean;
 
 
 	// Adventuring jobs only affect attributes.
@@ -19,13 +20,15 @@ export class RacialJob extends Job {
 	basePools: Set<{affectedPool: Pools, baseValue: number}>,
 	numberOfsupplementalRacialJobSlots: number,
 	numberOfAdventuringJobSlots: number,
-	numberOfCraftingJobSlots: number) {
+	numberOfCraftingJobSlots: number,
+	canBeSupplementalJob: boolean) {
 		super(name, affectedAttributes, affectedDefenses, basePools);
 		this.baseAttributes = baseAttributes;
 		this.baseDefenses = baseDefenses;
 		this.numberOfsupplementalRacialJobSlots = numberOfsupplementalRacialJobSlots;
 		this.numberOfAdventuringJobSlots = numberOfAdventuringJobSlots;
 		this.numberOfCraftingJobSlots = numberOfCraftingJobSlots;
+		this.canBeSupplementalJob = canBeSupplementalJob;
 	}
 
 	getEmptyRacialJob() {
@@ -33,7 +36,7 @@ export class RacialJob extends Job {
 		new Set<{affectedAttribute: Attributes, pointsPerLevel: number}>(),
 		new Set<{affectedDefense: Defenses, baseValue: number}>(),
 		new Set<{affectedDefense: Defenses, pointsPerLevel: number}>(),
-		new Set<{affectedPool: Pools, baseValue: number}>(), 0, 0, 0)
+		new Set<{affectedPool: Pools, baseValue: number}>(), 0, 0, 0, false);
 	}
 
 	protected setBaseAttributes(baseAttributes: Set<{affectedAttribute: Attributes, baseValue: number}>){

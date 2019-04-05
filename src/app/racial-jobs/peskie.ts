@@ -53,7 +53,7 @@ export class Peskie extends RacialJob {
 		// Peskies don't have any base pool values.
 
 		let peskie = new RacialJob("Peskie", baseAttributes, attributesSet,
-			baseDefenses, defensesSet, basePools, 0, 4, 2);
+			baseDefenses, defensesSet, basePools, 0, 4, 2, false);
 		// TODO: Set up a helper method to calculate base attributes?
 		// Well, in most cases it's either an average of two other races
 		// (like beastkin and half-breeds), or it's "addition," but one of the

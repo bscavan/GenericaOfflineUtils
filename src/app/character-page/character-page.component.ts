@@ -17,6 +17,7 @@ export class CharacterPageComponent implements OnInit {
 	public readonly MAX_LEVEL = 25;
 	@Input() characterFocus: Character;
 	allRacialJobs: RacialJob[] = Races.getAllRaces();
+	allSupplementalRacialJobs: RacialJob[] = Races.getAllSupplementalRaces();
 	allAdventuringJobs = AdventuringJobs.getAllAdventuringJobs();
 	allCraftingJobs = Professions.getAllCraftingJobs();
 	expanded: boolean = true;

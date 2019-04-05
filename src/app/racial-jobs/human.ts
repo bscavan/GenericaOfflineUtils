@@ -52,6 +52,6 @@ export class Human extends RacialJob {
 		// Humans don't have any base pool values.
 
 		return new RacialJob("Human", baseAttributes, attributesSet,
-			baseDefenses, defensesSet, basePools, 0, 7, 3);
+			baseDefenses, defensesSet, basePools, 0, 7, 3, true);
 	}
 }

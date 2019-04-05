@@ -6,6 +6,7 @@ import { CraftingJob } from "../crafting-jobs/crafting-job";
 import { BlankAdventuringJob } from "../adventuring-jobs/blank-adventuring-job";
 import { BlankCraftingJob } from "../crafting-jobs/blank-crafting-job";
 import { BlankRacialJob } from "../racial-jobs/blank-racial-job";
+import { isUndefined } from "util";
 
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
@@ -311,6 +312,7 @@ export class Character {
 		// Calculating pools:
 		this.totalPools = this.calcualtePools(this.basePools, this.totalAttributes);
 
+		// TODO: Handle the fact that "Beastkin" is a mix of Human and a beast. (only Humans work as the base)
 		//TODO: Check and update FATE, as it's a special case!
 
 		//TODO: Write a helper method to apply increases.
@@ -456,22 +458,30 @@ export class Character {
 			});
 		});
 	}
+
 	public addRacialJobLevelsToBaseDefenses(defensesMap: Map<Defenses, number>)
 	{
 		this.primaryRacialJob.getBaseDefenses().forEach((currentDefenseElement) =>
-			{
-				defensesMap.set(currentDefenseElement.affectedDefense,
-					defensesMap.get(currentDefenseElement.affectedDefense)
-					+ currentDefenseElement.baseValue);
-			});
+		{
+			defensesMap.set(currentDefenseElement.affectedDefense,
+				defensesMap.get(currentDefenseElement.affectedDefense)
+				+ currentDefenseElement.baseValue);
+		});
 
+		/**
+		 * According to page 24 of the alpha rules, doll haunters don't
+		 * add both parent's defenses together, they take the highest one.
+		 * The same holds true for Toy Golems, as seen on page 32.
+		 */
 		this.supplementalRacialJobLevels.forEach((currentJob) =>
 		{
 			currentJob.job.getBaseDefenses().forEach((currentDefenseElement) =>
 			{
-				defensesMap.set(currentDefenseElement.affectedDefense,
-					defensesMap.get(currentDefenseElement.affectedDefense)
-					+ currentDefenseElement.baseValue);
+				if(defensesMap.get(currentDefenseElement.affectedDefense) < currentDefenseElement.baseValue)
+				{
+					defensesMap.set(currentDefenseElement.affectedDefense,
+						currentDefenseElement.baseValue);
+				}
 			});
 		});
 	}

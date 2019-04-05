@@ -24,15 +24,20 @@
 </div>
 
 <div>
-	<b>Race:</b>
-	<select (change)="this.characterFocus.handlePrimaryRaceChange()"
-	[(ngModel)]="this.characterFocus.primaryRacialJob">
-		<!--TODO: Auto-select the option that is the value of this.characterFocus.primaryRacialJob! -->
-		<option *ngFor="let currentRacialJob of allRacialJobs"
-		[ngValue]="currentRacialJob">{{currentRacialJob.name}}</option>
+	<b>Primary Race:</b>
+	<div>
+		<select (change)="this.characterFocus.handlePrimaryRaceChange()"
+		[(ngModel)]="this.characterFocus.primaryRacialJob">
+			<!--TODO: Auto-select the option that is the value of this.characterFocus.primaryRacialJob! -->
+			<option *ngFor="let currentRacialJob of allRacialJobs"
+			[ngValue]="currentRacialJob">{{currentRacialJob.name}}</option>
 
-		<!-- TODO: Add an empty option to this so the player can remove the primaryRacialJob... -->
-	</select>
+			<!-- TODO: Add an empty option to this so the player can remove the primaryRacialJob... -->
+		</select>
+		<input type="number" min="0" max="{{MAX_LEVEL}}"
+		[(ngModel)]="this.characterFocus.primaryRacialJobLevel"
+		(change)="this.characterFocus.recalculateAttributes()">
+	</div>
 
 	<!-- TODO: Add support for supplemental RacialJobs -->
 </div>
@@ -44,8 +49,39 @@
 
 	TODO: Add support for setting the levels the character has in each of these jobs.
 	TODO: Prevent instances of BlankAdventuringJob and BlankCraftingJob from displaying their level controls here...
+
+	TODO: Handle Beastkin here, with the first job auto-populating to Human
+	(give a tooltip for that), and the second opening up a list of Beast jobs.
+	Note, they only get one job! It's a custom one created for them on the fly.
+	They choose their skills as they level, and parental jobs only affect the
+	base stats, not the points awarded for progressing.
+	TODO: Handle Crossbreeds here (That's a terrible name. Use "Biracial" instead?)
+	Because they handle the same way: one job, but pulling skills from the two
+	parents' lists.
+	SO, I should probably handle Biracial jobs differently than what I had planned
+	to do with the supplmental jobs. Really, that only applies to Toy Golems
+	and Doll Haunters (at least, for now it does).
 -->
 <div *ngIf="this.characterFocus.primaryRacialJob !== undefined">
+	<div *ngIf="this.characterFocus.primaryRacialJob.numberOfsupplementalRacialJobSlots > 0">
+			<b>Supplemental Racial Job(s):</b>
+			<!-- TODO: Make this iterate over all of the supplemental racial jobs... -->
+			<div *ngFor="let currentJobSlot of 
+			createRange(this.characterFocus.primaryRacialJob.numberOfsupplementalRacialJobSlots); let i = index">
+				<select [(ngModel)]="this.characterFocus.supplementalRacialJobLevels[i].job"
+				(change)="this.characterFocus.recalculateAttributes()">
+					<option *ngFor="let x of this.allSupplementalRacialJobs" [ngValue]="x">{{x.name}}</option>
+				</select>
+				<input type="number" min="0" max="{{MAX_LEVEL}}"
+				[(ngModel)]="this.characterFocus.supplementalRacialJobLevels[i].level"
+				(change)="this.characterFocus.recalculateAttributes()">
+				<!--
+					FIXME: When rapidly clicking this input, sometimes the change
+					directive is delayed until the mouse moves.
+				-->
+			</div>
+		</div>
+
 	<div>
 		<b>Adventuring Jobs:</b>
 		<div *ngFor="let currentJobSlot of 
