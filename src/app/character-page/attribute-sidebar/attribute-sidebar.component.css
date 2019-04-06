@@ -1,0 +1,20 @@
+.solid-border {
+	border-radius: 3px;
+	border-color:black;
+	border-style:solid
+}
+
+.value-cell {
+	text-align: right;
+	
+}
+
+.tr {
+	border-color:black;
+	border-style:solid
+}
+
+.td {
+	border-color:black;
+	border-style:solid
+}
