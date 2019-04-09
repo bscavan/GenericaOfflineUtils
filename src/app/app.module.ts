@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { CharacterPageComponent } from './character-page/character-page.component';
 import { AttributeBarComponent } from './character-page/attribute-bar/attribute-bar.component';
 import { AttributeSidebarComponent } from './character-page/attribute-sidebar/attribute-sidebar.component';
+import { PointBuyComponent } from './character-page/point-buy/point-buy.component';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { AttributeSidebarComponent } from './character-page/attribute-sidebar/at
     AppComponent,
     CharacterPageComponent,
 	AttributeBarComponent,
-	AttributeSidebarComponent
+	AttributeSidebarComponent,
+	PointBuyComponent
   ],
   imports: [
 	BrowserModule,

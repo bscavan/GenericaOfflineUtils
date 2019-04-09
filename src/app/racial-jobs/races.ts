@@ -3,6 +3,7 @@ import { Human } from "./human";
 import { RacialJob } from "./racial-job";
 import { Dwarf } from "./dwarf";
 import { ToyGolem_Metal } from "./toy-golem_metal";
+import { BlankRacialJob } from "./blank-racial-job";
 
 export class Races {
 	// TODO: Add support for races that have supplemental job slots, but only
@@ -13,6 +14,7 @@ export class Races {
 
 	private static compileRaces(): RacialJob[] {
 		let allRaces = [];
+		allRaces.push(BlankRacialJob.getBlankRacialJob());
 		allRaces.push(Peskie.getPeskieRace());
 		allRaces.push(Human.getHumanRace());
 		allRaces.push(Dwarf.getDwarfRace());

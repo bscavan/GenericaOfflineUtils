@@ -11,18 +11,19 @@ import { isUndefined } from "util";
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
 export class Character {
-
 	// TODO: Write support for banking jobs!
 	public name: string;
 	public title: string;
 	primaryRacialJob: RacialJob;
-	// TODO: Determine if this is still necessary...
 	primaryRacialJobLevel: number;
 	supplementalRacialJobLevels: [{job: RacialJob, level: number}];
 	adventuringJobLevels: [{job: AdventuringJob, level: number}];
 	craftingJobLevels: [{job: CraftingJob, level: number}];
 
 	protected baseAttributes: Map<Attributes, number> = new Map();
+	public initialRandomAttributes: Map<Attributes, number> = new Map();
+	public firstSetPointBuyAttributes: Map<Attributes, number> = new Map();
+	public secondSetPointBuyAttributes: Map<Attributes, number> = new Map();
 	protected totalAttributes: Map<Attributes, number> = new Map();
 
 	protected baseDefenses: Map<Defenses, number> = new Map();
@@ -59,6 +60,9 @@ export class Character {
 		this.adventuringJobLevels = adventuringJobLevels;
 		this.craftingJobLevels = craftingJobLevels;
 		this.enforceJobSlotLimits();
+		this.initializeCharacterGenAttributes();
+		// TODO: Add support for setting character gen attributes in this constructor?
+		// TODO: Push them into a separate class?
 		this.recalculateAttributes();
 		this.printFullStats();
 	}
@@ -260,6 +264,23 @@ export class Character {
 		});
 		
 		return indexFound;
+	}
+
+	private initializeCharacterGenAttributes() {
+		this.initialRandomAttributes = new Map();
+		this.firstSetPointBuyAttributes = new Map();
+		this.secondSetPointBuyAttributes = new Map();
+
+		ATTRIBUTE_SETS.forEach((currentAttribute) => {
+			this.initialRandomAttributes.set(currentAttribute.offensiveAttribute, 0);
+			this.initialRandomAttributes.set(currentAttribute.defensiveAttribute, 0);
+
+			this.firstSetPointBuyAttributes.set(currentAttribute.offensiveAttribute, 0);
+			this.firstSetPointBuyAttributes.set(currentAttribute.defensiveAttribute, 0);
+
+			this.secondSetPointBuyAttributes.set(currentAttribute.offensiveAttribute, 0);
+			this.secondSetPointBuyAttributes.set(currentAttribute.defensiveAttribute, 0);
+		});
 	}
 
 	private recalculateAttributes() {

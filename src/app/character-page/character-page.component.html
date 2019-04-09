@@ -23,6 +23,20 @@
 	</table>
 </div>
 
+<div> <!-- Empty div here for spacing. --> </div>
+
+<div class="tooltip">
+	<button (click)="expandPointBuyOptions = ! expandPointBuyOptions">&#8646;</button>
+	<span class="tooltiptext tooltip">Display character creation point investments.</span>
+	<!--
+		FIXME: The tooltip for this button gets cut off by the left-side of the
+		window.
+		TODO: Just bring in an actual tooltip package.
+	-->
+</div>
+
+<app-point-buy *ngIf="expandPointBuyOptions" [characterFocus]="characterFocus"></app-point-buy>
+
 <table>
 	<td>
 		<div>

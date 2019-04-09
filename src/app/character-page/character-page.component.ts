@@ -21,6 +21,11 @@ export class CharacterPageComponent implements OnInit {
 	allAdventuringJobs = AdventuringJobs.getAllAdventuringJobs();
 	allCraftingJobs = Professions.getAllCraftingJobs();
 	expanded: boolean = true;
+
+	// Control for the ngIf on the PointBuy component.
+	expandPointBuyOptions: boolean = false;
+
+	// Control for the ngIf on the manual/testing controls.
 	expandOptions:boolean = false;
 
 	constructor() {

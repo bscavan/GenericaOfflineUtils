@@ -1,0 +1,70 @@
+<table class="attribute-bar">
+	<td>
+		<tr>
+			&nbsp;
+		</tr>
+		<tr>
+			2d10
+		</tr>
+		<tr>
+			50pt
+		</tr>
+		<tr>
+			50pt
+		</tr>
+		<tr>
+			Total
+		</tr>
+	</td>
+	<!-- 
+		TODO: Rewrite these so that instead of displaying the current values
+		they instead link to them via ngModel. Then, put inputs in their places
+		to allow the user to actually change them.
+
+		Finally, look up how to limit them so the 50 point allocation sections
+		all pull from the same 50 point pool (all together they can't be more
+		than 50)
+			Also, add tooltips describing what the fields do...
+
+		Also, add the randomize button to the 2d10 section...
+
+		TODO: Determine if I actually need the Total section...
+	 -->
+	<span *ngFor="let current of this.orderedAttributes">
+		<td>
+			<tr class="attribute-bar">
+				{{current.offensiveAttribute}}
+			</tr>
+			<tr class="attribute-bar">
+				{{characterFocus.initialRandomAttributes.get(current.offensiveAttribute)}}
+			</tr>
+			<tr class="attribute-bar">
+				{{characterFocus.firstSetPointBuyAttributes.get(current.offensiveAttribute)}}
+			</tr>
+			<tr class="attribute-bar">
+				{{characterFocus.secondSetPointBuyAttributes.get(current.offensiveAttribute)}}
+			</tr>
+			<tr class="attribute-bar">
+				###
+			</tr>
+		</td>
+
+		<td>
+			<tr class="attribute-bar">
+				{{current.defensiveAttribute}}
+			</tr>
+			<tr class="attribute-bar">
+				{{characterFocus.initialRandomAttributes.get(current.defensiveAttribute)}}
+			</tr>
+			<tr class="attribute-bar">
+				{{characterFocus.firstSetPointBuyAttributes.get(current.defensiveAttribute)}}
+			</tr>
+			<tr class="attribute-bar">
+				{{characterFocus.secondSetPointBuyAttributes.get(current.defensiveAttribute)}}
+			</tr>
+			<tr class="attribute-bar">
+				###
+			</tr>
+		</td>
+	</span>
+</table>
