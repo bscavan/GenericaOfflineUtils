@@ -12,6 +12,11 @@ export class PointBuyComponent implements OnInit {
 	public allAttributeSets: Map<AttributeType, AttributeSet>;
 
 	public orderedAttributes: Attributes[] = [];
+
+	/**
+	 * The total number of points that can be invested in all attributes in
+	 * each step of the point-buy during character generation.
+	 */
 	public readonly maxPointsTotal = 50;
 
 	/*
@@ -38,7 +43,18 @@ export class PointBuyComponent implements OnInit {
 	 */
 	public pointsAllocatable_second = this.maxPointsTotal;
 
+	/**
+	 * Local collection of attribute investment data for characterFocus's first
+	 * point-buy section of character generation. Each element corresponds to
+	 * the Attribute element in orderedAttributes with the matching index.
+	 */
 	public firstSetPointBuyArray = [];
+
+	/**
+	 * Local collection of attribute investment data for characterFocus's second
+	 * point-buy section of character generation. Each element corresponds to
+	 * the Attribute element in orderedAttributes with the matching index.
+	 */
 	public secondSetPointBuyArray = [];
 
 	@Input() characterFocus: Character;
@@ -69,8 +85,8 @@ export class PointBuyComponent implements OnInit {
 
 	/**
 	 * Synchronizes the attribute values in firstSetPointBuyArray and
-	 * characterFocus.firstSetPointBuyAttributes, respecting the limit of
-	 * maxPoints.
+	 * characterFocus.firstSetPointBuyAttributes, respecting the limits of
+	 * maxPoints and maxInvestmentPerAttribute_first.
 	 */
 	public enforceMaximumPointValues_first() {
 		this.pointsAllocatable_first = this.maxPointsTotal;
@@ -123,8 +139,8 @@ export class PointBuyComponent implements OnInit {
 
 	/**
 	 * Synchronizes the attribute values in secondSetPointBuyArray and
-	 * characterFocus.secondSetPointBuyAttributes, respecting the limit of
-	 * maxPoints.
+	 * characterFocus.secondSetPointBuyAttributes, respecting the limits of
+	 * maxPoints and maxInvestmentPerAttribute_second.
 	 */
 	public enforceMaximumPointValues_second() {
 		this.pointsAllocatable_second = this.maxPointsTotal;
@@ -173,6 +189,14 @@ export class PointBuyComponent implements OnInit {
 		});
 	}
 
+	/**
+	 * Returns the result of Math.min(left, right).
+	 * Included so the aforementioned method can be called from this component's
+	 * HTML.
+	 *
+	 * @param left Number to compare to right
+	 * @param right Number to compare to left
+	 */
 	public minimum(left: number, right: number) {
 		return Math.min(left, right);
 	}
