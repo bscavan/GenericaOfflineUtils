@@ -44,7 +44,9 @@
 				min="0" max="{{this.firstSetPointBuyArray[i] + this.pointsAllocatable_first}}">
 			</tr>
 			<tr class="attribute-bar">
-				{{characterFocus.secondSetPointBuyAttributes.get(current)}}
+				<input type="number" (change)="updateAllocatablePoints_second(current, i)"
+				[(ngModel)]="this.secondSetPointBuyArray[i]"
+				min="0" max="{{this.secondSetPointBuyArray[i] + this.pointsAllocatable_second}}">
 			</tr>
 			<tr class="attribute-bar">
 				###

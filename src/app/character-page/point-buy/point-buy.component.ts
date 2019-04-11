@@ -27,6 +27,7 @@ export class PointBuyComponent implements OnInit {
 	public pointsAllocatable_second = this.maxPoints;
 
 	public firstSetPointBuyArray = [];
+	public secondSetPointBuyArray = [];
 
 	@Input() characterFocus: Character;
 
@@ -84,6 +85,53 @@ export class PointBuyComponent implements OnInit {
 		});
 	}
 
+	// FIXME: Refactor these nearly-duplicated methods to something reusable.
+
+	/**
+	 * Updates the value for the provided attribute and matching index in
+	 * secondSetPointBuyArray and characterFocus.secondSetPointBuyAttributes.
+	 * Then calls enforceMaximumPointValues_second.
+	 *
+	 * @param attribute 
+	 * @param index 
+	 */
+	updateAllocatablePoints_second(attribute: Attributes, index: number) {
+		let currentValue = this.secondSetPointBuyArray[index];
+		this.characterFocus.secondSetPointBuyAttributes.set(attribute, currentValue);
+
+		this.enforceMaximumPointValues_second();
+	}
+
+	/**
+	 * Synchronizes the attribute values in secondSetPointBuyArray and
+	 * characterFocus.secondSetPointBuyAttributes, respecting the limit of
+	 * maxPoints.
+	 */
+	public enforceMaximumPointValues_second() {
+		this.pointsAllocatable_second = this.maxPoints;
+
+		this.characterFocus.secondSetPointBuyAttributes.forEach((currentValue, currentKey) => {
+			this.pointsAllocatable_second = this.pointsAllocatable_second - currentValue;
+
+			/*
+			 * If subtracting the current attribute investment from the
+			 * remaining points reduced the remaining points below zero, then
+			 * re-increment that attribute by the difference.
+			 */
+			if(this.pointsAllocatable_second < 0) {
+				let adjustedValue = this.characterFocus.secondSetPointBuyAttributes.get(currentKey)
+					+ this.pointsAllocatable_second;
+				this.characterFocus.secondSetPointBuyAttributes.set(currentKey, adjustedValue);
+
+				this.pointsAllocatable_second = 0;
+				// TODO: Add an early termination here that zeros out the remaining attributes.
+			}
+
+			let currentIndex = this.orderedAttributes.indexOf(currentKey);
+			this.secondSetPointBuyArray[currentIndex] = this.characterFocus.secondSetPointBuyAttributes.get(currentKey);
+		});
+	}
+
 	/**
 	 * Initializes the arrays used for this component.
 	 */
@@ -91,9 +139,11 @@ export class PointBuyComponent implements OnInit {
 		this.allAttributeSets.forEach((currentAttributeSet) => {
 			this.orderedAttributes.push(currentAttributeSet.offensiveAttribute);
 			this.orderedAttributes.push(currentAttributeSet.defensiveAttribute);
-			// This array needs an empty slot for every attribute in orderedAttributes.
+			// This arrays need an empty slot for each attribute in orderedAttributes.
 			this.firstSetPointBuyArray.push(0);
 			this.firstSetPointBuyArray.push(0);
+			this.secondSetPointBuyArray.push(0);
+			this.secondSetPointBuyArray.push(0);
 		});
 	}
 }
