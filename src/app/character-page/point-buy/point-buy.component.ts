@@ -81,6 +81,7 @@ export class PointBuyComponent implements OnInit {
 		this.characterFocus.firstSetPointBuyAttributes.set(attribute, currentValue);
 
 		this.enforceMaximumPointValues_first();
+		this.characterFocus.recalculateAttributes();
 	}
 
 	/**
@@ -135,6 +136,7 @@ export class PointBuyComponent implements OnInit {
 		this.characterFocus.secondSetPointBuyAttributes.set(attribute, currentValue);
 
 		this.enforceMaximumPointValues_second();
+		this.characterFocus.recalculateAttributes();
 	}
 
 	/**

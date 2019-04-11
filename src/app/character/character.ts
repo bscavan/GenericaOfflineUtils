@@ -20,7 +20,6 @@ export class Character {
 	adventuringJobLevels: [{job: AdventuringJob, level: number}];
 	craftingJobLevels: [{job: CraftingJob, level: number}];
 
-	// TODO: Add steps to recalculateAttributes() to add these values in to the total.
 	protected baseAttributes: Map<Attributes, number> = new Map();
 	public initialRandomAttributes: Map<Attributes, number> = new Map();
 	public firstSetPointBuyAttributes: Map<Attributes, number> = new Map();
@@ -284,7 +283,7 @@ export class Character {
 		});
 	}
 
-	private recalculateAttributes() {
+	public recalculateAttributes() {
 		this.baseAttributes = new Map();
 		this.totalAttributes = new Map();
 
@@ -324,6 +323,10 @@ export class Character {
 		this.addRacialJobLevelsToDefenses(this.totalDefenses);
 		this.addJobLevelsToDefenses(this.totalDefenses, this.adventuringJobLevels);
 		this.addJobLevelsToDefenses(this.totalDefenses, this.craftingJobLevels);
+
+		this.addAttributeSetsTogether(this.totalAttributes, this.initialRandomAttributes);
+		this.addAttributeSetsTogether(this.totalAttributes, this.firstSetPointBuyAttributes);
+		this.addAttributeSetsTogether(this.totalAttributes, this.secondSetPointBuyAttributes);
 
 		// Adding base attributes to totals
 		this.addAttributeSetsTogether(this.totalAttributes, this.baseAttributes);
