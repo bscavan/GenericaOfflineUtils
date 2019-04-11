@@ -41,12 +41,12 @@
 			<tr class="attribute-bar">
 				<input type="number" (change)="updateAllocatablePoints_first(current, i)"
 				[(ngModel)]="this.firstSetPointBuyArray[i]"
-				min="0" max="{{this.firstSetPointBuyArray[i] + this.pointsAllocatable_first}}">
+				min="0" max="{{minimum(this.firstSetPointBuyArray[i] + this.pointsAllocatable_first, this.maxInvestmentPerAttribute_first)}}">
 			</tr>
 			<tr class="attribute-bar">
 				<input type="number" (change)="updateAllocatablePoints_second(current, i)"
 				[(ngModel)]="this.secondSetPointBuyArray[i]"
-				min="0" max="{{this.secondSetPointBuyArray[i] + this.pointsAllocatable_second}}">
+				min="0" max="{{minimum(this.secondSetPointBuyArray[i] + this.pointsAllocatable_second, this.maxInvestmentPerAttribute_second)}}">
 			</tr>
 			<tr class="attribute-bar">
 				###

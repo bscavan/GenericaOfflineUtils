@@ -12,19 +12,31 @@ export class PointBuyComponent implements OnInit {
 	public allAttributeSets: Map<AttributeType, AttributeSet>;
 
 	public orderedAttributes: Attributes[] = [];
-	public readonly maxPoints = 50;
+	public readonly maxPointsTotal = 50;
+
+	/*
+	 * In the alpha rules, there are no percentage limits on the first set of
+	 * attribute investments.
+	 */
+	public readonly maxInvestmentPerAttribute_first = this.maxPointsTotal;
+	
+	/*
+	 * In the alpha rules, the second set of attribute investments imposes a
+	 * cap of 10 points max per attribute.
+	 */
+	public readonly maxInvestmentPerAttribute_second = 10;
 
 	/**
 	 * The number of points the characterFocus still has available for investing
 	 * into their attributes out of their first round of investments.
 	 */
-	public pointsAllocatable_first = this.maxPoints;
+	public pointsAllocatable_first = this.maxPointsTotal;
 
 	/**
 	 * The number of points the characterFocus still has available for investing
 	 * into their attributes out of their second round of investments.
 	 */
-	public pointsAllocatable_second = this.maxPoints;
+	public pointsAllocatable_second = this.maxPointsTotal;
 
 	public firstSetPointBuyArray = [];
 	public secondSetPointBuyArray = [];
@@ -61,9 +73,16 @@ export class PointBuyComponent implements OnInit {
 	 * maxPoints.
 	 */
 	public enforceMaximumPointValues_first() {
-		this.pointsAllocatable_first = this.maxPoints;
+		this.pointsAllocatable_first = this.maxPointsTotal;
 
 		this.characterFocus.firstSetPointBuyAttributes.forEach((currentValue, currentKey) => {
+			// First check if the individual attribute limit has been exceeded.
+			if(currentValue > this.maxInvestmentPerAttribute_first) {
+				// If it has, then this attribute will be set to the limit.
+				this.characterFocus.firstSetPointBuyAttributes.set(currentKey, this.maxInvestmentPerAttribute_first);
+				currentValue = this.maxInvestmentPerAttribute_first;
+			}
+
 			this.pointsAllocatable_first = this.pointsAllocatable_first - currentValue;
 
 			/*
@@ -108,9 +127,16 @@ export class PointBuyComponent implements OnInit {
 	 * maxPoints.
 	 */
 	public enforceMaximumPointValues_second() {
-		this.pointsAllocatable_second = this.maxPoints;
+		this.pointsAllocatable_second = this.maxPointsTotal;
 
 		this.characterFocus.secondSetPointBuyAttributes.forEach((currentValue, currentKey) => {
+			// First check if the individual attribute limit has been exceeded.
+			if(currentValue > this.maxInvestmentPerAttribute_second) {
+				// If it has, then this attribute will be set to the limit.
+				this.characterFocus.secondSetPointBuyAttributes.set(currentKey, this.maxInvestmentPerAttribute_second);
+				currentValue = this.maxInvestmentPerAttribute_second;
+			}
+
 			this.pointsAllocatable_second = this.pointsAllocatable_second - currentValue;
 
 			/*
@@ -145,5 +171,9 @@ export class PointBuyComponent implements OnInit {
 			this.secondSetPointBuyArray.push(0);
 			this.secondSetPointBuyArray.push(0);
 		});
+	}
+
+	public minimum(left: number, right: number) {
+		return Math.min(left, right);
 	}
 }
