@@ -20,6 +20,7 @@ export class Character {
 	adventuringJobLevels: [{job: AdventuringJob, level: number}];
 	craftingJobLevels: [{job: CraftingJob, level: number}];
 
+	// TODO: Add steps to recalculateAttributes() to add these values in to the total.
 	protected baseAttributes: Map<Attributes, number> = new Map();
 	public initialRandomAttributes: Map<Attributes, number> = new Map();
 	public firstSetPointBuyAttributes: Map<Attributes, number> = new Map();

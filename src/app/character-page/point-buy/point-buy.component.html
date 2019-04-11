@@ -30,41 +30,42 @@
 
 		TODO: Determine if I actually need the Total section...
 	 -->
-	<span *ngFor="let current of this.orderedAttributes">
+	<span *ngFor="let current of this.orderedAttributes; let i = index">
 		<td>
 			<tr class="attribute-bar">
-				{{current.offensiveAttribute}}
+				{{current}}
 			</tr>
 			<tr class="attribute-bar">
-				{{characterFocus.initialRandomAttributes.get(current.offensiveAttribute)}}
+				{{this.characterFocus.initialRandomAttributes.get(current)}}
 			</tr>
 			<tr class="attribute-bar">
-				{{characterFocus.firstSetPointBuyAttributes.get(current.offensiveAttribute)}}
+				<input type="number" (change)="updateAllocatablePoints_first(current, i)"
+				[(ngModel)]="this.firstSetPointBuyArray[i]"
+				min="0" max="{{this.firstSetPointBuyArray[i] + this.pointsAllocatable_first}}">
 			</tr>
 			<tr class="attribute-bar">
-				{{characterFocus.secondSetPointBuyAttributes.get(current.offensiveAttribute)}}
-			</tr>
-			<tr class="attribute-bar">
-				###
-			</tr>
-		</td>
-
-		<td>
-			<tr class="attribute-bar">
-				{{current.defensiveAttribute}}
-			</tr>
-			<tr class="attribute-bar">
-				{{characterFocus.initialRandomAttributes.get(current.defensiveAttribute)}}
-			</tr>
-			<tr class="attribute-bar">
-				{{characterFocus.firstSetPointBuyAttributes.get(current.defensiveAttribute)}}
-			</tr>
-			<tr class="attribute-bar">
-				{{characterFocus.secondSetPointBuyAttributes.get(current.defensiveAttribute)}}
+				{{characterFocus.secondSetPointBuyAttributes.get(current)}}
 			</tr>
 			<tr class="attribute-bar">
 				###
 			</tr>
 		</td>
 	</span>
+	<td>
+		<tr>
+			&nbsp;
+		</tr>
+		<tr>
+			&nbsp;
+		</tr>
+		<tr>
+			points remaining: {{this.pointsAllocatable_first}}
+		</tr>
+		<tr>
+			points remaining: {{this.pointsAllocatable_second}}
+		</tr>
+		<tr>
+			&nbsp;
+		</tr>
+	</td>
 </table>
