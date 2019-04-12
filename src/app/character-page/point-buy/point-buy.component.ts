@@ -70,7 +70,9 @@ export class PointBuyComponent implements OnInit {
 	ngOnInit() {
 		this.allAttributeSets = AttributeKeys.getAttributeSets();
 		this.initializeArrays();
-		this.reroll();
+		this.loadFirstPointBuyAttributesSectionFromCharacter();
+		this.loadSecondPointBuyAttributesSectionFromCharacter();
+		this.loadRandomAttributesSectionFromCharacter();
 	}
 
 	/**
@@ -234,6 +236,34 @@ export class PointBuyComponent implements OnInit {
 			this.secondSetPointBuyArray.push(0);
 			this.randomAttributes.push(0);
 			this.randomAttributes.push(0);
+		});
+	}
+
+	/*
+	 * Note: These loading methods require that every attribute represented in
+	 * characterFocus.initialRandomAttributes is present in this.orderedAttributes
+	 * and that the indices they occur at correspond to the correct slots in
+	 * firstSetPointBuyAttributes, secondSetPointBuyAttributes, and
+	 * randomAttributes.
+	 */
+	public loadFirstPointBuyAttributesSectionFromCharacter() {
+		this.characterFocus.firstSetPointBuyAttributes.forEach((currentValue, currentKey) => {
+			let currentIndex = this.orderedAttributes.indexOf(currentKey);
+			this.firstSetPointBuyArray[currentIndex] = currentValue;
+		});
+	}
+
+	public loadSecondPointBuyAttributesSectionFromCharacter() {
+		this.characterFocus.secondSetPointBuyAttributes.forEach((currentValue, currentKey) => {
+			let currentIndex = this.orderedAttributes.indexOf(currentKey);
+			this.secondSetPointBuyArray[currentIndex] = currentValue;
+		});
+	}
+
+	public loadRandomAttributesSectionFromCharacter() {
+		this.characterFocus.initialRandomAttributes.forEach((currentValue, currentKey) => {
+			let currentIndex = this.orderedAttributes.indexOf(currentKey);
+			this.randomAttributes[currentIndex] = currentValue;
 		});
 	}
 
