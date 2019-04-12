@@ -1,5 +1,6 @@
 import { Job } from "../job";
 import { Attributes, Defenses, Pools } from "../attribute-keys";
+import { SerializationUtil } from "../serialization-util";
 
 export class RacialJob extends Job {
 	protected baseAttributes: Set<{affectedAttribute: Attributes, baseValue: number}>;
@@ -51,5 +52,29 @@ export class RacialJob extends Job {
 
 	public getBaseDefenses() {
 		return this.baseDefenses;
+	}
+
+	public serializeToJSON() {
+		let json = super.serializeToJSON();
+
+		json["baseAttributes"] = SerializationUtil.serializeBaseAttributesSet(this.baseAttributes);
+		json["baseDefenses"] = SerializationUtil.serializeBaseDefensesSet(this.baseDefenses);
+		json["numberOfsupplementalRacialJobSlots"] = this.numberOfsupplementalRacialJobSlots;
+		json["numberOfAdventuringJobSlots"] = this.numberOfAdventuringJobSlots;
+		json["numberOfCraftingJobSlots"] = this.numberOfCraftingJobSlots;
+		json["canBeSupplementalJob"] = this.canBeSupplementalJob;
+
+		return json;
+	}
+
+	public deserializeFromJSON(json) {
+		super.deserializeFromJSON(json);
+
+		this.baseAttributes = SerializationUtil.deserializeBaseAttributesSet(json.baseAttributes);
+		this.baseDefenses = SerializationUtil.deserializeBaseDefensesSet(json.baseDefenses);
+		this.numberOfsupplementalRacialJobSlots = json.numberOfsupplementalRacialJobSlots;
+		this.numberOfAdventuringJobSlots = json.numberOfAdventuringJobSlots;
+		this.numberOfCraftingJobSlots = json.numberOfCraftingJobSlots;
+		this.canBeSupplementalJob = json.canBeSupplementalJob;
 	}
 }

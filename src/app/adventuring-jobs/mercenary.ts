@@ -16,9 +16,9 @@ export class Mercenary extends AdventuringJob {
 	// TODO: Refactor these into static methods?
 	public static generateMercenaryJob(): AdventuringJob {
 		let attributesSet = new Set<{affectedAttribute: Attributes, pointsPerLevel: number}>();
-		attributesSet.add({affectedAttribute: Attributes.STRENGTH, pointsPerLevel: 3});
-		attributesSet.add({affectedAttribute: Attributes.DEXTERITY, pointsPerLevel: 3});
-		attributesSet.add({affectedAttribute: Attributes.PERCEPTION, pointsPerLevel: 3});
+		attributesSet.add({affectedAttribute: Attributes.STR, pointsPerLevel: 3});
+		attributesSet.add({affectedAttribute: Attributes.DEX, pointsPerLevel: 3});
+		attributesSet.add({affectedAttribute: Attributes.PER, pointsPerLevel: 3});
 
 		let mercenary = new AdventuringJob("Mercenary", attributesSet);
 

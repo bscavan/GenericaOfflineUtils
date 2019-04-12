@@ -1,40 +1,66 @@
 import { AttributeSet } from "./attribute-set";
 
 export enum Attributes {
-    STRENGTH = "STR",
-    CONSTITUTION = "CON",
-    INTELLIGENCE = "INT",
-    WISDOM = "WIS",
-    DEXTERITY = "DEX",
-    AGILITY = "AGL",
-    CHARISMA = "CHA",
-    WILL = "WILL",
-    PERCEPTION = "PER",
-    LUCK = "LUCK",
+	/*
+	STRENGTH = "STR",
+	CONSTITUTION = "CON",
+	INTELLIGENCE = "INT",
+	WISDOM = "WIS",
+	DEXTERITY = "DEX",
+	AGILITY = "AGL",
+	CHARISMA = "CHA",
+	WILL = "WILL",
+	PERCEPTION = "PER",
+	LUCK = "LUCK",
+	 */
+	STR = "STR",
+	CON = "CON",
+	INT = "INT",
+	WIS = "WIS",
+	DEX = "DEX",
+	AGL = "AGL",
+	CHA = "CHA",
+	WILL = "WILL",
+	PER = "PER",
+	LUCK = "LUCK",
 }
 
 export enum Pools {
-    HEALTH_POINTS = "HP",
-    SANITY = "SAN",
-    STAMINA = "STA",
-    MOXIE = "MOX",
-    FORTUNE = "FOR"
+	/*
+	HEALTH_POINTS = "HP",
+	SANITY = "SAN",
+	STAMINA = "STA",
+	MOXIE = "MOX",
+	FORTUNE = "FOR"
+	 */
+	HP = "HP",
+	SAN = "SAN",
+	STA = "STA",
+	MOX = "MOX",
+	FOR = "FOR"
 }
 
 export enum Defenses {
-    ARMOR = "ARM",
-    MENTAL_FORTITUDE = "MF",
-    ENDURANCE = "END",
-    COOL = "COOL",
-    FATE = "FATE"
+	/*
+	ARMOR = "ARM",
+	MENTAL_FORTITUDE = "MF",
+	ENDURANCE = "END",
+	COOL = "COOL",
+	FATE = "FATE"
+	 */
+	ARM = "ARM",
+	MFORT = "MFORT",
+	END = "END",
+	COOL = "COOL",
+	FATE = "FATE"
 }
 
 export enum AttributeType {
-	PHYSICAL = "Physical",
-	MENTAL = "Mental",
-	GUMPTION = "Gumption",
-	SOCIAL = "Social",
-	EXISTENTIAL = "Existential"
+	PHYSICAL = "PHYSICAL",
+	MENTAL = "MENTAL",
+	GUMPTION = "GUMPTION",
+	SOCIAL = "SOCIAL",
+	EXISTENTIAL = "EXISTENTIAL"
 }
 
 export class AttributeKeys
@@ -48,16 +74,16 @@ export class AttributeKeys
 
 		this.attributeSets = new Map<AttributeType, AttributeSet>();
 
-		this.attributeSets.set(AttributeType.PHYSICAL, new AttributeSet(AttributeType.PHYSICAL, Attributes.STRENGTH,
-			Attributes.CONSTITUTION, Defenses.ARMOR, Pools.HEALTH_POINTS));
-		this.attributeSets.set(AttributeType.MENTAL, new AttributeSet(AttributeType.MENTAL, Attributes.INTELLIGENCE,
-			Attributes.WISDOM, Defenses.MENTAL_FORTITUDE, Pools.SANITY));
-		this.attributeSets.set(AttributeType.GUMPTION, new AttributeSet(AttributeType.GUMPTION, Attributes.DEXTERITY,
-			Attributes.AGILITY, Defenses.ENDURANCE, Pools.STAMINA));
-		this.attributeSets.set(AttributeType.SOCIAL, new AttributeSet(AttributeType.SOCIAL, Attributes.CHARISMA,
-			Attributes.WILL, Defenses.COOL, Pools.MOXIE));
-		this.attributeSets.set(AttributeType.EXISTENTIAL, new AttributeSet(AttributeType.EXISTENTIAL, Attributes.PERCEPTION,
-			Attributes.LUCK, Defenses.FATE, Pools.FORTUNE));
+		this.attributeSets.set(AttributeType.PHYSICAL, new AttributeSet(AttributeType.PHYSICAL, Attributes.STR,
+			Attributes.CON, Defenses.ARM, Pools.HP));
+		this.attributeSets.set(AttributeType.MENTAL, new AttributeSet(AttributeType.MENTAL, Attributes.INT,
+			Attributes.WIS, Defenses.MFORT, Pools.SAN));
+		this.attributeSets.set(AttributeType.GUMPTION, new AttributeSet(AttributeType.GUMPTION, Attributes.DEX,
+			Attributes.AGL, Defenses.END, Pools.STA));
+		this.attributeSets.set(AttributeType.SOCIAL, new AttributeSet(AttributeType.SOCIAL, Attributes.CHA,
+			Attributes.WILL, Defenses.COOL, Pools.MOX));
+		this.attributeSets.set(AttributeType.EXISTENTIAL, new AttributeSet(AttributeType.EXISTENTIAL, Attributes.PER,
+			Attributes.LUCK, Defenses.FATE, Pools.FOR));
 
 		return this.attributeSets;
 	}

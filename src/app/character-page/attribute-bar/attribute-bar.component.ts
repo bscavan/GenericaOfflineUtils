@@ -17,51 +17,51 @@ export class AttributeBarComponent implements OnInit {
 	}
 
 	public getHP(character: Character): number {
-		return character.getPool(Pools.HEALTH_POINTS);
+		return character.getPool(Pools.HP);
 	}
 
 	public getSanity(character: Character): number {
-		return character.getPool(Pools.SANITY);
+		return character.getPool(Pools.SAN);
 	}
 
 	public getStamina(character: Character): number {
-		return character.getPool(Pools.STAMINA);
+		return character.getPool(Pools.STA);
 	}
 
 	public getMoxie(character: Character): number {
-		return character.getPool(Pools.MOXIE);
+		return character.getPool(Pools.MOX);
 	}
 
 	public getFortune(character: Character): number {
-		return character.getPool(Pools.FORTUNE);
+		return character.getPool(Pools.FOR);
 	}
 
 	public getStrength(character: Character): number {
-		return character.getAttribute(Attributes.STRENGTH);
+		return character.getAttribute(Attributes.STR);
 	}
 
 	public getConstitution(character: Character): number {
-		return character.getAttribute(Attributes.CONSTITUTION);
+		return character.getAttribute(Attributes.CON);
 	}
 
 	public getIntelligence(character: Character): number {
-		return character.getAttribute(Attributes.INTELLIGENCE);
+		return character.getAttribute(Attributes.INT);
 	}
 
 	public getWisdom(character: Character): number {
-		return character.getAttribute(Attributes.WISDOM);
+		return character.getAttribute(Attributes.WIS);
 	}
 
 	public getDexterity(character: Character): number {
-		return character.getAttribute(Attributes.DEXTERITY);
+		return character.getAttribute(Attributes.DEX);
 	}
 
 	public getAgility(character: Character): number {
-		return character.getAttribute(Attributes.AGILITY);
+		return character.getAttribute(Attributes.AGL);
 	}
 
 	public getCharisma(character: Character): number {
-		return character.getAttribute(Attributes.CHARISMA);
+		return character.getAttribute(Attributes.CHA);
 	}
 
 	public getWill(character: Character): number {
@@ -73,6 +73,6 @@ export class AttributeBarComponent implements OnInit {
 	}
 
 	public getPerception(character: Character): number {
-		return character.getAttribute(Attributes.PERCEPTION);
+		return character.getAttribute(Attributes.PER);
 	}
 }

@@ -16,9 +16,9 @@ export class Duelist extends AdventuringJob {
 	// TODO: Refactor these into static methods?
 	public static generateDuelistJob(): AdventuringJob {
 		let attributesSet = new Set<{affectedAttribute: Attributes, pointsPerLevel: number}>();
-		attributesSet.add({affectedAttribute: Attributes.STRENGTH, pointsPerLevel: 3});
-		attributesSet.add({affectedAttribute: Attributes.DEXTERITY, pointsPerLevel: 3});
-		attributesSet.add({affectedAttribute: Attributes.AGILITY, pointsPerLevel: 3});
+		attributesSet.add({affectedAttribute: Attributes.STR, pointsPerLevel: 3});
+		attributesSet.add({affectedAttribute: Attributes.DEX, pointsPerLevel: 3});
+		attributesSet.add({affectedAttribute: Attributes.AGL, pointsPerLevel: 3});
 
 		let duelist = new AdventuringJob("Duelist", attributesSet);
 

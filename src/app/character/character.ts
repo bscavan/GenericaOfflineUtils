@@ -6,7 +6,6 @@ import { CraftingJob } from "../crafting-jobs/crafting-job";
 import { BlankAdventuringJob } from "../adventuring-jobs/blank-adventuring-job";
 import { BlankCraftingJob } from "../crafting-jobs/blank-crafting-job";
 import { BlankRacialJob } from "../racial-jobs/blank-racial-job";
-import { isUndefined } from "util";
 
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
@@ -556,23 +555,27 @@ export class Character {
 			+ "], level: [" + this.primaryRacialJobLevel + "];")
 
 		this.supplementalRacialJobLevels.forEach((currentRace, index) => {
-			console.log("supplemental race " + (index + 1) + "["
-				+ currentRace.job.name + "], level [" + currentRace.level + "] ");
+			if(currentRace.job.name.trim() !== "") {
+				console.log("supplemental race " + (index + 1) + "["
+					+ currentRace.job.name + "], level [" + currentRace.level + "] ");
+			}
 		});
 		console.log("]")
 
-		// FIXME: Prevent BlankAdventuringJob levels from showing up here...
 		console.log("adventuring job levels(s): [");
 		this.adventuringJobLevels.keys();
 		this.adventuringJobLevels.forEach((currentJob) => {
-			console.log("Job: [" + currentJob.job.name + "], level [" + currentJob.level + "] ");
+			if(currentJob.job.name.trim() !== "") {
+				console.log("Job: [" + currentJob.job.name + "], level [" + currentJob.level + "] ");
+			}
 		});
 		console.log("]")
 
-		// FIXME: Prevent BlankCraftingJob levels from showing up here...
 		console.log("crafting job levels(s): [");
 		this.craftingJobLevels.forEach((currentJob) => {
-			console.log("Job: [" + currentJob.job.name + "], level [" + currentJob.level + "] ");
+			if(currentJob.job.name.trim() !== "") {
+				console.log("Job: [" + currentJob.job.name + "], level [" + currentJob.level + "] ");
+			}
 		});
 		console.log("]")
 	}

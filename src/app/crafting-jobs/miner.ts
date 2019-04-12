@@ -15,8 +15,8 @@ export class Miner extends CraftingJob {
 	// TODO: Refactor these into static methods?
 	public static generateMinerJob(): CraftingJob {
 		let attributesSet = new Set<{affectedAttribute: Attributes, pointsPerLevel: number}>();
-		attributesSet.add({affectedAttribute: Attributes.DEXTERITY, pointsPerLevel: 1});
-		attributesSet.add({affectedAttribute: Attributes.STRENGTH, pointsPerLevel: 1});
+		attributesSet.add({affectedAttribute: Attributes.DEX, pointsPerLevel: 1});
+		attributesSet.add({affectedAttribute: Attributes.STR, pointsPerLevel: 1});
 
 		let miner = new CraftingJob("Miner", attributesSet);
 
