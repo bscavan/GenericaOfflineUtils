@@ -44,6 +44,12 @@ export class PointBuyComponent implements OnInit {
 	public pointsAllocatable_second = this.maxPointsTotal;
 
 	/**
+	 * Local collection of the 2d10 points a character receives in each
+	 * attribute during character creation.
+	 */
+	public randomAttributes = [];
+
+	/**
 	 * Local collection of attribute investment data for characterFocus's first
 	 * point-buy section of character generation. Each element corresponds to
 	 * the Attribute element in orderedAttributes with the matching index.
@@ -64,9 +70,8 @@ export class PointBuyComponent implements OnInit {
 	ngOnInit() {
 		this.allAttributeSets = AttributeKeys.getAttributeSets();
 		this.initializeArrays();
+		this.reroll();
 	}
-
-	// TODO: make a local set of attributes we're tracking characterFocus.initialRandomAttributes and manage it here.
 
 	/**
 	 * Updates the value for the provided attribute and matching index in
@@ -176,6 +181,45 @@ export class PointBuyComponent implements OnInit {
 		});
 	}
 
+	/*
+	 * TODO: Consider
+	 * A) allowing players to manually enter these values, or
+	 * B) rolling all 10 of them, and letting players manually assign them
+	 * via drag-and-drop.
+	 */
+	/**
+	 * Sets each element in randomAttributes to a random number equal to the
+	 * result of two ten-sided dice rolls (aka: 2d10).
+	 */
+	public reroll() {
+		for(let index = 0; index < this.randomAttributes.length; index++) {
+			this.randomAttributes[index] = this.oneToTen() + this.oneToTen();
+		}
+
+		this.propagateRerollToCharacter();
+	}
+
+	/**
+	 * Overwrites the values in characterFocus.initialRandomAttributes with the
+	 * new values in randomAttributes, and then updates the total attributes on
+	 * characterFocus by calling characterFocus.recalculateAttributes().
+	 */
+	public propagateRerollToCharacter() {
+		this.characterFocus.initialRandomAttributes.forEach((currentValue, currentKey) => {
+			let currentIndex = this.orderedAttributes.indexOf(currentKey);
+			this.characterFocus.initialRandomAttributes.set(currentKey, this.randomAttributes[currentIndex]);
+		});
+
+		this.characterFocus.recalculateAttributes();
+	}
+
+	/**
+	 * Returns a random number between 1 and 10.
+	 */
+	private oneToTen(): number {
+		return Math.floor(Math.random() * 10) + 1;
+	}
+
 	/**
 	 * Initializes the arrays used for this component.
 	 */
@@ -183,11 +227,13 @@ export class PointBuyComponent implements OnInit {
 		this.allAttributeSets.forEach((currentAttributeSet) => {
 			this.orderedAttributes.push(currentAttributeSet.offensiveAttribute);
 			this.orderedAttributes.push(currentAttributeSet.defensiveAttribute);
-			// This arrays need an empty slot for each attribute in orderedAttributes.
+			// These arrays require empty slots for each attribute in orderedAttributes.
 			this.firstSetPointBuyArray.push(0);
 			this.firstSetPointBuyArray.push(0);
 			this.secondSetPointBuyArray.push(0);
 			this.secondSetPointBuyArray.push(0);
+			this.randomAttributes.push(0);
+			this.randomAttributes.push(0);
 		});
 	}
 
