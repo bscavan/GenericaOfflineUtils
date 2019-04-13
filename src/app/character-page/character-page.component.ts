@@ -4,6 +4,11 @@ import { Races } from '../racial-jobs/races';
 import { AdventuringJobs } from '../adventuring-jobs/adventuring-jobs';
 import { Professions } from '../crafting-jobs/professions';
 import { RacialJob } from '../racial-jobs/racial-job';
+import { CharacterSerializer } from '../character/character-serializer';
+import { Job } from '../job';
+import { Peskie } from '../racial-jobs/peskie';
+import { Pools } from '../attribute-keys';
+import { BlankRacialJob } from '../racial-jobs/blank-racial-job';
 
 
 @Component({
@@ -39,5 +44,27 @@ export class CharacterPageComponent implements OnInit {
 			items.push(i);
 		}
 		return items;
+	}
+
+	// Manual testing code for seriailization.
+	public serialize() {
+		/*
+		// TODO: Put these into a unit-test.
+		let serializer = new CharacterSerializer();
+		console.log(serializer.serialize(this.characterFocus));
+
+		let moddedPeskieRace = Peskie.getPeskieRace();
+		moddedPeskieRace.basePools.add({affectedPool: Pools.HP, baseValue: 7});
+		let serializedPeskieJob = moddedPeskieRace.serializeToJSON();
+		console.log(serializedPeskieJob);
+
+		let pesudoPeskieJob: RacialJob = BlankRacialJob.getBlankRacialJob();
+		pesudoPeskieJob.deserializeFromJSON(serializedPeskieJob);
+		*/
+		let serializedJaxby = this.characterFocus.serializeToJSON();
+
+		console.log(serializedJaxby);
+
+		this.characterFocus.deserializeFromJSON(serializedJaxby);
 	}
 }

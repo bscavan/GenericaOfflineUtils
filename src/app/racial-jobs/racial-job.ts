@@ -67,7 +67,7 @@ export class RacialJob extends Job {
 		return json;
 	}
 
-	public deserializeFromJSON(json) {
+	public deserializeFromJSON(json): RacialJob {
 		super.deserializeFromJSON(json);
 
 		this.baseAttributes = SerializationUtil.deserializeBaseAttributesSet(json.baseAttributes);
@@ -76,5 +76,7 @@ export class RacialJob extends Job {
 		this.numberOfAdventuringJobSlots = json.numberOfAdventuringJobSlots;
 		this.numberOfCraftingJobSlots = json.numberOfCraftingJobSlots;
 		this.canBeSupplementalJob = json.canBeSupplementalJob;
+
+		return this;
 	}
 }

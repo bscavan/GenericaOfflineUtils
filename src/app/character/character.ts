@@ -6,6 +6,7 @@ import { CraftingJob } from "../crafting-jobs/crafting-job";
 import { BlankAdventuringJob } from "../adventuring-jobs/blank-adventuring-job";
 import { BlankCraftingJob } from "../crafting-jobs/blank-crafting-job";
 import { BlankRacialJob } from "../racial-jobs/blank-racial-job";
+import { SerializationUtil } from "../serialization-util";
 
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
@@ -58,6 +59,12 @@ export class Character {
 		this.supplementalRacialJobLevels = supplementalRacialJobLevels
 		this.adventuringJobLevels = adventuringJobLevels;
 		this.craftingJobLevels = craftingJobLevels;
+
+		this.increasesToAttributes = new Map<string, {targetAttribute: Attributes; value: number}>();
+		this.decreasesToAttributes = new Map<string, {targetAttribute: Attributes; value: number}>();
+		this.buffsToAttributes = new Map<string, {targetAttribute: Attributes; value: number}>();
+		this.debuffsToAttributes = new Map<string, {targetAttribute: Attributes; value: number}>();
+
 		this.enforceJobSlotLimits();
 		this.initializeCharacterGenAttributes();
 		// TODO: Add support for setting character gen attributes in this constructor?
@@ -578,5 +585,190 @@ export class Character {
 			}
 		});
 		console.log("]")
+	}
+
+	// TODO: Migrate all of these serialization methods into a helper class.
+	public serializeJobItemArray(JobItemsArray) {
+		let jobsJsonArray = [];
+
+		JobItemsArray.forEach((currentJob) => {
+			jobsJsonArray.push({job: currentJob.job.serializeToJSON(), level: currentJob.level})
+		});
+
+		return jobsJsonArray;
+	}
+
+	public deserializeAdventuringJobItemArray(json) {
+		let jobItemsArray: [{job: AdventuringJob, level: number}] = [{job: null, level: null}];
+		jobItemsArray.pop();
+
+		for(let currentIndex in json) {
+			let currentJobJson = json[currentIndex];
+			let currentJob = BlankAdventuringJob.generateBlankAdventuringJob();
+			currentJob.deserializeFromJSON(currentJobJson.job);
+			jobItemsArray.push({job: currentJob, level: currentJobJson.level});;
+		}
+
+		return jobItemsArray;
+	}
+
+	public deserializeCraftingJobItemArray(json) {
+		let jobItemsArray: [{job: CraftingJob, level: number}] = [{job: null, level: null}];
+		jobItemsArray.pop();
+
+		for(let currentIndex in json) {
+			let currentJobJson = json[currentIndex];
+			let currentJob = BlankCraftingJob.generateBlankCraftingJob();
+			currentJob.deserializeFromJSON(currentJobJson.job);
+			jobItemsArray.push({job: currentJob, level: currentJobJson.level});;
+		}
+
+		return jobItemsArray;
+	}
+
+	public deserializeRacialJobItemArray(json) {
+		let jobItemsArray: [{job: RacialJob, level: number}] = [{job: null, level: null}];
+		jobItemsArray.pop();
+
+		for(let currentIndex in json) {
+			let currentJobJson = json[currentIndex];
+			let currentJob = BlankRacialJob.generateBlankRacialJob();
+			currentJob.deserializeFromJSON(currentJobJson.job);
+			jobItemsArray.push({job: currentJob, level: currentJobJson.level});
+		}
+
+		return jobItemsArray;
+	}
+
+	public serializeAdjustmentMap(attributeAdjustmentMap: Map<string, {targetAttribute: Attributes; value: number}>) {
+		let json = {};
+
+		attributeAdjustmentMap.forEach((currentValue, currentKey) =>{
+			json[currentKey] =
+			{
+				targetAttribute: currentValue.targetAttribute.toString(),
+				value: currentValue.value
+			}
+		});
+
+		return json;
+	}
+
+	public deserializeAdjustmentMap(attributeAdjustmentJson) {
+		let attributeAdjustmentMap : Map<string, {targetAttribute: Attributes; value: number}> = new Map();
+
+		for(let adjustmentKey in attributeAdjustmentJson) {
+			let currentAdjustmentJson = attributeAdjustmentJson[adjustmentKey];
+			let attributeKey = currentAdjustmentJson.targetAttribute;
+
+			// This is a means of converting a string into the matching enum type.
+			let attributeValue: Attributes = (<any>Attributes)[attributeKey];
+
+			attributeAdjustmentMap.set(adjustmentKey, {targetAttribute: attributeValue, value: currentAdjustmentJson.value});
+		}
+
+		return attributeAdjustmentMap;
+	}
+
+	public serializeToJSON() {
+		let json = {};
+
+		json["name"] = this.name;
+		json["title"] = this.title;
+		json["primaryRacialJob"] = this.primaryRacialJob.serializeToJSON();
+		json["primaryRacialJobLevel"] = this.primaryRacialJobLevel;
+
+		json["supplementalRacialJobLevels"] = this.serializeJobItemArray(this.supplementalRacialJobLevels);
+		json["adventuringJobLevels"] = this.serializeJobItemArray(this.adventuringJobLevels);
+		json["craftingJobLevels"] = this.serializeJobItemArray(this.craftingJobLevels);
+
+		json["baseAttributes"] = SerializationUtil.serializeMap(this.baseAttributes);
+		json["initialRandomAttributes"] = SerializationUtil.serializeMap(this.initialRandomAttributes);
+		json["firstSetPointBuyAttributes"] = SerializationUtil.serializeMap(this.firstSetPointBuyAttributes);
+		json["secondSetPointBuyAttributes"] = SerializationUtil.serializeMap(this.secondSetPointBuyAttributes);
+		json["totalAttributes"] = SerializationUtil.serializeMap(this.totalAttributes);
+
+		json["baseDefenses"] = SerializationUtil.serializeMap(this.baseDefenses);
+		json["totalDefenses"] = SerializationUtil.serializeMap(this.totalDefenses);
+
+		json["basePools"] = SerializationUtil.serializeMap(this.basePools);
+		json["totalPools"] = SerializationUtil.serializeMap(this.totalPools);
+
+		json["increasesToAttributes"] = this.serializeAdjustmentMap(this.increasesToAttributes);
+		json["decreasesToAttributes"] = this.serializeAdjustmentMap(this.decreasesToAttributes);
+
+		json["buffsToAttributes"] = this.serializeAdjustmentMap(this.buffsToAttributes);
+		json["debuffsToAttributes"] = this.serializeAdjustmentMap(this.debuffsToAttributes);
+
+		return json;
+	}
+
+	/*
+	 * FIXME: When I deserialize from Json, it creates new Job objects. Because
+	 * of this the character's currently selected jobs don't match the exact
+	 * objects in the CharacterPage component (the ones in allRacialJobs,
+	 * allAdventuringJobs, and allCraftingJobs), and so the dropdown options
+	 * stay unselected because the values don't match.
+	 *
+	 * This problem is why I initially migrated away from using the
+	 * generate...Job() methods in the Job subclasses and moved to the
+	 * get...Job() methods that return a single, static instance of the job.
+	 *
+	 * To handle this, the next step will probably be to handle deserializing
+	 * Jobs through the classes that already maintain the collection of jobs.
+	 * Namely, Races, AdventuringJobs, and Professions. A static method added
+	 * to each of those classes could handle instantiating a new (blank) Job
+	 * object, populating it with the values pulled from the JSON, and then
+	 * determining if the job already exists. If it does then the existing one
+	 * is returned. Otherwise the new one is added.
+	 *
+	 * If I move in this direction, it would probably be for the best to make
+	 * those classes the central means of accessing Job objects. Rather than
+	 * writing Peskie.getPeskieJob(), it would need to be:
+	 * RacialJobs.getJob("Peskie")
+	 *
+	 * Note: Handling job deserialization in this way will also make importing
+	 * new jobs from user-uploaded JSON simpler. As there are plans for making
+	 * a page where the user can define jobs and download them as JSON, this is
+	 * desirable.
+	 */
+	public deserializeFromJSON(json) {
+		this.name = json.name;
+		this.title = json.title;
+
+		let racialJob = BlankRacialJob.getBlankRacialJob();
+		racialJob.deserializeFromJSON(json.primaryRacialJob);
+		this.primaryRacialJob = racialJob;
+		this.primaryRacialJobLevel = json.primaryRacialJobLevel;
+
+		this.supplementalRacialJobLevels = this.deserializeRacialJobItemArray(json.supplementalRacialJobLevels);
+		this.adventuringJobLevels = this.deserializeAdventuringJobItemArray(json.adventuringJobLevels);
+		this.craftingJobLevels = this.deserializeCraftingJobItemArray(json.craftingJobLevels);
+
+		// Do I actually need to deserialize baseAttributes, totalAttributes, baseDefenses, totalDefenses, basePools or totalPools?
+		// I could probably just call recalculateAttributes()...
+		//json["baseAttributes"] = SerializationUtil.serializeMap(this.baseAttributes);
+
+		this.initialRandomAttributes = SerializationUtil.deserializeAttributesMap(json.initialRandomAttributes);
+		this.firstSetPointBuyAttributes = SerializationUtil.deserializeAttributesMap(json.firstSetPointBuyAttributes);
+		this.secondSetPointBuyAttributes = SerializationUtil.deserializeAttributesMap(json.secondSetPointBuyAttributes);
+
+		/*
+		json["totalAttributes"] = SerializationUtil.serializeMap(this.totalAttributes);
+
+		json["baseDefenses"] = SerializationUtil.serializeMap(this.baseDefenses);
+		json["totalDefenses"] = SerializationUtil.serializeMap(this.totalDefenses);
+
+		json["basePools"] = SerializationUtil.serializeMap(this.basePools);
+		json["totalPools"] = SerializationUtil.serializeMap(this.totalPools);
+		*/
+
+		this.increasesToAttributes = this.deserializeAdjustmentMap(json.increasesToAttributes);
+		this.decreasesToAttributes = this.deserializeAdjustmentMap(json.decreasesToAttributes);
+
+		this.buffsToAttributes = this.deserializeAdjustmentMap(this.buffsToAttributes);
+		this.debuffsToAttributes = this.deserializeAdjustmentMap(this.debuffsToAttributes);
+
+		this.recalculateAttributes();
 	}
 }

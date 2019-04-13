@@ -4,6 +4,7 @@ import { Attributes } from "../attribute-keys";
 export class BlankAdventuringJob extends AdventuringJob {
 	private static blankAdventuringJob = null;
 
+	// FIXME: This produces a single instance of the "blank" job, that anyone can edit and change for everyone...
 	public static getBlankAdventuringJob(): AdventuringJob {
 		if(this.blankAdventuringJob == null) {
 			this.blankAdventuringJob = this.generateBlankAdventuringJob();

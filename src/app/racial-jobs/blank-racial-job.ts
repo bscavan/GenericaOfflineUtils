@@ -4,6 +4,7 @@ import { RacialJob } from "./racial-job";
 export class BlankRacialJob extends RacialJob {
 	private static blankRace = null;
 
+		// FIXME: This produces a single instance of the "blank" job, that anyone can edit and change for everyone...
 	public static getBlankRacialJob(): RacialJob {
 		if(this.blankRace == null) {
 			this.blankRace = this.generateBlankRacialJob();
@@ -13,7 +14,7 @@ export class BlankRacialJob extends RacialJob {
 	}
 
 	// TODO: Refactor these into static helper-methods?
-	private static generateBlankRacialJob(): RacialJob {
+	public static generateBlankRacialJob(): RacialJob {
 		let baseAttributes = new Set<{affectedAttribute: Attributes, baseValue: number}>();
 
 		let attributesSet = new Set<{affectedAttribute: Attributes, pointsPerLevel: number}>();

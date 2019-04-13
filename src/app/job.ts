@@ -28,10 +28,12 @@ export class Job {
 		return json;
 	}
 
-	public deserializeFromJSON(json) {
+	public deserializeFromJSON(json): Job {
 		this.name = json.name;
 		this.affectedAttributes = SerializationUtil.deserializeAttributesSet(json.affectedAttributes);
-		this.affectedDefenses = SerializationUtil.deserializeDefensesSet(json.affectedDefenses)
-		this.basePools = SerializationUtil.deserializePoolsSet(json.basePools)
+		this.affectedDefenses = SerializationUtil.deserializeDefensesSet(json.affectedDefenses);
+		this.basePools = SerializationUtil.deserializePoolsSet(json.basePools);
+
+		return this;
 	}
 }
