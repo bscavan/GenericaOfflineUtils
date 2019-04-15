@@ -4,11 +4,13 @@ import { Races } from '../racial-jobs/races';
 import { AdventuringJobs } from '../adventuring-jobs/adventuring-jobs';
 import { Professions } from '../crafting-jobs/professions';
 import { RacialJob } from '../racial-jobs/racial-job';
-import { CharacterSerializer } from '../character/character-serializer';
+import * as FileSaver from 'file-saver';
 import { Job } from '../job';
 import { Peskie } from '../racial-jobs/peskie';
 import { Pools } from '../attribute-keys';
 import { BlankRacialJob } from '../racial-jobs/blank-racial-job';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 
 @Component({
@@ -50,9 +52,6 @@ export class CharacterPageComponent implements OnInit {
 	public serialize() {
 		/*
 		// TODO: Put these into a unit-test.
-		let serializer = new CharacterSerializer();
-		console.log(serializer.serialize(this.characterFocus));
-
 		let moddedPeskieRace = Peskie.getPeskieRace();
 		moddedPeskieRace.basePools.add({affectedPool: Pools.HP, baseValue: 7});
 		let serializedPeskieJob = moddedPeskieRace.serializeToJSON();
@@ -66,5 +65,16 @@ export class CharacterPageComponent implements OnInit {
 		console.log(serializedJaxby);
 
 		this.characterFocus.deserializeFromJSON(serializedJaxby);
+	}
+
+	public save() {
+		let filename = "character.save"
+		let characterJson = this.characterFocus.serializeToJSON()
+		characterJson = JSON.stringify(characterJson);
+		let characterJsonArray = [];
+		characterJsonArray.push(characterJson);
+
+		let blob = new Blob(characterJsonArray, {type: 'text/plain' });
+		FileSaver.saveAs(blob, filename);
 	}
 }

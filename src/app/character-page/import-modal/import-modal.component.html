@@ -1,0 +1,17 @@
+<ng-template #content let-c="close" let-d="dismiss">
+	<div>
+		<h4>Choose a character file to import</h4>
+	</div>
+	<div class="modal-footer">
+		<form>
+			<div>
+				<input type="file" (change)="importFile($event); ">
+			</div>
+			<div>
+				<button class="button" (click)="d('Close click')" >Close</button>
+			</div>
+		</form>
+	</div>
+</ng-template>
+
+<div (click)="open(content)">Import character file</div>

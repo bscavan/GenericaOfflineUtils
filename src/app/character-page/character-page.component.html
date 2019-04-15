@@ -1,3 +1,17 @@
+<div class="dropdown">
+	<button class="dropbtn">Dropdown</button>
+	<div class="dropdown-content">
+		<a class="dropdown-item dropdown-item" (click)="this.save()">Download character</a>
+		<a class="dropdown-item dropdown-item"><app-import-modal [characterFocus]="this.characterFocus"></app-import-modal></a>
+
+		<!-- TODO: Write a method to clear out the existing character-->
+		<a class="dropdown-item dropdown-item" (click)="console.log('hello')">Clear</a>
+	</div>
+</div>
+
+
+
+
 <!-- TODO: Align these text boxes! -->
 <div>
 	<b>name:</b>
@@ -163,7 +177,7 @@
 			<!--
 				Placeholder row for aligning the top of the sidebar with the 
 				top of the racial job select.
-			 -->
+				-->
 		</tr>
 		<tr>
 			<div style="margin-top: 20px; margin-left: 20px">
@@ -172,5 +186,3 @@
 		</tr>
 	</td>
 </table>
-<!-- This button is here for testing. A proper dropdown menu with save and load options will be needed in the future. -->
-<button (click)="this.serialize()">Serialize Me!</button>

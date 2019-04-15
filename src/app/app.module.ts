@@ -7,6 +7,8 @@ import { CharacterPageComponent } from './character-page/character-page.componen
 import { AttributeBarComponent } from './character-page/attribute-bar/attribute-bar.component';
 import { AttributeSidebarComponent } from './character-page/attribute-sidebar/attribute-sidebar.component';
 import { PointBuyComponent } from './character-page/point-buy/point-buy.component';
+import { ImportModalComponent } from './character-page/import-modal/import-modal.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -15,11 +17,14 @@ import { PointBuyComponent } from './character-page/point-buy/point-buy.componen
     CharacterPageComponent,
 	AttributeBarComponent,
 	AttributeSidebarComponent,
-	PointBuyComponent
+	PointBuyComponent,
+	ImportModalComponent
   ],
   imports: [
+	NgbModule.forRoot(),
 	BrowserModule,
-	FormsModule
+	FormsModule,
+	//AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
