@@ -1,0 +1,19 @@
+.node-content-wrapper, .tree-children {
+	width:100%;
+}
+
+.toggle-children {
+  z-index: 1;
+	height: 12px;
+	width: 12px;
+	top: 3px;
+	background-image: url("/assets/img/chevron.png");
+}
+
+.toggle-children-wrapper {
+	padding:0;
+}
+
+tree-viewport {
+	margin-right: 5px;
+}
