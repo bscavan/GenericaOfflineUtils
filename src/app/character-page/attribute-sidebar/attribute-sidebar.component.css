@@ -4,6 +4,25 @@
 	border-style:solid
 }
 
+.bottom-border {
+	border-bottom-width: 3px;
+	border-bottom-style: solid;
+	border-bottom-color: black;
+}
+
+.left-border {
+	border-left-width: 3px;
+	border-left-style: solid;
+	border-left-color: black;
+}
+
+.top-attribute {
+	margin-left: -1px;
+	width: 105%;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+}
+
 .value-cell {
 	text-align: right;
 	

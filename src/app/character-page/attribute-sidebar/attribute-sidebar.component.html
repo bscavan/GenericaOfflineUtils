@@ -1,17 +1,17 @@
 <!-- TODO: Rewrite this using an ngFor loop. -->
-<table style="background-color: gray" class="solid-border">
-	<div style="background-color: slategray">
-		<tr>
-			<td class="solid-border">
-				<tr class="solid-border">
+<table>
+	<div style="background-color: slategray; border-width: 3px; border-style:solid; border-color: black; border-radius: 10px;">
+		<tr class="bottom-border">
+			<td>
+				<div class="top-attribute">
 					<td>
 						<b>STR:</b>
 					</td>
 					<td>
 						{{this.getStrength(characterFocus)}}
 					</td>
-				</tr>
-				<tr class="solid-border">
+				</div>
+				<tr>
 					<td style="width:70%">
 						<b>CON:</b>
 					</td>
@@ -21,8 +21,8 @@
 				</tr>
 			</td>
 
-			<td class="solid-border">
-				<tr class="solid-border">
+			<td class="left-border">
+				<tr>
 					<td style="width:70%">
 						<b>HP:</b>
 					</td>
@@ -32,17 +32,17 @@
 				</tr>
 			</td>
 		</tr>
-		<tr>
-			<td class="solid-border">
-				<tr class="solid-border">
+		<tr class="bottom-border">
+			<td>
+				<div class="top-attribute">
 					<td>
 						<b>INT:</b>
 					</td>
 					<td>
 						{{this.getIntelligence(characterFocus)}}
 					</td>
-				</tr>
-				<tr class="solid-border">
+				</div>
+				<tr>
 					<td>
 						<b>WIS:</b>
 					</td>
@@ -52,8 +52,8 @@
 				</tr>
 			</td>
 
-			<td class="solid-border">
-				<tr class="solid-border">
+			<td class="left-border">
+				<tr>
 					<td>
 						<b>SAN:</b>
 					</td>
@@ -64,17 +64,17 @@
 			</td>
 		</tr>
 
-		<tr>
-			<td class="solid-border">
-				<tr class="solid-border">
+		<tr class="bottom-border">
+			<td>
+				<div class="top-attribute">
 					<td>
 						<b>DEX:</b>
 					</td>
 					<td>
 						{{this.getDexterity(characterFocus)}}
 					</td>
-				</tr>
-				<tr class="solid-border">
+				</div>
+				<tr>
 					<td>
 						<b>AGL:</b>
 					</td>
@@ -84,8 +84,8 @@
 				</tr>
 			</td>
 
-			<td class="solid-border">
-				<tr class="solid-border">
+			<td class="left-border">
+				<tr>
 					<td>
 						<b>STA:</b>
 					</td>
@@ -96,17 +96,17 @@
 			</td>
 		</tr>
 
-		<tr>
-			<td class="solid-border">
-				<tr class="solid-border">
+		<tr class="bottom-border">
+			<td>
+				<div class="top-attribute">
 					<td>
 						<b>CHA:</b>
 					</td>
 					<td>
 						{{this.getCharisma(characterFocus)}}
 					</td>
-				</tr>
-				<tr class="solid-border">
+				</div>
+				<tr>
 					<td>
 						<b>Will:</b>
 					</td>
@@ -116,8 +116,8 @@
 				</tr>
 			</td>
 
-			<td class="solid-border">
-				<tr class="solid-border">
+			<td class="left-border">
+				<tr>
 					<td>
 						<b>MOX:</b>
 					</td>
@@ -129,16 +129,16 @@
 		</tr>
 
 		<tr>
-			<td class="solid-border">
-				<tr class="solid-border">
+			<td>
+				<div class="top-attribute">
 					<td>
 						<b>LUCK:</b>
 					</td>
 					<td>
 						{{this.getLuck(characterFocus)}}
 					</td>
-				</tr>
-				<tr class="solid-border">
+				</div>
+				<tr>
 					<td>
 						<b>PER:</b>
 					</td>
@@ -148,8 +148,8 @@
 				</tr>
 			</td>
 
-			<td class="solid-border">
-				<tr class="solid-border">
+			<td class="left-border">
+				<tr>
 					<td>
 						<b>FOR:</b>
 					</td>
