@@ -1,6 +1,9 @@
 import { Duelist } from "./duelist";
 import { Mercenary } from "./mercenary";
 import { BlankAdventuringJob } from "./blank-adventuring-job";
+import { AdventuringJob } from "./adventuring-job";
+import * as deepEqual from "deep-equal";
+import { isNull } from "util";
 
 export class AdventuringJobs {
 	private static adventuringJobs = null;
@@ -20,7 +23,26 @@ export class AdventuringJobs {
 		if(this.adventuringJobs == null) {
 			this.adventuringJobs = this.compileRaces();
 		}
-		
+
 		return this.adventuringJobs;
+	}
+
+	public static deserializeAdventuringJob(json): AdventuringJob {
+		let prospectiveJob = BlankAdventuringJob.generateBlankAdventuringJob().deserializeFromJSON(json);
+		let jobToReturn: AdventuringJob = null;
+
+		this.adventuringJobs.forEach((currentJob) => {
+			if(deepEqual(currentJob, prospectiveJob)) {
+				jobToReturn = currentJob;
+				return;
+			}
+		});
+
+		if(isNull(jobToReturn)) {
+			this.adventuringJobs.push(prospectiveJob);
+			return prospectiveJob;
+		} else {
+			return jobToReturn;
+		}
 	}
 }

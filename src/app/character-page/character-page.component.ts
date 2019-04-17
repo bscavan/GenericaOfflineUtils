@@ -60,11 +60,19 @@ export class CharacterPageComponent implements OnInit {
 		let pesudoPeskieJob: RacialJob = BlankRacialJob.getBlankRacialJob();
 		pesudoPeskieJob.deserializeFromJSON(serializedPeskieJob);
 		*/
+		let allRaces = Races.getAllRaces();
 		let serializedJaxby = this.characterFocus.serializeToJSON();
 
 		console.log(serializedJaxby);
 
 		this.characterFocus.deserializeFromJSON(serializedJaxby);
+
+		let job = this.characterFocus.primaryRacialJob;
+		let jobJson = job.serializeToJSON();
+
+		Races.deserializeRacialJob(jobJson);
+
+		let secondLength = Races.getAllRaces().length;
 	}
 
 	public save() {

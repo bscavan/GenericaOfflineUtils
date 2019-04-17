@@ -7,6 +7,9 @@ import { BlankAdventuringJob } from "../adventuring-jobs/blank-adventuring-job";
 import { BlankCraftingJob } from "../crafting-jobs/blank-crafting-job";
 import { BlankRacialJob } from "../racial-jobs/blank-racial-job";
 import { SerializationUtil } from "../serialization-util";
+import { Races } from "../racial-jobs/races";
+import { Professions } from "../crafting-jobs/professions";
+import { AdventuringJobs } from "../adventuring-jobs/adventuring-jobs";
 
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
@@ -604,8 +607,7 @@ export class Character {
 
 		for(let currentIndex in json) {
 			let currentJobJson = json[currentIndex];
-			let currentJob = BlankAdventuringJob.generateBlankAdventuringJob();
-			currentJob.deserializeFromJSON(currentJobJson.job);
+			let currentJob = AdventuringJobs.deserializeAdventuringJob(currentJobJson.job);
 			jobItemsArray.push({job: currentJob, level: currentJobJson.level});;
 		}
 
@@ -618,8 +620,7 @@ export class Character {
 
 		for(let currentIndex in json) {
 			let currentJobJson = json[currentIndex];
-			let currentJob = BlankCraftingJob.generateBlankCraftingJob();
-			currentJob.deserializeFromJSON(currentJobJson.job);
+			let currentJob = Professions.deserializeCraftingJob(currentJobJson.job);
 			jobItemsArray.push({job: currentJob, level: currentJobJson.level});;
 		}
 
@@ -632,8 +633,7 @@ export class Character {
 
 		for(let currentIndex in json) {
 			let currentJobJson = json[currentIndex];
-			let currentJob = BlankRacialJob.generateBlankRacialJob();
-			currentJob.deserializeFromJSON(currentJobJson.job);
+			let currentJob = Races.deserializeRacialJob(currentJobJson.job);
 			jobItemsArray.push({job: currentJob, level: currentJobJson.level});
 		}
 
@@ -736,9 +736,7 @@ export class Character {
 		this.name = json.name;
 		this.title = json.title;
 
-		let racialJob = BlankRacialJob.getBlankRacialJob();
-		racialJob.deserializeFromJSON(json.primaryRacialJob);
-		this.primaryRacialJob = racialJob;
+		this.primaryRacialJob = Races.deserializeRacialJob(json.primaryRacialJob);
 		this.primaryRacialJobLevel = json.primaryRacialJobLevel;
 
 		this.supplementalRacialJobLevels = this.deserializeRacialJobItemArray(json.supplementalRacialJobLevels);

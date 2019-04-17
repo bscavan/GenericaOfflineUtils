@@ -2,14 +2,11 @@ import { Attributes, Defenses, Pools } from "../attribute-keys";
 import { RacialJob } from "./racial-job";
 
 export class BlankRacialJob extends RacialJob {
-	private static blankRace = null;
+	private static readonly blankRace = BlankRacialJob.generateBlankRacialJob();
 
-		// FIXME: This produces a single instance of the "blank" job, that anyone can edit and change for everyone...
+	// FIXME: This produces a single instance of the "blank" job, that anyone can edit and change for everyone...
+	// TODO: Remove this once Races has been converted over to using a Map. Then, retrieve the BlankRacialJob from there.
 	public static getBlankRacialJob(): RacialJob {
-		if(this.blankRace == null) {
-			this.blankRace = this.generateBlankRacialJob();
-		}
-
 		return this.blankRace;
 	}
 
