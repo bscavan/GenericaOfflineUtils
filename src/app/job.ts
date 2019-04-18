@@ -3,8 +3,11 @@ import { SerializationUtil } from "./serialization-util";
 
 export class Job {
 	//TODO: Add support for skills
+	// TODO: Add support for tracking Job descriptions
+	// TODO: Add support for tracking unlock requirements.
 	name: string;
 	affectedAttributes: Set<{affectedAttribute: Attributes, pointsPerLevel: number}>;
+	// TODO: Migrate affectedDefenses and basePools into RacialJob.
 	affectedDefenses: Set<{affectedDefense: Defenses, pointsPerLevel: number}>;
 	basePools: Set<{affectedPool: Pools, baseValue: number}>;
 	// skills go here?

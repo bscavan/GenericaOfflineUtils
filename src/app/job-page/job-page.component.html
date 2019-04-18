@@ -1,0 +1,49 @@
+<!-- TODO: Find a way to make this reference the constants in RoutingModule -->
+<a routerLink="/characterPage">Character Page</a>
+
+<div ngbDropdown class="nav-item dropdown file-menu">
+	<button class="nav-link dropdown-toggle" href="#" ngbDropdownToggle
+	container="body" placement="right" ngbTooltip="Job page options">File</button>
+	<div ngbDropdownMenu aria-labelledby="file-menu-btn">
+		<a class="dropdown-item dropdown-item" (click)="this.save()">Download Job</a>
+		<!--a class="dropdown-item dropdown-item"><app-import-modal [characterFocus]="this.characterFocus"></app-import-modal></a-->
+		<a class="dropdown-item dropdown-item" (click)="this.loadIntoCollection(jobDefinition)">Upload job into collection</a>
+
+		<!-- TODO: Write a method to clear out the existing character-->
+		<a class="dropdown-item dropdown-item" (click)="console.log('clear() still needs to be implemented.')">Clear</a>
+	</div>
+</div>
+
+<!--
+	To include:
+
+			Switch for the type of job (Racial, Crafting, or Adventuring), which controls an ngTemplate.
+			Crafting and Adventuring support:
+				A Job's name
+				affectedAttributes: Set<{affectedAttribute: Attributes, pointsPerLevel: number}>;
+				affectedDefenses: Set<{affectedDefense: Defenses, pointsPerLevel: number}>;
+				basePools: Set<{affectedPool: Pools, baseValue: number}>;
+	
+	Saving feature.
+-->
+<div>
+	Name:
+	<input type="text" [(ngModel)]="jobDefinition.name"/>
+</div>
+
+<div>
+	<table>
+		<td *ngFor="let current of this.orderedAttributes; let i = index">
+			<tr class="attribute-bar">
+				{{current.affectedAttribute.toString()}}
+			</tr>
+			<tr>
+				<input style="width:125px" type="number"
+				(change)="updateJobAttributes(current)"
+				[(ngModel)]="current.pointsPerLevel" />
+			</tr>
+		</td>
+	</table>
+</div>
+
+

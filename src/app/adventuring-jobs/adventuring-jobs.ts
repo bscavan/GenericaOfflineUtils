@@ -27,8 +27,14 @@ export class AdventuringJobs {
 		return this.adventuringJobs;
 	}
 
+	// TODO: Test this manually.
 	public static deserializeAdventuringJob(json): AdventuringJob {
 		let prospectiveJob = BlankAdventuringJob.generateBlankAdventuringJob().deserializeFromJSON(json);
+
+		return this.addAdventuringJob(prospectiveJob);
+	}
+
+	public static addAdventuringJob(prospectiveJob: AdventuringJob): AdventuringJob {
 		let jobToReturn: AdventuringJob = null;
 
 		this.adventuringJobs.forEach((currentJob) => {

@@ -48,6 +48,7 @@ export class CharacterPageComponent implements OnInit {
 		return items;
 	}
 
+	/*
 	// Manual testing code for seriailization.
 	public serialize() {
 		/*
@@ -59,7 +60,7 @@ export class CharacterPageComponent implements OnInit {
 
 		let pesudoPeskieJob: RacialJob = BlankRacialJob.getBlankRacialJob();
 		pesudoPeskieJob.deserializeFromJSON(serializedPeskieJob);
-		*/
+		*
 		let allRaces = Races.getAllRaces();
 		let serializedJaxby = this.characterFocus.serializeToJSON();
 
@@ -74,6 +75,7 @@ export class CharacterPageComponent implements OnInit {
 
 		let secondLength = Races.getAllRaces().length;
 	}
+	*/
 
 	public save() {
 		let filename = "character.save"

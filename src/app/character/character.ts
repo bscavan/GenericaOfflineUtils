@@ -704,33 +704,7 @@ export class Character {
 	}
 
 	/*
-	 * FIXME: When I deserialize from Json, it creates new Job objects. Because
-	 * of this the character's currently selected jobs don't match the exact
-	 * objects in the CharacterPage component (the ones in allRacialJobs,
-	 * allAdventuringJobs, and allCraftingJobs), and so the dropdown options
-	 * stay unselected because the values don't match.
-	 *
-	 * This problem is why I initially migrated away from using the
-	 * generate...Job() methods in the Job subclasses and moved to the
-	 * get...Job() methods that return a single, static instance of the job.
-	 *
-	 * To handle this, the next step will probably be to handle deserializing
-	 * Jobs through the classes that already maintain the collection of jobs.
-	 * Namely, Races, AdventuringJobs, and Professions. A static method added
-	 * to each of those classes could handle instantiating a new (blank) Job
-	 * object, populating it with the values pulled from the JSON, and then
-	 * determining if the job already exists. If it does then the existing one
-	 * is returned. Otherwise the new one is added.
-	 *
-	 * If I move in this direction, it would probably be for the best to make
-	 * those classes the central means of accessing Job objects. Rather than
-	 * writing Peskie.getPeskieJob(), it would need to be:
-	 * RacialJobs.getJob("Peskie")
-	 *
-	 * Note: Handling job deserialization in this way will also make importing
-	 * new jobs from user-uploaded JSON simpler. As there are plans for making
-	 * a page where the user can define jobs and download them as JSON, this is
-	 * desirable.
+	 * FIXME: This method is very fragile. Rework it to handle malformed sections of JSON.
 	 */
 	public deserializeFromJSON(json) {
 		this.name = json.name;

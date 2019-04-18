@@ -9,6 +9,9 @@ import { AttributeSidebarComponent } from './character-page/attribute-sidebar/at
 import { PointBuyComponent } from './character-page/point-buy/point-buy.component';
 import { ImportModalComponent } from './character-page/import-modal/import-modal.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { JobPageComponent } from './job-page/job-page.component';
+import { AppRoutingModule } from './app-routing-module';
+import { APP_BASE_HREF } from '@angular/common';
 
 
 @NgModule({
@@ -18,15 +21,18 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 	AttributeBarComponent,
 	AttributeSidebarComponent,
 	PointBuyComponent,
-	ImportModalComponent
+	ImportModalComponent,
+	JobPageComponent
   ],
   imports: [
 	NgbModule.forRoot(),
 	BrowserModule,
 	FormsModule,
-	//AppRoutingModule
+	AppRoutingModule
   ],
-  providers: [],
+  providers: [
+	{provide: APP_BASE_HREF, useValue: '/'}
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
