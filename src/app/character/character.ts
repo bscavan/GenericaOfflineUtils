@@ -76,6 +76,18 @@ export class Character {
 		this.printFullStats();
 	}
 
+	public static generateBlankCharacter(): Character {
+		let racial: [{job: RacialJob, level: number}] = [{job: null, level: null}];
+		racial.pop();
+		let adventuring: [{job: AdventuringJob, level: number}] = [{job: null, level: null}];
+		adventuring.pop();
+		let crafting: [{job: CraftingJob, level: number}] = [{job: null, level: null}];
+		crafting.pop();
+
+		return new Character("", "", BlankRacialJob.generateBlankRacialJob(),
+		0, racial, adventuring, crafting);
+	}
+
 	public addRacialJobLevels(newJob: RacialJob, levelsTaken: number) {
 		if(this.primaryRacialJob == null) {
 			this.primaryRacialJob = newJob;

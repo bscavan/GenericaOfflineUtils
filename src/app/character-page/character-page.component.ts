@@ -22,7 +22,7 @@ export class CharacterPageComponent implements OnInit {
 
 	// This is a limitation on the rules we have, not the software itself.
 	public readonly MAX_LEVEL = 25;
-	@Input() characterFocus: Character;
+	characterFocus: Character;
 	allRacialJobs: RacialJob[] = Races.getAllRaces();
 	allSupplementalRacialJobs: RacialJob[] = Races.getAllSupplementalRaces();
 	allAdventuringJobs = AdventuringJobs.getAllAdventuringJobs();
@@ -38,7 +38,13 @@ export class CharacterPageComponent implements OnInit {
 	constructor() {
 	}
 
-	ngOnInit() {}
+	ngOnInit() {
+		// FIXME: This clears the current character whenever navigating away
+		// from and back to the page. Instead, the current character needs to
+		// be handled by a service auto-injected into the constructor so the
+		// state is preserved...
+		this.characterFocus = Character.generateBlankCharacter();
+	}
 
 	createRange(number){
 		var items: number[] = [];

@@ -15,7 +15,7 @@ const routes: Routes =
 		path: JOB_PAGE_ROUTE, component: JobPageComponent,
 	},
     {
-        path: '', component: CharacterPageComponent
+        path: '**', component: CharacterPageComponent
     }
 ];
 

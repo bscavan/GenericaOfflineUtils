@@ -37,8 +37,9 @@
 
 <div> <!-- Empty div here for spacing. --> </div>
 
+<button (click)="expandPointBuyOptions = ! expandPointBuyOptions">&#8646;</button>
 <div class="tooltip">
-	<button (click)="expandPointBuyOptions = ! expandPointBuyOptions">&#8646;</button>
+	
 	<span class="tooltiptext tooltip">Display character creation point investments.</span>
 	<!--
 		FIXME: The tooltip for this button gets cut off by the left-side of the
@@ -93,7 +94,6 @@
 		<div *ngIf="this.characterFocus.primaryRacialJob !== undefined">
 			<div *ngIf="this.characterFocus.primaryRacialJob.numberOfsupplementalRacialJobSlots > 0">
 					<b>Supplemental Racial Job(s):</b>
-					<!-- TODO: Make this iterate over all of the supplemental racial jobs... -->
 					<div *ngFor="let currentJobSlot of 
 					createRange(this.characterFocus.primaryRacialJob.numberOfsupplementalRacialJobSlots); let i = index">
 						<select [(ngModel)]="this.characterFocus.supplementalRacialJobLevels[i].job"

@@ -43,10 +43,19 @@ export class JobPageComponent implements OnInit {
 		this.jobDefinition.affectedAttributes.add(attributeItem);
 	}
 
+	// Currently this won't upload a job if every attribute is zero. Is this wrong?
 	public loadIntoCollection(job: AdventuringJob) {
-		AdventuringJobs.addAdventuringJob(job);
+		if(job.name.trim().length < 1) {
+			alert("All jobs must have a name. Please name the job before attempting to upload it.")
+		} else {
+			AdventuringJobs.addAdventuringJob(job);
+		}
 	}
 
+	// Note: Currently, the JSON for jobs don't contain notes as to what type
+	// of jobs they refer to. So, it would be really easy to import a crafting
+	// job in as an adventuring, or to accidentally try to load a racial in as
+	// a crafting... Would that break things?
 	public save() {
 		let filename = this.jobDefinition.name + ".json";
 		let jobJson = this.jobDefinition.serializeToJSON();
