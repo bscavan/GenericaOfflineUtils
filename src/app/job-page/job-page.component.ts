@@ -5,15 +5,12 @@ import { Attributes, AttributeKeys } from '../attribute-keys';
 import * as FileSaver from 'file-saver';
 import { AdventuringJob } from '../adventuring-jobs/adventuring-job';
 import { AdventuringJobs } from '../adventuring-jobs/adventuring-jobs';
+import { JobService } from '../job-service';
 
 export enum JOB_TYPES {
 	RACIAL_JOB,
 	CRAFTING_JOB,
 	ADVENTURING_JOB
-}
-
-export class RacialJobControl {
-	
 }
 
 @Component({
@@ -25,22 +22,18 @@ export class JobPageComponent implements OnInit {
 
 	public orderedAttributes: {affectedAttribute: Attributes; pointsPerLevel: number;}[] = [];
 	@Input() jobType: JOB_TYPES;
-	
-	jobDefinition: Job;
 
-	constructor() { }
+	constructor(private jobService: JobService) { }
 
 	ngOnInit() {
-		this.jobDefinition = BlankAdventuringJob.generateFullyPopulatedBlankAdventuringJob();
-
 		// Set<{affectedAttribute: Attributes, pointsPerLevel: number}>;
-		this.jobDefinition.affectedAttributes.forEach((currentElement) => {
+		this.jobService.adventuringJobInProgress.affectedAttributes.forEach((currentElement) => {
 			this.orderedAttributes.push(currentElement);
 		});
 	}
 
 	updateJobAttributes(attributeItem) {
-		this.jobDefinition.affectedAttributes.add(attributeItem);
+		this.jobService.adventuringJobInProgress.affectedAttributes.add(attributeItem);
 	}
 
 	// Currently this won't upload a job if every attribute is zero. Is this wrong?
@@ -57,8 +50,8 @@ export class JobPageComponent implements OnInit {
 	// job in as an adventuring, or to accidentally try to load a racial in as
 	// a crafting... Would that break things?
 	public save() {
-		let filename = this.jobDefinition.name + ".json";
-		let jobJson = this.jobDefinition.serializeToJSON();
+		let filename = this.jobService.adventuringJobInProgress.name + ".json";
+		let jobJson = this.jobService.adventuringJobInProgress.serializeToJSON();
 		jobJson = JSON.stringify(jobJson);
 		let jobJsonArray = [];
 		jobJsonArray.push(jobJson);

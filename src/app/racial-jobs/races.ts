@@ -8,6 +8,8 @@ import * as deepEqual from "deep-equal";
 import { isNull } from "util";
 
 export class Races {
+	// TODO: Consider migrating all of these featues into JobService...
+
 	// TODO: Add support for races that have supplemental job slots, but only
 	// allow specific races as options, ex: half-breeds only allow two-skill jobs,
 	// and beastkin are humans with one beast job...

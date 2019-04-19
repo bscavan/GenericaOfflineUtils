@@ -13,6 +13,7 @@ import { JobPageComponent } from './job-page/job-page.component';
 import { AppRoutingModule } from './app-routing-module';
 import { APP_BASE_HREF } from '@angular/common';
 import { CharacterService } from './character/character-service';
+import { JobService } from './job-service';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { CharacterService } from './character/character-service';
   ],
   providers: [
 	{provide: APP_BASE_HREF, useValue: '/'},
-	CharacterService
+	CharacterService,
+	JobService
 ],
   bootstrap: [AppComponent]
 })
