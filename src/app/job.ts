@@ -1,7 +1,8 @@
 import { Attributes, Defenses, Pools } from "./attribute-keys";
 import { SerializationUtil } from "./serialization-util";
+import { JsonSerializable } from "./json-serializable";
 
-export class Job {
+export class Job implements JsonSerializable {
 	//TODO: Add support for skills
 	// TODO: Add support for tracking Job descriptions
 	// TODO: Add support for tracking unlock requirements.

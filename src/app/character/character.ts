@@ -10,10 +10,11 @@ import { SerializationUtil } from "../serialization-util";
 import { Races } from "../racial-jobs/races";
 import { Professions } from "../crafting-jobs/professions";
 import { AdventuringJobs } from "../adventuring-jobs/adventuring-jobs";
+import { JsonSerializable } from "../json-serializable";
 
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
-export class Character {
+export class Character implements JsonSerializable {
 	// TODO: Write support for banking jobs!
 	public name: string;
 	public title: string;
@@ -729,23 +730,9 @@ export class Character {
 		this.adventuringJobLevels = this.deserializeAdventuringJobItemArray(json.adventuringJobLevels);
 		this.craftingJobLevels = this.deserializeCraftingJobItemArray(json.craftingJobLevels);
 
-		// Do I actually need to deserialize baseAttributes, totalAttributes, baseDefenses, totalDefenses, basePools or totalPools?
-		// I could probably just call recalculateAttributes()...
-		//json["baseAttributes"] = SerializationUtil.serializeMap(this.baseAttributes);
-
 		this.initialRandomAttributes = SerializationUtil.deserializeAttributesMap(json.initialRandomAttributes);
 		this.firstSetPointBuyAttributes = SerializationUtil.deserializeAttributesMap(json.firstSetPointBuyAttributes);
 		this.secondSetPointBuyAttributes = SerializationUtil.deserializeAttributesMap(json.secondSetPointBuyAttributes);
-
-		/*
-		json["totalAttributes"] = SerializationUtil.serializeMap(this.totalAttributes);
-
-		json["baseDefenses"] = SerializationUtil.serializeMap(this.baseDefenses);
-		json["totalDefenses"] = SerializationUtil.serializeMap(this.totalDefenses);
-
-		json["basePools"] = SerializationUtil.serializeMap(this.basePools);
-		json["totalPools"] = SerializationUtil.serializeMap(this.totalPools);
-		*/
 
 		this.increasesToAttributes = this.deserializeAdjustmentMap(json.increasesToAttributes);
 		this.decreasesToAttributes = this.deserializeAdjustmentMap(json.decreasesToAttributes);
@@ -754,5 +741,7 @@ export class Character {
 		this.debuffsToAttributes = this.deserializeAdjustmentMap(this.debuffsToAttributes);
 
 		this.recalculateAttributes();
+
+		return this;
 	}
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Character } from '../../character/character';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { JsonSerializable } from '../../json-serializable';
 
 @Component({
 	selector: 'app-import-modal',
@@ -8,14 +8,14 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 	styleUrls: ['./import-modal.component.css']
 })
 export class ImportModalComponent implements OnInit {
-	@Input() characterFocus: Character;
+	@Input() focus: JsonSerializable;
+	@Input() label: String;
 
-	//FIXME: Figure out why the modal keeps opening up at the bottom of the page!
 	constructor(private modalService: NgbModal) { }
 
 	ngOnInit() {}
 
-	importFile(event) {
+	importCharacterFile(event) {
 		var file = event.target.files[0];
 
 		if (!file) {
@@ -26,7 +26,7 @@ export class ImportModalComponent implements OnInit {
 
 		reader.onload = (event) => {
 			let characterFileAsJson = JSON.parse(reader.result.toString());
-			this.characterFocus.deserializeFromJSON(characterFileAsJson);
+			this.focus.deserializeFromJSON(characterFileAsJson);
 		}
 
 		reader.readAsText(file);
