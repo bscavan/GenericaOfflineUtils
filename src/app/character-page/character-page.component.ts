@@ -10,6 +10,7 @@ import { Peskie } from '../racial-jobs/peskie';
 import { Pools } from '../attribute-keys';
 import { BlankRacialJob } from '../racial-jobs/blank-racial-job';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CharacterService } from '../character/character-service';
 
 
 
@@ -22,7 +23,6 @@ export class CharacterPageComponent implements OnInit {
 
 	// This is a limitation on the rules we have, not the software itself.
 	public readonly MAX_LEVEL = 25;
-	characterFocus: Character;
 	allRacialJobs: RacialJob[] = Races.getAllRaces();
 	allSupplementalRacialJobs: RacialJob[] = Races.getAllSupplementalRaces();
 	allAdventuringJobs = AdventuringJobs.getAllAdventuringJobs();
@@ -35,16 +35,10 @@ export class CharacterPageComponent implements OnInit {
 	// Control for the ngIf on the manual/testing controls.
 	expandOptions:boolean = false;
 
-	constructor() {
+	constructor(private characterService: CharacterService) {
 	}
 
-	ngOnInit() {
-		// FIXME: This clears the current character whenever navigating away
-		// from and back to the page. Instead, the current character needs to
-		// be handled by a service auto-injected into the constructor so the
-		// state is preserved...
-		this.characterFocus = Character.generateBlankCharacter();
-	}
+	ngOnInit() { }
 
 	createRange(number){
 		var items: number[] = [];
@@ -85,7 +79,7 @@ export class CharacterPageComponent implements OnInit {
 
 	public save() {
 		let filename = "character.save"
-		let characterJson = this.characterFocus.serializeToJSON()
+		let characterJson = this.characterService.characterFocus.serializeToJSON()
 		characterJson = JSON.stringify(characterJson);
 		let characterJsonArray = [];
 		characterJsonArray.push(characterJson);

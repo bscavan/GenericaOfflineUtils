@@ -12,6 +12,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { JobPageComponent } from './job-page/job-page.component';
 import { AppRoutingModule } from './app-routing-module';
 import { APP_BASE_HREF } from '@angular/common';
+import { CharacterService } from './character/character-service';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { APP_BASE_HREF } from '@angular/common';
 	AppRoutingModule
   ],
   providers: [
-	{provide: APP_BASE_HREF, useValue: '/'}
+	{provide: APP_BASE_HREF, useValue: '/'},
+	CharacterService
 ],
   bootstrap: [AppComponent]
 })

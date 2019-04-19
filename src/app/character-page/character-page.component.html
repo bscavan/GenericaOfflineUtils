@@ -3,7 +3,7 @@
 	container="body" placement="right" ngbTooltip="Character page options">File</button>
 	<div ngbDropdownMenu aria-labelledby="file-menu-btn">
 		<a class="dropdown-item dropdown-item" (click)="this.save()">Download character</a>
-		<a class="dropdown-item dropdown-item"><app-import-modal [focus]="this.characterFocus"
+		<a class="dropdown-item dropdown-item"><app-import-modal [focus]="this.characterService.characterFocus"
 		[label]="'character'"></app-import-modal></a>
 
 		<!-- TODO: Write a method to clear out the existing character-->
@@ -15,12 +15,12 @@
 <div>
 	<b>name:</b>
 	<input style="width: 200px" type="text"
-	[(ngModel)]="this.characterFocus.name"/>
+	[(ngModel)]="this.characterService.characterFocus.name"/>
 </div>
 <div>
 	<b>title:</b>
 	<input style="width: 200px" type="text"
-	[(ngModel)]="this.characterFocus.title"/>
+	[(ngModel)]="this.characterService.characterFocus.title"/>
 </div>
 
 <div class="tooltip">
@@ -38,35 +38,26 @@
 
 <div> <!-- Empty div here for spacing. --> </div>
 
-<button (click)="expandPointBuyOptions = ! expandPointBuyOptions">&#8646;</button>
-<div class="tooltip">
-	
-	<span class="tooltiptext tooltip">Display character creation point investments.</span>
-	<!--
-		FIXME: The tooltip for this button gets cut off by the left-side of the
-		window.
-		TODO: Just bring in an actual tooltip package.
-	-->
-</div>
+<button ngbTooltip="Display character creation point investments" (click)="expandPointBuyOptions = ! expandPointBuyOptions">&#8646;</button>
 
-<app-point-buy *ngIf="expandPointBuyOptions" [characterFocus]="characterFocus"></app-point-buy>
+<app-point-buy *ngIf="expandPointBuyOptions" [characterFocus]="this.characterService.characterFocus"></app-point-buy>
 
 <table>
 	<td>
 		<div>
 			<b>Primary Race:</b>
 			<div>
-				<select (change)="this.characterFocus.handlePrimaryRaceChange()"
-				[(ngModel)]="this.characterFocus.primaryRacialJob">
-					<!--TODO: Auto-select the option that is the value of this.characterFocus.primaryRacialJob! -->
+				<select (change)="this.characterService.characterFocus.handlePrimaryRaceChange()"
+				[(ngModel)]="this.characterService.characterFocus.primaryRacialJob">
+					<!--TODO: Auto-select the option that is the value of this.characterService.characterFocus.primaryRacialJob! -->
 					<option *ngFor="let currentRacialJob of allRacialJobs"
 					[ngValue]="currentRacialJob">{{currentRacialJob.name}}</option>
 		
 					<!-- TODO: Add an empty option to this so the player can remove the primaryRacialJob... -->
 				</select>
 				<input type="number" min="0" max="{{MAX_LEVEL}}"
-				[(ngModel)]="this.characterFocus.primaryRacialJobLevel"
-				(change)="this.characterFocus.recalculateAttributes()">
+				[(ngModel)]="this.characterService.characterFocus.primaryRacialJobLevel"
+				(change)="this.characterService.characterFocus.recalculateAttributes()">
 			</div>
 		
 			<!-- TODO: Add support for supplemental RacialJobs -->
@@ -92,18 +83,18 @@
 			to do with the supplmental jobs. Really, that only applies to Toy Golems
 			and Doll Haunters (at least, for now it does).
 		-->
-		<div *ngIf="this.characterFocus.primaryRacialJob !== undefined">
-			<div *ngIf="this.characterFocus.primaryRacialJob.numberOfsupplementalRacialJobSlots > 0">
+		<div *ngIf="this.characterService.characterFocus.primaryRacialJob !== undefined">
+			<div *ngIf="this.characterService.characterFocus.primaryRacialJob.numberOfsupplementalRacialJobSlots > 0">
 					<b>Supplemental Racial Job(s):</b>
 					<div *ngFor="let currentJobSlot of 
-					createRange(this.characterFocus.primaryRacialJob.numberOfsupplementalRacialJobSlots); let i = index">
-						<select [(ngModel)]="this.characterFocus.supplementalRacialJobLevels[i].job"
-						(change)="this.characterFocus.recalculateAttributes()">
+					createRange(this.characterService.characterFocus.primaryRacialJob.numberOfsupplementalRacialJobSlots); let i = index">
+						<select [(ngModel)]="this.characterService.characterFocus.supplementalRacialJobLevels[i].job"
+						(change)="this.characterService.characterFocus.recalculateAttributes()">
 							<option *ngFor="let x of this.allSupplementalRacialJobs" [ngValue]="x">{{x.name}}</option>
 						</select>
 						<input type="number" min="0" max="{{MAX_LEVEL}}"
-						[(ngModel)]="this.characterFocus.supplementalRacialJobLevels[i].level"
-						(change)="this.characterFocus.recalculateAttributes()">
+						[(ngModel)]="this.characterService.characterFocus.supplementalRacialJobLevels[i].level"
+						(change)="this.characterService.characterFocus.recalculateAttributes()">
 						<!--
 							FIXME: When rapidly clicking this input, sometimes the change
 							directive is delayed until the mouse moves.
@@ -114,14 +105,14 @@
 			<div>
 				<b>Adventuring Jobs:</b>
 				<div *ngFor="let currentJobSlot of 
-				createRange(this.characterFocus.primaryRacialJob.numberOfAdventuringJobSlots); let i = index">
-					<select [(ngModel)]="this.characterFocus.adventuringJobLevels[i].job"
-					(change)="this.characterFocus.recalculateAttributes()">
+				createRange(this.characterService.characterFocus.primaryRacialJob.numberOfAdventuringJobSlots); let i = index">
+					<select [(ngModel)]="this.characterService.characterFocus.adventuringJobLevels[i].job"
+					(change)="this.characterService.characterFocus.recalculateAttributes()">
 						<option *ngFor="let x of this.allAdventuringJobs" [ngValue]="x">{{x.name}}</option>
 					</select>
 					<input type="number" min="0" max="{{MAX_LEVEL}}"
-					[(ngModel)]="this.characterFocus.adventuringJobLevels[i].level"
-					(change)="this.characterFocus.recalculateAttributes()">
+					[(ngModel)]="this.characterService.characterFocus.adventuringJobLevels[i].level"
+					(change)="this.characterService.characterFocus.recalculateAttributes()">
 					<!--
 						FIXME: When rapidly clicking this input, sometimes the change
 						directive is delayed until the mouse moves.
@@ -132,14 +123,14 @@
 			<div>
 				<b>Crafting Jobs:</b>
 				<div *ngFor="let currentJobSlot of 
-				createRange(this.characterFocus.primaryRacialJob.numberOfCraftingJobSlots); let i = index">
-					<select [(ngModel)]="this.characterFocus.craftingJobLevels[i].job"
-					(change)="this.characterFocus.recalculateAttributes()">
+				createRange(this.characterService.characterFocus.primaryRacialJob.numberOfCraftingJobSlots); let i = index">
+					<select [(ngModel)]="this.characterService.characterFocus.craftingJobLevels[i].job"
+					(change)="this.characterService.characterFocus.recalculateAttributes()">
 						<option *ngFor="let x of this.allCraftingJobs" [ngValue]="x">{{x.name}}</option>
 					</select>
 					<input type="number" min="0" max="{{MAX_LEVEL}}"
-					[(ngModel)]="this.characterFocus.craftingJobLevels[i].level"
-					(change)="this.characterFocus.recalculateAttributes()">
+					[(ngModel)]="this.characterService.characterFocus.craftingJobLevels[i].level"
+					(change)="this.characterService.characterFocus.recalculateAttributes()">
 					<!--
 						FIXME: When rapidly clicking this input, sometimes the change
 						directive is delayed until the mouse moves.
@@ -149,7 +140,7 @@
 		</div>
 		<div hidden>
 			stats:
-			<app-attribute-bar [characterFocus]="characterFocus"></app-attribute-bar>
+			<app-attribute-bar [characterFocus]="this.characterService.characterFocus"></app-attribute-bar>
 			
 			<div class="tooltip">
 				<button (click)="expandOptions = ! expandOptions">&#9881;</button>
@@ -161,8 +152,8 @@
 				-->
 			</div>
 			<div *ngIf="expandOptions">
-				<button (click)="this.characterFocus.recalculateAttributes()">Manually recalculate attributes</button>
-				<button (click)="this.characterFocus.printFullStats()">Print attributes to console log</button>
+				<button (click)="this.characterService.characterFocus.recalculateAttributes()">Manually recalculate attributes</button>
+				<button (click)="this.characterService.characterFocus.printFullStats()">Print attributes to console log</button>
 			</div>
 			
 			<!-- TODO:
@@ -180,7 +171,7 @@
 		</tr>
 		<tr>
 			<div style="margin-top: 20px; margin-left: 20px">
-				<app-attribute-sidebar [characterFocus]="characterFocus"></app-attribute-sidebar>
+				<app-attribute-sidebar [characterFocus]="this.characterService.characterFocus"></app-attribute-sidebar>
 			</div>
 		</tr>
 	</td>
