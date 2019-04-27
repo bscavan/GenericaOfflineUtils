@@ -6,9 +6,9 @@ import * as deepEqual from "deep-equal";
 import { isNull } from "util";
 
 export class Professions {
-	private static craftingJobs = null;
+	private static craftingJobs: CraftingJob[] = null;
 
-	static compileRaces() {
+	private static compileCraftingJobs(): CraftingJob[] {
 		let allCraftingJobs = [];
 		allCraftingJobs.push(BlankCraftingJob.getBlankCraftingJob());
 		allCraftingJobs.push(Tanner.getTannerJob());
@@ -19,9 +19,9 @@ export class Professions {
 	}
 
 	// Use this to iterate over all the crafting job options offered in the front-end
-	public static getAllCraftingJobs() {
+	public static getAllCraftingJobs(): CraftingJob[] {
 		if(this.craftingJobs == null) {
-			this.craftingJobs = this.compileRaces();
+			this.craftingJobs = this.compileCraftingJobs();
 		}
 
 		return this.craftingJobs;
@@ -29,6 +29,24 @@ export class Professions {
 
 	public static deserializeCraftingJob(json): CraftingJob {
 		let prospectiveJob = BlankCraftingJob.generateBlankCraftingJob().deserializeFromJSON(json);
+		let jobToReturn: CraftingJob = null;
+
+		this.craftingJobs.forEach((currentJob) => {
+			if(deepEqual(currentJob, prospectiveJob)) {
+				jobToReturn = currentJob;
+				return;
+			}
+		});
+
+		if(isNull(jobToReturn)) {
+			this.craftingJobs.push(prospectiveJob);
+			return prospectiveJob;
+		} else {
+			return jobToReturn;
+		}
+	}
+
+	public static addCraftingJob(prospectiveJob: CraftingJob): CraftingJob {
 		let jobToReturn: CraftingJob = null;
 
 		this.craftingJobs.forEach((currentJob) => {

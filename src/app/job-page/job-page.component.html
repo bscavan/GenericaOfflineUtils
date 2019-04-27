@@ -1,15 +1,54 @@
 <div ngbDropdown class="nav-item dropdown file-menu">
+	<!--
+		FIXME: The labels on these buttons are not clear to users.
+		Rewrite them to make the more intuitive.
+	-->
 	<button class="nav-link dropdown-toggle" href="#" ngbDropdownToggle
 	container="body" placement="right" ngbTooltip="Job page options">File</button>
 	<div ngbDropdownMenu aria-labelledby="file-menu-btn">
 		<a class="dropdown-item dropdown-item" (click)="this.save()">Download Job</a>
 		<!--a class="dropdown-item dropdown-item"><app-import-modal [characterFocus]="this.characterFocus"></app-import-modal></a-->
-		<a class="dropdown-item dropdown-item" (click)="this.loadIntoCollection(this.jobService.adventuringJobInProgress)">Upload job into collection</a>
+		<a class="dropdown-item dropdown-item" (click)="this.loadIntoCollection(this.currentJob)">Upload job into collection</a>
 
-		<!-- TODO: Write a method to clear out the existing character-->
-		<a class="dropdown-item dropdown-item" (click)="console.log('clear() still needs to be implemented.')">Clear</a>
+		<!-- TODO: Alert the user that they are about to wipe out their work and ask for confirmation...-->
+		<a class="dropdown-item dropdown-item" (click)="clearCurrentJob()">Clear</a>
 	</div>
 </div>
+
+<!-- TODO: Add a means of selecting jobs from the lists already used by the character page.
+	Then, jobs in circulation can be edited while they are still in circulation, or else
+	saved as a new job.
+		// Actually, that would require some additional functionality, because simply pulling
+		out the existing job would always change it (you are using a reference to the original)
+		so you would need to clone the original, and then let the user decide if they wish to
+		overwrite the original (which would trigger a function to iterate over all of the new
+		job's fields and overwrite the values in the original with the new one) or save it as a
+		new entry in the collection.
+-->
+
+<!--
+	The ngModel and values here only serve to communicate to Angular when these
+	buttons should appear selected. The actual functionality comes from the
+	(click) methods.
+-->
+<div class="btn-group btn-group-toggle" ngbRadioGroup [(ngModel)]="radioButtoSelection" name="jobTypeSelect">
+	<label ngbButtonLabel class="btn-primary">
+		<input ngbButton type="radio" value="0" (click)="setSelectedJobTypeToAdventuring()"> Adventuring Job
+	</label>
+	<label ngbButtonLabel class="btn-primary">
+		<input ngbButton type="radio" value="1" (click)="setSelectedJobTypeToCrafting()"> Crafting Job
+	</label>
+	<label ngbButtonLabel class="btn-primary">
+		<input ngbButton type="radio" value="2" (click)="setSelectedJobTypeToRacial()"> Racial Job
+	</label>
+</div>
+
+<!-- TODO: Make one of these lists for each type of job, and swap them out based on which job type
+	is being defined.
+
+	Alternatively, only have one, but swap out the active list backing it?
+-->
+
 
 <!--
 	To include:
@@ -25,7 +64,7 @@
 -->
 <div>
 	Name:
-	<input type="text" [(ngModel)]="this.jobService.adventuringJobInProgress.name"/>
+	<input type="text" [(ngModel)]="this.currentJob.name"/>
 </div>
 
 <div>

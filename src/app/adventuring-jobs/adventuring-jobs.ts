@@ -8,7 +8,7 @@ import { isNull } from "util";
 export class AdventuringJobs {
 	private static adventuringJobs = null;
 
-	static compileRaces() {
+	private static compileAdventuringJobs() {
 		let allAdventuringJobs = [];
 		allAdventuringJobs.push(BlankAdventuringJob.getBlankAdventuringJob());
 		allAdventuringJobs.push(Duelist.getDuelistJob());
@@ -21,7 +21,7 @@ export class AdventuringJobs {
 	// Use this to iterate over all the adventuring job options offered in the front-end
 	public static getAllAdventuringJobs() {
 		if(this.adventuringJobs == null) {
-			this.adventuringJobs = this.compileRaces();
+			this.adventuringJobs = this.compileAdventuringJobs();
 		}
 
 		return this.adventuringJobs;

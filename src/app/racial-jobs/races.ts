@@ -61,11 +61,26 @@ export class Races {
 		return this.allSupplementalRaces;
 	}
 
-	public static addJob(job: RacialJob) {
-		this.allRaces.push(job);
+	public static addRacialJob(prospectiveJob: RacialJob): RacialJob {
+		let jobToReturn: RacialJob = null;
 
-		if(job.canBeSupplementalJob) {
-			this.allSupplementalRaces.push(job);
+		this.allRaces.forEach((currentJob) => {
+			if(deepEqual(currentJob, prospectiveJob)) {
+				jobToReturn = currentJob;
+				return;
+			}
+		});
+
+		if(isNull(jobToReturn)) {
+			this.allRaces.push(prospectiveJob);
+
+			if(prospectiveJob.canBeSupplementalJob) {
+				this.allSupplementalRaces.push(prospectiveJob);
+			}
+
+			return prospectiveJob;
+		} else {
+			return jobToReturn;
 		}
 	}
 
