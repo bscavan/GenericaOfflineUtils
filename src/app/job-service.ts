@@ -11,9 +11,9 @@ import { Professions } from './crafting-jobs/professions';
 import { Races } from './racial-jobs/races';
 
 export enum JobTypes {
-	ADVENTURING_JOB,
-	CRAFTING_JOB,
-	RACIAL_JOB
+	ADVENTURING_JOB = "Adventuring",
+	CRAFTING_JOB = "Crafting",
+	RACIAL_JOB = "Racial"
 }
 
 @Injectable()

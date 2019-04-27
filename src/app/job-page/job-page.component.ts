@@ -6,6 +6,8 @@ import * as FileSaver from 'file-saver';
 import { AdventuringJob } from '../adventuring-jobs/adventuring-job';
 import { AdventuringJobs } from '../adventuring-jobs/adventuring-jobs';
 import { JobService, JobTypes } from '../job-service';
+import { Professions } from '../crafting-jobs/professions';
+import { Races } from '../racial-jobs/races';
 
 @Component({
   selector: 'app-job-page',
@@ -18,6 +20,7 @@ export class JobPageComponent implements OnInit {
 	public radioButtoSelection: number;
 
 	public currentJob: Job;
+	public currentJobsList: Job[];
 	public orderedAttributes: {affectedAttribute: Attributes; pointsPerLevel: number;}[] = [];
 	selectedJobType: JobTypes;
 
@@ -28,6 +31,7 @@ export class JobPageComponent implements OnInit {
 		// TODO: Add a step to automatically click the Adventuring Job button here.
 
 		this.resetOrderedAttributes();
+		this.resetCurrentJobsList();
 	}
 
 	// TODO: Expand out from just orderedAttributes, eventually covering all of the features of the three job types...
@@ -41,6 +45,22 @@ export class JobPageComponent implements OnInit {
 		});
 	}
 
+	resetCurrentJobsList() {
+		switch(this.selectedJobType) {
+			case JobTypes.ADVENTURING_JOB:
+				this.currentJobsList = AdventuringJobs.getAllAdventuringJobs();
+				break;
+
+			case JobTypes.CRAFTING_JOB:
+				this.currentJobsList = Professions.getAllCraftingJobs();
+				break;
+
+			case JobTypes.RACIAL_JOB:
+				this.currentJobsList = Races.getAllRaces();
+				break;
+		}
+	}
+
 	updateJobAttributes(attributeItem) {
 		this.currentJob.affectedAttributes.add(attributeItem);
 	}
@@ -52,6 +72,8 @@ export class JobPageComponent implements OnInit {
 		} else {
 			this.jobService.uploadJobIntoCollection(job);
 		}
+
+		this.resetCurrentJobsList();
 	}
 
 	public clearCurrentJob() {
@@ -79,6 +101,8 @@ export class JobPageComponent implements OnInit {
 			this.selectedJobType = JobTypes.ADVENTURING_JOB;
 			this.resetOrderedAttributes();
 		}
+
+		this.resetCurrentJobsList();
 	}
 
 	public setSelectedJobTypeToCrafting() {
@@ -86,6 +110,8 @@ export class JobPageComponent implements OnInit {
 			this.selectedJobType = JobTypes.CRAFTING_JOB;
 			this.resetOrderedAttributes();
 		}
+
+		this.resetCurrentJobsList();
 	}
 
 	public setSelectedJobTypeToRacial() {
@@ -93,5 +119,7 @@ export class JobPageComponent implements OnInit {
 			this.selectedJobType = JobTypes.RACIAL_JOB;
 			this.resetOrderedAttributes();
 		}
+
+		this.resetCurrentJobsList();
 	}
 }

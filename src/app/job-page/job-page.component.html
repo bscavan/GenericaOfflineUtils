@@ -14,7 +14,14 @@
 		<a class="dropdown-item dropdown-item" (click)="clearCurrentJob()">Clear</a>
 	</div>
 </div>
-
+<div>
+	{{selectedJobType}} jobs list:
+	<ul>
+		<div *ngFor="let current of currentJobsList">
+			<li *ngIf="current.name.trim().length > 0">name: {{current.name}}</li>
+		</div>
+	</ul>
+</div>
 <!-- TODO: Add a means of selecting jobs from the lists already used by the character page.
 	Then, jobs in circulation can be edited while they are still in circulation, or else
 	saved as a new job.
