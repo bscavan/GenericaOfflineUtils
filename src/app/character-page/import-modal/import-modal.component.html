@@ -1,11 +1,11 @@
 <ng-template #content let-c="close" let-d="dismiss">
 	<div>
-		<h4>Choose a {{label}} file to import</h4>
+		<h4>Choose {{label}} file to import</h4>
 	</div>
 	<div class="modal-footer">
 		<form>
 			<div>
-				<input type="file" (change)="importCharacterFile($event); ">
+				<input type="file" (change)="importFile($event)">
 			</div>
 			<div>
 				<button class="button" (click)="d('Close click')" >Close</button>

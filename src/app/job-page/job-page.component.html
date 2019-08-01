@@ -7,8 +7,14 @@
 	container="body" placement="right" ngbTooltip="Job page options">File</button>
 	<div ngbDropdownMenu aria-labelledby="file-menu-btn">
 		<a class="dropdown-item dropdown-item" (click)="this.save()">Download Job</a>
-		<!--a class="dropdown-item dropdown-item"><app-import-modal [characterFocus]="this.characterFocus"></app-import-modal></a-->
-		<a class="dropdown-item dropdown-item" (click)="this.loadIntoCollection(this.currentJob)">Upload job into collection</a>
+
+		<a class="dropdown-item dropdown-item">
+			<app-import-modal [focus]="this.currentJob"
+			[label]="'job'"
+			[callback]="adventuringJobCallback"></app-import-modal>
+		</a>
+		<a class="dropdown-item dropdown-item" (click)="this.loadIntoCollection(currentJob)">Upload current job into collection</a>
+
 
 		<!-- TODO: Alert the user that they are about to wipe out their work and ask for confirmation...-->
 		<a class="dropdown-item dropdown-item" (click)="clearCurrentJob()">Clear</a>
@@ -83,8 +89,11 @@
 			<tr>
 				<input style="width:125px" type="number"
 				(change)="updateJobAttributes(current)"
-				[(ngModel)]="current.pointsPerLevel" />
+				[(ngModel)]="current.pointsPerLevel"
+				min="0"/>
 			</tr>
 		</td>
 	</table>
 </div>
+
+<button (click)="recreateOrderedAttributes()">reUp</button>

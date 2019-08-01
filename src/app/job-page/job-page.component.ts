@@ -24,7 +24,11 @@ export class JobPageComponent implements OnInit {
 	public orderedAttributes: {affectedAttribute: Attributes; pointsPerLevel: number;}[] = [];
 	selectedJobType: JobTypes;
 
-	constructor(private jobService: JobService) { }
+	public static job_service: JobService;
+
+	constructor(private jobService: JobService) {
+		JobPageComponent.job_service = jobService;
+	}
 
 	ngOnInit() {
 		this.selectedJobType = JobTypes.ADVENTURING_JOB;
@@ -45,6 +49,24 @@ export class JobPageComponent implements OnInit {
 		});
 	}
 
+	// FIXME: Currently these callbacks are not working.
+	// It is related to the fact that they are being executed in a nested component.
+	public adventuringJobCallback(adventuringJob: Job) {
+		JobPageComponent.job_service.uploadJobIntoCollection(adventuringJob);
+	}
+
+	// FIXME: Currently these callbacks are not working.
+	// It is related to the fact that they are being executed in a nested component.
+	public craftingJobCallback(craftingJob: Job) {
+		JobPageComponent.job_service.uploadJobIntoCollection(craftingJob);
+	}
+
+	// FIXME: Currently these callbacks are not working.
+	// It is related to the fact that they are being executed in a nested component.
+	public racialJobCallback(racialJob: Job) {
+		JobPageComponent.job_service.uploadJobIntoCollection(racialJob);
+	}
+
 	resetCurrentJobsList() {
 		switch(this.selectedJobType) {
 			case JobTypes.ADVENTURING_JOB:
@@ -59,6 +81,14 @@ export class JobPageComponent implements OnInit {
 				this.currentJobsList = Races.getAllRaces();
 				break;
 		}
+	}
+
+	recreateOrderedAttributes() {
+		this.orderedAttributes = [];
+
+		this.currentJob.affectedAttributes.forEach((currentElement) => {
+			this.orderedAttributes.push(currentElement);
+		});
 	}
 
 	updateJobAttributes(attributeItem) {
@@ -78,12 +108,15 @@ export class JobPageComponent implements OnInit {
 
 	public clearCurrentJob() {
 		this.jobService.clearCurrentJob(this.selectedJobType)
+		// FIXME: This currently doesn't visually take effect until the user
+		// switches to another view (either the characterPage or one of the
+		// other tabs in the jobPage) and then switches back.
 	}
 
 	// Note: Currently, the JSON for jobs don't contain notes as to what type
 	// of jobs they refer to. So, it would be really easy to import a crafting
 	// job in as an adventuring, or to accidentally try to load a racial in as
-	// a crafting... Would that break things?
+	// a crafting job... This will break things.
 	public save() {
 		let jobInProgress = this.jobService.getCurrentJob(this.selectedJobType);
 		let filename = jobInProgress.name + ".json";
