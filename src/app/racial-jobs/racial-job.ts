@@ -1,6 +1,7 @@
 import { Job } from "../job";
 import { Attributes, Defenses, Pools } from "../attribute-keys";
 import { SerializationUtil } from "../serialization-util";
+import { JobTypes } from "../shared-constants"
 
 export class RacialJob extends Job {
 	protected baseAttributes: Set<{affectedAttribute: Attributes, baseValue: number}>;
@@ -23,7 +24,7 @@ export class RacialJob extends Job {
 	numberOfAdventuringJobSlots: number,
 	numberOfCraftingJobSlots: number,
 	canBeSupplementalJob: boolean) {
-		super(name, affectedAttributes, affectedDefenses, basePools);
+		super(name, JobTypes.RACIAL_JOB, affectedAttributes, affectedDefenses, basePools);
 		this.baseAttributes = baseAttributes;
 		this.baseDefenses = baseDefenses;
 		this.numberOfsupplementalRacialJobSlots = numberOfsupplementalRacialJobSlots;

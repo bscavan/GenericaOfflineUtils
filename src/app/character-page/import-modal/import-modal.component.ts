@@ -71,8 +71,9 @@ export class ImportModalComponent implements OnInit {
 				// FIXME: When I get each job's JSON tagged with the type of job
 				// it is, then make a master deserializeNewJobFromJson(String)
 				// method and put it into JobService.
-				let deserializedAdventuringJob = BlankAdventuringJob.generateBlankAdventuringJob().deserializeFromJSON(jobFileAsJson);
-				this.jobService.uploadJobIntoCollection(deserializedAdventuringJob);
+				// let deserializedAdventuringJob = BlankAdventuringJob.generateBlankAdventuringJob().deserializeFromJSON(jobFileAsJson);
+				// this.jobService.uploadCurrentJobIntoCollection(deserializedAdventuringJob);
+				this.jobService.uploadJobIntoCollectionFromJSON(jobFileAsJson);
 	
 				// Deserializes the JSON into the Job the component is focusing on.
 				// this.focus.deserializeFromJSON(jobFileAsJson);

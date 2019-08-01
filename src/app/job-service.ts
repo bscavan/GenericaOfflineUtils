@@ -9,12 +9,8 @@ import { BlankRacialJob } from './racial-jobs/blank-racial-job';
 import { AdventuringJobs } from './adventuring-jobs/adventuring-jobs';
 import { Professions } from './crafting-jobs/professions';
 import { Races } from './racial-jobs/races';
-
-export enum JobTypes {
-	ADVENTURING_JOB = "Adventuring",
-	CRAFTING_JOB = "Crafting",
-	RACIAL_JOB = "Racial"
-}
+import { isNullOrUndefined } from 'util';
+import { JobTypes } from './shared-constants'
 
 @Injectable()
 export class JobService {
@@ -67,7 +63,7 @@ export class JobService {
 
 	// FIXME: This method is being used for importing and uploading.
 	// When importing it's overwriting the job in progress.
-	public uploadJobIntoCollection(job: Job) {
+	public uploadCurrentJobIntoCollection(job: Job) {
 		if(job instanceof AdventuringJob) {
 			AdventuringJobs.addAdventuringJob(job);
 			this.adventuringJobInProgress = BlankAdventuringJob.generateFullyPopulatedBlankAdventuringJob();
@@ -77,6 +73,41 @@ export class JobService {
 		} else if (job instanceof RacialJob) {
 			Races.addRacialJob(job);
 			this.racialJobInProgress = BlankRacialJob.generateFullyPopulatedBlankRacialJob();
+		}
+	}
+
+	public uploadJobIntoCollectionFromJSON(json) {
+		let newJob = this.deserializeJobFromJSON(json);
+		if(newJob instanceof AdventuringJob) {
+			AdventuringJobs.addAdventuringJob(newJob);
+		} else if (newJob instanceof CraftingJob) {
+			Professions.addCraftingJob(newJob);
+		} else if (newJob instanceof RacialJob) {
+			Races.addRacialJob(newJob);
+		}
+	}
+
+	public deserializeJobFromJSON(json): Job {
+		if(isNullOrUndefined(json.jobType)) {
+			// TODO: Fail. Loudly.
+			return null;
+		} else {
+			switch(json.jobType) {
+				case JobTypes.ADVENTURING_JOB:
+					let newAdventuringJobInProgress = BlankAdventuringJob.generateFullyPopulatedBlankAdventuringJob();
+					newAdventuringJobInProgress.deserializeFromJSON(json);
+					return newAdventuringJobInProgress;
+
+				case JobTypes.CRAFTING_JOB:
+					let newCraftingJobInProgress = BlankCraftingJob.generateFullyPopulatedBlankCraftingJob();
+					newCraftingJobInProgress.deserializeFromJSON(json);
+					return newCraftingJobInProgress;
+	
+				case JobTypes.RACIAL_JOB:
+					let newRacialJobInProgress = BlankRacialJob.generateFullyPopulatedBlankRacialJob();
+					newRacialJobInProgress.deserializeFromJSON(json);
+					return newRacialJobInProgress;
+			}
 		}
 	}
 }

@@ -5,9 +5,10 @@ import { Attributes, AttributeKeys } from '../attribute-keys';
 import * as FileSaver from 'file-saver';
 import { AdventuringJob } from '../adventuring-jobs/adventuring-job';
 import { AdventuringJobs } from '../adventuring-jobs/adventuring-jobs';
-import { JobService, JobTypes } from '../job-service';
+import { JobService } from '../job-service';
 import { Professions } from '../crafting-jobs/professions';
 import { Races } from '../racial-jobs/races';
+import { JobTypes } from '../shared-constants'
 
 @Component({
   selector: 'app-job-page',
@@ -52,19 +53,19 @@ export class JobPageComponent implements OnInit {
 	// FIXME: Currently these callbacks are not working.
 	// It is related to the fact that they are being executed in a nested component.
 	public adventuringJobCallback(adventuringJob: Job) {
-		JobPageComponent.job_service.uploadJobIntoCollection(adventuringJob);
+		JobPageComponent.job_service.uploadCurrentJobIntoCollection(adventuringJob);
 	}
 
 	// FIXME: Currently these callbacks are not working.
 	// It is related to the fact that they are being executed in a nested component.
 	public craftingJobCallback(craftingJob: Job) {
-		JobPageComponent.job_service.uploadJobIntoCollection(craftingJob);
+		JobPageComponent.job_service.uploadCurrentJobIntoCollection(craftingJob);
 	}
 
 	// FIXME: Currently these callbacks are not working.
 	// It is related to the fact that they are being executed in a nested component.
 	public racialJobCallback(racialJob: Job) {
-		JobPageComponent.job_service.uploadJobIntoCollection(racialJob);
+		JobPageComponent.job_service.uploadCurrentJobIntoCollection(racialJob);
 	}
 
 	resetCurrentJobsList() {
@@ -100,7 +101,7 @@ export class JobPageComponent implements OnInit {
 		if(job.name.trim().length < 1) {
 			alert("All jobs must have a name. Please name the job before attempting to upload it.")
 		} else {
-			this.jobService.uploadJobIntoCollection(job);
+			this.jobService.uploadCurrentJobIntoCollection(job);
 		}
 
 		this.resetCurrentJobsList();
