@@ -5,7 +5,8 @@
 	<div class="modal-footer">
 		<form>
 			<div>
-				<input type="file" (change)="importFile($event)">
+				<input *ngIf="importType === 'job'" type="file" (change)="importJobFile($event)" multiple>
+				<input *ngIf="importType === 'character'" type="file" (change)="importFile($event)">
 			</div>
 			<div>
 				<button class="button" (click)="d('Close click')" >Close</button>

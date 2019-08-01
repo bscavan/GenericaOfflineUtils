@@ -65,6 +65,8 @@ export class JobService {
 		}
 	}
 
+	// FIXME: This method is being used for importing and uploading.
+	// When importing it's overwriting the job in progress.
 	public uploadJobIntoCollection(job: Job) {
 		if(job instanceof AdventuringJob) {
 			AdventuringJobs.addAdventuringJob(job);

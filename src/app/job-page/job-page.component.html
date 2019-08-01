@@ -11,6 +11,7 @@
 		<a class="dropdown-item dropdown-item">
 			<app-import-modal [focus]="this.currentJob"
 			[label]="'job'"
+			[importType]="'job'"
 			[callback]="adventuringJobCallback"></app-import-modal>
 		</a>
 		<a class="dropdown-item dropdown-item" (click)="this.loadIntoCollection(currentJob)">Upload current job into collection</a>
