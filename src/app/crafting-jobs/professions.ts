@@ -63,4 +63,15 @@ export class Professions {
 			return jobToReturn;
 		}
 	}
+
+	public static deleteCraftingJob(prospectiveJob: CraftingJob) {
+		let index = this.craftingJobs.indexOf(prospectiveJob);
+		let returnValue = null;
+
+		if(index >= 0) {
+			returnValue = this.craftingJobs.splice(index, 1);
+		}
+
+		return returnValue;
+	}
 }

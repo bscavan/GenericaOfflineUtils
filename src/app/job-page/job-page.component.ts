@@ -49,6 +49,7 @@ export class JobPageComponent implements OnInit {
 			this.orderedAttributes.push(currentElement);
 		});
 	}
+
 	public clearOrderedAttributes() {
 		this.currentJob = this.jobService.getCurrentJob(this.selectedJobType);
 		this.orderedAttributes = [];
@@ -66,19 +67,19 @@ export class JobPageComponent implements OnInit {
 	// FIXME: Currently these callbacks are not working.
 	// It is related to the fact that they are being executed in a nested component.
 	public adventuringJobCallback(adventuringJob: Job) {
-		JobPageComponent.job_service.uploadCurrentJobIntoCollection(adventuringJob);
+		JobPageComponent.job_service.uploadJobIntoCollection(adventuringJob);
 	}
 
 	// FIXME: Currently these callbacks are not working.
 	// It is related to the fact that they are being executed in a nested component.
 	public craftingJobCallback(craftingJob: Job) {
-		JobPageComponent.job_service.uploadCurrentJobIntoCollection(craftingJob);
+		JobPageComponent.job_service.uploadJobIntoCollection(craftingJob);
 	}
 
 	// FIXME: Currently these callbacks are not working.
 	// It is related to the fact that they are being executed in a nested component.
 	public racialJobCallback(racialJob: Job) {
-		JobPageComponent.job_service.uploadCurrentJobIntoCollection(racialJob);
+		JobPageComponent.job_service.uploadJobIntoCollection(racialJob);
 	}
 
 	resetCurrentJobsList() {
@@ -119,7 +120,7 @@ export class JobPageComponent implements OnInit {
 		if(job.name.trim().length < 1) {
 			alert("All jobs must have a name. Please name the job before attempting to upload it.")
 		} else {
-			this.jobService.uploadCurrentJobIntoCollection(job);
+			this.jobService.uploadJobIntoCollection(job);
 		}
 
 		this.resetCurrentJobsList();
@@ -132,6 +133,10 @@ export class JobPageComponent implements OnInit {
 		// FIXME: This currently doesn't visually take effect until the user
 		// switches to another view (either the characterPage or one of the
 		// other tabs in the jobPage) and then switches back.
+	}
+
+	public deleteCurrentJob() {
+		this.jobService.deleteJobFromCollection(this.currentJob);
 	}
 
 	// Note: Currently, the JSON for jobs don't contain notes as to what type

@@ -63,7 +63,7 @@ export class JobService {
 
 	// FIXME: This method is being used for importing and uploading.
 	// When importing it's overwriting the job in progress.
-	public uploadCurrentJobIntoCollection(job: Job) {
+	public uploadJobIntoCollection(job: Job) {
 		if(job instanceof AdventuringJob) {
 			AdventuringJobs.addAdventuringJob(job);
 			this.adventuringJobInProgress = BlankAdventuringJob.generateFullyPopulatedBlankAdventuringJob();
@@ -84,6 +84,19 @@ export class JobService {
 			Professions.addCraftingJob(newJob);
 		} else if (newJob instanceof RacialJob) {
 			Races.addRacialJob(newJob);
+		}
+	}
+
+	public deleteJobFromCollection(job: Job) {
+		if(job instanceof AdventuringJob) {
+			AdventuringJobs.deleteAdventuringJob(job);
+			this.adventuringJobInProgress = BlankAdventuringJob.generateFullyPopulatedBlankAdventuringJob();
+		} else if (job instanceof CraftingJob) {
+			Professions.deleteCraftingJob(job);
+			this.craftingJobInProgress = BlankCraftingJob.generateFullyPopulatedBlankCraftingJob();
+		} else if (job instanceof RacialJob) {
+			Races.deleteRacialJob(job);
+			this.racialJobInProgress = BlankRacialJob.generateFullyPopulatedBlankRacialJob();
 		}
 	}
 

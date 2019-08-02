@@ -102,4 +102,15 @@ export class Races {
 			return jobToReturn;
 		}
 	}
+
+	public static deleteRacialJob(prospectiveJob: RacialJob) {
+		let index = this.allRaces.indexOf(prospectiveJob);
+		let returnValue = null;
+
+		if(index >= 0) {
+			returnValue = this.allRaces.splice(index, 1);
+		}
+
+		return returnValue;
+	}
 }

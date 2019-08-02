@@ -3,10 +3,10 @@ import { Mercenary } from "./mercenary";
 import { BlankAdventuringJob } from "./blank-adventuring-job";
 import { AdventuringJob } from "./adventuring-job";
 import * as deepEqual from "deep-equal";
-import { isNull } from "util";
+import { isNull, isNullOrUndefined } from "util";
 
 export class AdventuringJobs {
-	private static adventuringJobs = null;
+	private static adventuringJobs: any[] = null;
 
 	private static compileAdventuringJobs() {
 		let allAdventuringJobs = [];
@@ -50,5 +50,16 @@ export class AdventuringJobs {
 		} else {
 			return jobToReturn;
 		}
+	}
+
+	public static deleteAdventuringJob(prospectiveJob: AdventuringJob) {
+		let index = this.adventuringJobs.indexOf(prospectiveJob);
+		let returnValue = null;
+
+		if(index >= 0) {
+			returnValue = this.adventuringJobs.splice(index, 1);
+		}
+
+		return returnValue;
 	}
 }
