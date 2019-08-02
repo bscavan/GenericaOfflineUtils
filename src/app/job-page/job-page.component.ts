@@ -105,6 +105,7 @@ export class JobPageComponent implements OnInit {
 		}
 
 		this.resetCurrentJobsList();
+		this.clearCurrentJob();
 	}
 
 	public clearCurrentJob() {

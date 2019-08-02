@@ -1,6 +1,7 @@
-import { Attributes, Defenses, Pools } from "./attribute-keys";
+import { Attributes, Defenses, Pools, AttributeKeys } from "./attribute-keys";
 import { SerializationUtil } from "./serialization-util";
 import { JsonSerializable } from "./json-serializable";
+import { isNullOrUndefined } from "util";
 
 export class Job implements JsonSerializable {
 	//TODO: Add support for skills
@@ -20,9 +21,50 @@ export class Job implements JsonSerializable {
 	basePools: Set<{affectedPool: Pools, baseValue: number}>) {
 		this.name = name;
 		this.jobType = jobType;
-		this.affectedAttributes = affectedAttributes;
-		this.affectedDefenses = affectedDefenses;
-		this.basePools = basePools;
+		this.affectedAttributes = new Set<{affectedAttribute: Attributes, pointsPerLevel: number}>()
+		this.affectedDefenses = new Set<{affectedDefense: Defenses, pointsPerLevel: number}>();
+		this.basePools = new Set<{affectedPool: Pools, baseValue: number}>();
+
+		// Tally up the provided stats
+		let foundAttributes = new Map<Attributes, number>();
+		let foundDefenses = new Map<Defenses, number>();
+		let foundPools = new Map<Pools, number>();
+
+		affectedAttributes.forEach(item => {
+			foundAttributes.set(item.affectedAttribute, item.pointsPerLevel);
+		});
+
+		affectedDefenses.forEach(item => {
+			foundDefenses.set(item.affectedDefense, item.pointsPerLevel);
+		});
+
+		basePools.forEach(item => {
+			foundPools.set(item.affectedPool, item.baseValue);
+		});
+
+		// Initialize every stat to the provided value or zero if none exists.
+		AttributeKeys.getAttributeSets().forEach((currentAttributeSet) => {
+			let currentOffensive = this.defaultIfUndefined(foundAttributes.get(currentAttributeSet.offensiveAttribute));
+			this.affectedAttributes.add({affectedAttribute: currentAttributeSet.offensiveAttribute, pointsPerLevel: currentOffensive});
+
+			let currentDefensive = this.defaultIfUndefined(foundAttributes.get(currentAttributeSet.defensiveAttribute));
+			this.affectedAttributes.add({affectedAttribute: currentAttributeSet.defensiveAttribute, pointsPerLevel: currentDefensive});
+
+			let currentDefense = this.defaultIfUndefined(foundDefenses.get(currentAttributeSet.defense));
+			this.affectedDefenses.add({affectedDefense: currentAttributeSet.defense, pointsPerLevel: currentDefense});
+
+			let currentPool = this.defaultIfUndefined(foundPools.get(currentAttributeSet.pool));
+			this.basePools.add({affectedPool: currentAttributeSet.pool, baseValue: currentPool});
+		});
+	}
+
+	/**
+	 * Returns the provided value if it is a defined number, otherwise zero.
+	 * @param x The number to check for an undefined value.
+	 */
+	private defaultIfUndefined(x: number): number {
+		let returnValue = (isNullOrUndefined(x)) ? 0 : x;
+		return returnValue;
 	}
 
 	public serializeToJSON() {

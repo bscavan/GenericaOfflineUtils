@@ -25,7 +25,8 @@
 	{{selectedJobType}} jobs list:
 	<ul>
 		<div *ngFor="let current of currentJobsList">
-			<li *ngIf="current.name.trim().length > 0">name: {{current.name}}</li>
+			<li *ngIf="current.name.trim().length > 0"
+			(click)="currentJob = current">name: {{current.name}}</li>
 		</div>
 	</ul>
 </div>
