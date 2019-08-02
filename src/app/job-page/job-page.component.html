@@ -14,8 +14,8 @@
 			[importType]="'job'"
 			[callback]="adventuringJobCallback"></app-import-modal>
 		</a>
-		<a class="dropdown-item dropdown-item" (click)="this.loadIntoCollection(currentJob)">Upload current job into collection</a>
 
+		<a class="dropdown-item dropdown-item" (click)="this.loadIntoCollection(currentJob)">Upload current job into collection</a>
 
 		<!-- TODO: Alert the user that they are about to wipe out their work and ask for confirmation...-->
 		<a class="dropdown-item dropdown-item" (click)="clearCurrentJob()">Clear</a>
@@ -98,4 +98,6 @@
 	</table>
 </div>
 
-<button (click)="recreateOrderedAttributes()">reUp</button>
+<button (click)="this.loadIntoCollection(currentJob)">Save Job</button>
+<button (click)="this.clearCurrentJob()">New Job</button>
+<button hidden (click)="recreateOrderedAttributes()">reUp</button>

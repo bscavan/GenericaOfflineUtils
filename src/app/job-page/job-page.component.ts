@@ -49,6 +49,19 @@ export class JobPageComponent implements OnInit {
 			this.orderedAttributes.push(currentElement);
 		});
 	}
+	public clearOrderedAttributes() {
+		this.currentJob = this.jobService.getCurrentJob(this.selectedJobType);
+		this.orderedAttributes = [];
+
+		// Set<{affectedAttribute: Attributes, pointsPerLevel: number}>;
+		this.currentJob.affectedAttributes.forEach((currentElement) => {
+			let newCurrentElement = {
+				affectedAttribute: currentElement.affectedAttribute,
+				pointsPerLevel: 0
+			}
+			this.orderedAttributes.push(newCurrentElement);
+		});
+	}
 
 	// FIXME: Currently these callbacks are not working.
 	// It is related to the fact that they are being executed in a nested component.
@@ -110,6 +123,7 @@ export class JobPageComponent implements OnInit {
 
 	public clearCurrentJob() {
 		this.jobService.clearCurrentJob(this.selectedJobType)
+		this.resetOrderedAttributes();
 		// FIXME: This currently doesn't visually take effect until the user
 		// switches to another view (either the characterPage or one of the
 		// other tabs in the jobPage) and then switches back.
@@ -129,6 +143,11 @@ export class JobPageComponent implements OnInit {
 
 		let blob = new Blob(jobJsonArray, {type: 'text/plain' });
 		FileSaver.saveAs(blob, filename);
+	}
+
+	public newJob() {
+		this.resetOrderedAttributes();
+		this.resetCurrentJobsList();
 	}
 
 	public setSelectedJobTypeToAdventuring() {
