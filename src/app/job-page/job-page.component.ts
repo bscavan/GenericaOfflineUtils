@@ -97,6 +97,11 @@ export class JobPageComponent implements OnInit {
 		}
 	}
 
+	public switchJob(newJob: Job) {
+		this.currentJob = newJob;
+		this.recreateOrderedAttributes();
+	}
+
 	recreateOrderedAttributes() {
 		this.orderedAttributes = [];
 
