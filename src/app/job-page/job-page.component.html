@@ -24,10 +24,12 @@
 </div>
 <div>
 	{{selectedJobType}} jobs list:
-	<ul>
+	<ul style="border: solid; border-width:4px; border-color: steelblue;
+		border-radius: 5px; width: 20%; max-height: 250px; overflow-y: auto">
 		<div *ngFor="let current of currentJobsList">
 			<li *ngIf="current.name.trim().length > 0"
 			(click)="this.switchJob(current)">name: {{current.name}}</li>
+			<!--TODO: Automatically sort this list?-->
 		</div>
 	</ul>
 </div>
@@ -75,8 +77,6 @@
 				affectedAttributes: Set<{affectedAttribute: Attributes, pointsPerLevel: number}>;
 				affectedDefenses: Set<{affectedDefense: Defenses, pointsPerLevel: number}>;
 				basePools: Set<{affectedPool: Pools, baseValue: number}>;
-	
-	Importing feature.
 -->
 <div>
 	Name:
@@ -101,4 +101,5 @@
 
 <button (click)="this.loadIntoCollection(currentJob)">Save Job</button>
 <button (click)="this.clearCurrentJob()">New Job</button>
+<!--This button is only here to facilitate debugging with 'ng serve'.-->
 <button hidden (click)="recreateOrderedAttributes()">reUp</button>

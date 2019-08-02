@@ -22,6 +22,7 @@ export class JobPageComponent implements OnInit {
 
 	public currentJob: Job;
 	public currentJobsList: Job[];
+	// TODO: Keep this list sorted alphabetically?
 	public orderedAttributes: {affectedAttribute: Attributes; pointsPerLevel: number;}[] = [];
 	selectedJobType: JobTypes;
 
