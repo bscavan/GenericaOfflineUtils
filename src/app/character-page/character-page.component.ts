@@ -1,15 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Character } from '../character/character';
+import { Component, OnInit } from '@angular/core';
 import { Races } from '../racial-jobs/races';
 import { AdventuringJobs } from '../adventuring-jobs/adventuring-jobs';
 import { Professions } from '../crafting-jobs/professions';
 import { RacialJob } from '../racial-jobs/racial-job';
 import * as FileSaver from 'file-saver';
-import { Job } from '../job';
-import { Peskie } from '../racial-jobs/peskie';
-import { Pools } from '../attribute-keys';
-import { BlankRacialJob } from '../racial-jobs/blank-racial-job';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CharacterService } from '../character/character-service';
 
 

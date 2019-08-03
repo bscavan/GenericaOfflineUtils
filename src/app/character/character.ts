@@ -20,6 +20,12 @@ export class Character implements JsonSerializable {
 	public title: string;
 	primaryRacialJob: RacialJob;
 	primaryRacialJobLevel: number;
+	/* FIXME:
+	 * This setup allows for duplicating jobs.
+	 * A better approach would probably be to set this up as a map, with the
+	 * jobs names being the keys and the combination of Job object and level
+	 * being the values.
+	 */
 	supplementalRacialJobLevels: [{job: RacialJob, level: number}];
 	adventuringJobLevels: [{job: AdventuringJob, level: number}];
 	craftingJobLevels: [{job: CraftingJob, level: number}];
