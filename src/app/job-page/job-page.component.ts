@@ -16,10 +16,11 @@ import { JobTypes } from '../shared-constants'
   styleUrls: ['./job-page.component.css']
 })
 export class JobPageComponent implements OnInit {
+	public readonly LABEL = Job.LABEL;
+
 	// This value exists to a ngbRadio group in the html will have something to bind to.
 	// Its value is never important.
 	public radioButtoSelection: number;
-
 	public currentJob: Job;
 	public currentJobsList: Job[];
 	// TODO: Keep this list sorted alphabetically?

@@ -4,7 +4,7 @@
 	<div ngbDropdownMenu aria-labelledby="file-menu-btn">
 		<a class="dropdown-item dropdown-item" (click)="this.save()">Download character</a>
 		<a class="dropdown-item dropdown-item"><app-import-modal [focus]="this.characterService.characterFocus"
-		[label]="'character'" [importType]="'character'"></app-import-modal></a>
+		[label]="LABEL" [importType]="LABEL"></app-import-modal></a>
 
 		<!-- TODO: Write a method to clear out the existing character-->
 		<a class="dropdown-item dropdown-item" (click)="console.log('clear() still needs to be implemented.')">Clear</a>

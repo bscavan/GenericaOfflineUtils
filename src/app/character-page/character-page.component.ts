@@ -5,6 +5,7 @@ import { Professions } from '../crafting-jobs/professions';
 import { RacialJob } from '../racial-jobs/racial-job';
 import * as FileSaver from 'file-saver';
 import { CharacterService } from '../character/character-service';
+import { Character } from '../character/character';
 
 
 
@@ -14,6 +15,7 @@ import { CharacterService } from '../character/character-service';
   styleUrls: ['./character-page.component.css']
 })
 export class CharacterPageComponent implements OnInit {
+	public readonly LABEL = Character.LABEL;
 
 	// This is a limitation on the rules we have, not the software itself.
 	public readonly MAX_LEVEL = 25;
@@ -72,8 +74,8 @@ export class CharacterPageComponent implements OnInit {
 	*/
 
 	public save() {
-		let filename = "character.save"
-		let characterJson = this.characterService.characterFocus.serializeToJSON()
+		let filename = "character_" + this.characterService.characterFocus.name + ".save";
+		let characterJson = this.characterService.characterFocus.serializeToJSON();
 		characterJson = JSON.stringify(characterJson);
 		let characterJsonArray = [];
 		characterJsonArray.push(characterJson);

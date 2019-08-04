@@ -15,6 +15,7 @@ import { JsonSerializable } from "../json-serializable";
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
 export class Character implements JsonSerializable {
+	public static readonly LABEL = "character";
 	// TODO: Write support for banking jobs!
 	public name: string;
 	public title: string;
@@ -749,5 +750,9 @@ export class Character implements JsonSerializable {
 		this.recalculateAttributes();
 
 		return this;
+	}
+
+	public getLabel() {
+		return Job.LABEL;
 	}
 }

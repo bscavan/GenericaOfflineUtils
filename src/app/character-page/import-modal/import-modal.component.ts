@@ -1,9 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { JsonSerializable } from '../../json-serializable';
-import { isNull, isNullOrUndefined } from 'util';
+import { isNullOrUndefined } from 'util';
 import { JobService } from '../../job-service';
-import { BlankAdventuringJob } from '../../adventuring-jobs/blank-adventuring-job';
+import { Character } from '../../character/character';
+import { Job } from '../../job';
 
 @Component({
 	selector: 'app-import-modal',
@@ -24,28 +25,6 @@ export class ImportModalComponent implements OnInit {
 	ngOnInit() {}
 
 	importFile(event) {
-		var file = event.target.files[0];
-
-		if (!file) {
-			return;
-		}
-
-		let reader = new FileReader();
-
-		reader.onload = (event) => {
-			// Parses the result of the FileReader as JSON.
-			let characterFileAsJson = JSON.parse(reader.result.toString());
-			// Deserializes the JSON into the Job the component is focusing on.
-			this.focus.deserializeFromJSON(characterFileAsJson);
-			// Attempts to executes the callback method associated with focus.
-			this.executeCallback(this.focus);
-		}
-
-		reader.readAsText(file);
-		// TODO: Find a way to close the modal after this.
-	}
-
-	importJobFile(event) {
 		let allFiles = event.target.files;
 
 		if(isNullOrUndefined(allFiles)) {
@@ -65,16 +44,17 @@ export class ImportModalComponent implements OnInit {
 			reader.onload = (event) => {
 				// Parses the result of the FileReader as JSON.
 				let jobFileAsJson = JSON.parse(reader.result.toString());
-	
-				// TODO: Determine which kind of job it is here.
-				// Then create that kind of option.
-				// FIXME: When I get each job's JSON tagged with the type of job
-				// it is, then make a master deserializeNewJobFromJson(String)
-				// method and put it into JobService.
-				// let deserializedAdventuringJob = BlankAdventuringJob.generateBlankAdventuringJob().deserializeFromJSON(jobFileAsJson);
-				// this.jobService.uploadCurrentJobIntoCollection(deserializedAdventuringJob);
-				this.jobService.uploadJobIntoCollectionFromJSON(jobFileAsJson);
-	
+
+				switch(this.importType) {
+					case Character.LABEL:
+						this.focus.deserializeFromJSON(jobFileAsJson);
+						break;
+
+					case Job.LABEL:
+						this.jobService.uploadJobIntoCollectionFromJSON(jobFileAsJson);
+						break;
+				}
+
 				// Deserializes the JSON into the Job the component is focusing on.
 				// this.focus.deserializeFromJSON(jobFileAsJson);
 				// Attempts to executes the callback method associated with focus.
@@ -84,7 +64,9 @@ export class ImportModalComponent implements OnInit {
 			reader.readAsText(currentFile);
 			// TODO: Find a way to close the modal after this.
 		}
-		//var file = event.target.files[0];
+	}
+
+	readerInJobFile(reader: FileReader) {
 	}
 
 	open(content) {

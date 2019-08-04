@@ -4,4 +4,6 @@ export interface JsonSerializable {
 	serializeToJSON();
 
 	deserializeFromJSON(json);
+
+	getLabel();
 }

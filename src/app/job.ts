@@ -4,6 +4,7 @@ import { JsonSerializable } from "./json-serializable";
 import { isNullOrUndefined } from "util";
 
 export class Job implements JsonSerializable {
+	public static readonly LABEL = "job";
 	//TODO: Add support for skills
 	// TODO: Add support for tracking Job descriptions
 	// TODO: Add support for tracking unlock requirements.
@@ -85,5 +86,9 @@ export class Job implements JsonSerializable {
 		this.basePools = SerializationUtil.deserializePoolsSet(json.basePools);
 
 		return this;
+	}
+
+	public getLabel() {
+		return Job.LABEL;
 	}
 }
