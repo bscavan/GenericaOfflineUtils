@@ -8,6 +8,7 @@ export class Job implements JsonSerializable {
 	//TODO: Add support for skills
 	// TODO: Add support for tracking Job descriptions
 	// TODO: Add support for tracking unlock requirements.
+	public uuid: string;
 	name: string;
 	jobType: string;
 	affectedAttributes: Set<{affectedAttribute: Attributes, pointsPerLevel: number}>;
@@ -20,6 +21,8 @@ export class Job implements JsonSerializable {
 	affectedAttributes: Set<{affectedAttribute: Attributes, pointsPerLevel: number}>,
 	affectedDefenses: Set<{affectedDefense: Defenses, pointsPerLevel: number}>,
 	basePools: Set<{affectedPool: Pools, baseValue: number}>) {
+		// FIXME: Randomly generate this value.
+		this.uuid = "-1";
 		this.name = name;
 		this.jobType = jobType;
 		this.affectedAttributes = new Set<{affectedAttribute: Attributes, pointsPerLevel: number}>()
@@ -70,6 +73,7 @@ export class Job implements JsonSerializable {
 
 	public serializeToJSON() {
 		let json = {};
+		json["uuid"] = this.uuid;
 		json["name"] = this.name;
 		json["jobType"] = this.jobType;
 		json["affectedAttributes"] = SerializationUtil.serializeAttributesSet(this.affectedAttributes);
@@ -79,6 +83,7 @@ export class Job implements JsonSerializable {
 	}
 
 	public deserializeFromJSON(json): Job {
+		this.uuid = json.uuid;
 		this.name = json.name;
 		this.jobType = json.jobType;
 		this.affectedAttributes = SerializationUtil.deserializeAttributesSet(json.affectedAttributes);

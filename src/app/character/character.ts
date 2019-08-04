@@ -17,6 +17,8 @@ const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 export class Character implements JsonSerializable {
 	public static readonly LABEL = "character";
 	// TODO: Write support for banking jobs!
+	// FIXME: Randomly generate this value.
+	public uuid: string;
 	public name: string;
 	public title: string;
 	primaryRacialJob: RacialJob;
@@ -693,6 +695,7 @@ export class Character implements JsonSerializable {
 	public serializeToJSON() {
 		let json = {};
 
+		json["uuid"] = this.uuid;
 		json["name"] = this.name;
 		json["title"] = this.title;
 		json["primaryRacialJob"] = this.primaryRacialJob.serializeToJSON();
@@ -727,6 +730,7 @@ export class Character implements JsonSerializable {
 	 * FIXME: This method is very fragile. Rework it to handle malformed sections of JSON.
 	 */
 	public deserializeFromJSON(json) {
+		this.uuid = json.uuid;
 		this.name = json.name;
 		this.title = json.title;
 

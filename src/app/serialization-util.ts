@@ -1,4 +1,5 @@
 import { Attributes, Defenses, Pools } from "./attribute-keys";
+import { Denomination } from "./skills/skill";
 
 export class SerializationUtil {
 	/**

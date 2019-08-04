@@ -9,6 +9,7 @@ import { JobService } from '../job-service';
 import { Professions } from '../crafting-jobs/professions';
 import { Races } from '../racial-jobs/races';
 import { JobTypes } from '../shared-constants'
+import { Skill, Currency, Duration, Qualifier, Denomination } from '../skills/skill';
 
 @Component({
   selector: 'app-job-page',
