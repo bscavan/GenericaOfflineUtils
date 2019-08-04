@@ -140,20 +140,14 @@ export class JobPageComponent implements OnInit {
 		this.jobService.deleteJobFromCollection(this.currentJob);
 	}
 
-	// Note: Currently, the JSON for jobs don't contain notes as to what type
-	// of jobs they refer to. So, it would be really easy to import a crafting
-	// job in as an adventuring, or to accidentally try to load a racial in as
-	// a crafting job... This will break things.
 	public save() {
-		let jobInProgress = this.jobService.getCurrentJob(this.selectedJobType);
-		let filename = jobInProgress.name + ".json";
-		let jobJson = jobInProgress.serializeToJSON();
+		let jobJson = this.currentJob.serializeToJSON();
 		jobJson = JSON.stringify(jobJson);
 		let jobJsonArray = [];
 		jobJsonArray.push(jobJson);
 
 		let blob = new Blob(jobJsonArray, {type: 'text/plain' });
-		FileSaver.saveAs(blob, filename);
+		FileSaver.saveAs(blob, this.currentJob.name + ".json");
 	}
 
 	public newJob() {
