@@ -25,7 +25,7 @@ describe('CharacterPageComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(CharacterPageComponent);
 		component = fixture.componentInstance;
-		component.characterFocus = new Jaxby();
+		component.characterService.characterFocus = new Jaxby();
 		fixture.detectChanges();
 	});
 

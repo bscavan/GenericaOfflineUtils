@@ -183,4 +183,26 @@ export class JobPageComponent implements OnInit {
 
 		this.resetCurrentJobsList();
 	}
+
+	public saveNewSkill() {
+		let costs = [{
+			costAmount: 1,
+			costDenomination: Currency.GOLD_PIECES
+		}];
+
+		let duration= {
+			amount: 1,
+			timeDenomination: Duration.PASSIVE_CONSTANT,
+			qualifier: Qualifier.NONE
+		};
+
+		let testSkill = new Skill("Weapon Mastery", "mastery of a weapon", costs, duration);
+		let skillJson = testSkill.serializeToJSON();
+		skillJson = JSON.stringify(skillJson);
+
+		let jobFileAsJson = JSON.parse(skillJson.toString());
+
+		let otherSkill = new Skill(null, null, null, null);
+		otherSkill.deserializeFromJSON(jobFileAsJson);
+	}
 }

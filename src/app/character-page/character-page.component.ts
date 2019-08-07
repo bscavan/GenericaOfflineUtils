@@ -31,7 +31,7 @@ export class CharacterPageComponent implements OnInit {
 	// Control for the ngIf on the manual/testing controls.
 	expandOptions:boolean = false;
 
-	constructor(private characterService: CharacterService) {
+	constructor(public characterService: CharacterService) {
 	}
 
 	ngOnInit() { }

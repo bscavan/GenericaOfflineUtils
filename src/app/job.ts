@@ -2,6 +2,8 @@ import { Attributes, Defenses, Pools, AttributeKeys } from "./attribute-keys";
 import { SerializationUtil } from "./serialization-util";
 import { JsonSerializable } from "./json-serializable";
 import { isNullOrUndefined } from "util";
+import { v4 as uuid } from 'uuid';
+import { Skill } from "./skills/skill";
 
 export class Job implements JsonSerializable {
 	public static readonly LABEL = "job";
@@ -17,17 +19,20 @@ export class Job implements JsonSerializable {
 	basePools: Set<{affectedPool: Pools, baseValue: number}>;
 	// skills go here?
 
+	skills: Map<number, Set<Skill>>;
+
 	constructor(name: string, jobType: string,
 	affectedAttributes: Set<{affectedAttribute: Attributes, pointsPerLevel: number}>,
 	affectedDefenses: Set<{affectedDefense: Defenses, pointsPerLevel: number}>,
 	basePools: Set<{affectedPool: Pools, baseValue: number}>) {
 		// FIXME: Randomly generate this value.
-		this.uuid = "-1";
+		this.uuid = uuid();
 		this.name = name;
 		this.jobType = jobType;
 		this.affectedAttributes = new Set<{affectedAttribute: Attributes, pointsPerLevel: number}>()
 		this.affectedDefenses = new Set<{affectedDefense: Defenses, pointsPerLevel: number}>();
 		this.basePools = new Set<{affectedPool: Pools, baseValue: number}>();
+		this.skills = new Map<number, Set<Skill>>();
 
 		// Tally up the provided stats
 		let foundAttributes = new Map<Attributes, number>();
@@ -63,6 +68,26 @@ export class Job implements JsonSerializable {
 	}
 
 	/**
+	 * Adds the provided skill to the list of skills this job provides at the
+	 * specified level.
+	 * NOTE: this method allows the same skill to be added at multiple levels.
+	 *
+	 * @param levelGained The job level at which this skill is accessible to a
+	 * character.
+	 * @param skillToAdd The skill to add to the list this job provides.
+	 */
+	public addSkill(levelGained: number, skillToAdd: Skill) {
+		let skillsAtLevel = this.skills.get(levelGained);
+
+		if(isNullOrUndefined(skillsAtLevel)) {
+			skillsAtLevel = new Set<Skill>();
+		}
+
+		skillsAtLevel.add(skillToAdd);
+		this.skills.set(levelGained, skillsAtLevel);
+	}
+
+	/**
 	 * Returns the provided value if it is a defined number, otherwise zero.
 	 * @param x The number to check for an undefined value.
 	 */
@@ -79,6 +104,8 @@ export class Job implements JsonSerializable {
 		json["affectedAttributes"] = SerializationUtil.serializeAttributesSet(this.affectedAttributes);
 		json["affectedDefenses"] = SerializationUtil.serializeDefensesSet(this.affectedDefenses);
 		json["basePools"] = SerializationUtil.serializePoolsSet(this.basePools);
+		json["skills"] = this.generateSkillSection();
+
 		return json;
 	}
 
@@ -89,8 +116,44 @@ export class Job implements JsonSerializable {
 		this.affectedAttributes = SerializationUtil.deserializeAttributesSet(json.affectedAttributes);
 		this.affectedDefenses = SerializationUtil.deserializeDefensesSet(json.affectedDefenses);
 		this.basePools = SerializationUtil.deserializePoolsSet(json.basePools);
+		this.skills = this.deserializeSkillSection(json.skills);
 
 		return this;
+	}
+
+	private generateSkillSection() {
+		let skillsSection = {};
+
+		this.skills.forEach((currentSkillGrouping, currentSkillLevel) => {
+			let skillsAtCurrentLevel = [];
+
+			currentSkillGrouping.forEach(currentSkill => {
+				skillsAtCurrentLevel.push(currentSkill.serializeToJSON());
+			});
+
+			skillsSection["" + currentSkillLevel] = skillsAtCurrentLevel;
+		});
+
+		return skillsSection;
+	}
+
+	private deserializeSkillSection(skillsJson): Map<number, Set<Skill>> {
+		let skillsMap = new Map<number, Set<Skill>>();
+
+		for(let currentIndex in skillsJson) {
+			let currentSkillSetJson = skillsJson[currentIndex];
+			let currentSkillSet = new Set<Skill>();
+
+			// Iterate over each of skill elements in the json and add them to the Set.
+			for(let currentSkillIndex in currentSkillSetJson) {
+				currentSkillSet.add(Skill.deserializeNewSkillFromJSON(currentSkillSetJson[currentSkillIndex]));
+			}
+
+			// TODO: Handle improper input.
+			skillsMap.set(Number.parseInt(currentIndex), currentSkillSet);
+		}
+
+		return skillsMap;
 	}
 
 	public getLabel() {

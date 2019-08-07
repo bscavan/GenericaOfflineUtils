@@ -1,7 +1,8 @@
 import { Pools } from '../attribute-keys'
-import { uuidv4 } from 'uuid'
+import { v4 as uuid } from 'uuid';
 import { JsonSerializable } from '../json-serializable';
 import * as FileSaver from 'file-saver';
+import { isNullOrUndefined } from 'util';
 
 /*
  * TODO: Don't forget to provide a means of working in the Bard's borrow skills.
@@ -79,6 +80,11 @@ export type Denomination = Pools | Currency | SpecialCost;
 
 export class Skill implements JsonSerializable {
 	public static readonly LABEL = "skill";
+	public static readonly DEFAULT_SKILL_DURATION = {
+		amount: 1,
+		timeDenomination: Duration.PASSIVE_CONSTANT,
+		qualifier: Qualifier.NONE
+	}
 
 	public uuid: string;
 	public name: string;
@@ -98,19 +104,45 @@ export class Skill implements JsonSerializable {
 	 * amounts or qualifiers, so we'll end up with things like:
 	 * "1 INSTANT NONE" or "1 CONCENTRATION NONE"
 	 */
-	public duration: {amount: number, timeDenomination: Duration, qualifier: Qualifier}[];
+	public duration: {amount: number, timeDenomination: Duration, qualifier: Qualifier};
 
 	public constructor(name: string, description: string,
 	costs: {costAmount: number, costDenomination: Denomination}[],
-	duration: {amount: number, timeDenomination: Duration, qualifier: Qualifier}[]) {
-		// Generates a random UUID for a new skill.
-		//this.uuid = uuidv4();
-		// FIXME: Randomly generate this value.
-		this.uuid = "-1";
+	duration: {amount: number, timeDenomination: Duration, qualifier: Qualifier}) {
+		this.uuid = uuid();
 		this.name = name;
 		this.description = description;
-		this.costs = costs;
-		this.duration = duration;
+
+		if(isNullOrUndefined(costs)) {
+			this.costs = [];
+		} else {
+			this.costs = costs;
+		}
+
+		if(isNullOrUndefined(duration)) {
+			this.duration = Skill.DEFAULT_SKILL_DURATION;
+		} else {
+			this.duration = duration;
+		}
+	}
+
+	public setCost(newCost: {costAmount: number, costDenomination: Denomination}[]) {
+		this.costs = newCost;
+	}
+
+	public addCost(newCostAmount: number, newCostDenomination: Denomination) {
+		this.costs.push({
+			costAmount: newCostAmount,
+			costDenomination: newCostDenomination
+		})
+	}
+
+	public setDuration(newDurationAmount: number, newDurationDenomination: Duration, newDurationQualifier: Qualifier) {
+		this.duration = {
+			amount: newDurationAmount,
+			timeDenomination: newDurationDenomination,
+			qualifier: newDurationQualifier
+		};
 	}
 
 	public serializeToJSON() {
@@ -130,6 +162,18 @@ export class Skill implements JsonSerializable {
 		this.costs = json.costs;
 		this.duration = json.duration;
 		return this;
+	}
+
+	public static deserializeNewSkillFromJSON(json): Skill {
+		let deserializedSkill = new Skill(null, null, null, null);
+
+		deserializedSkill.uuid = json.uuid;
+		deserializedSkill.name = json.name;
+		deserializedSkill.description = json.description;
+		deserializedSkill.costs = json.costs;
+		deserializedSkill.duration = json.duration;
+
+		return deserializedSkill;
 	}
 
 	public getLabel() {

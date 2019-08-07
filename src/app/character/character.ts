@@ -11,6 +11,7 @@ import { Races } from "../racial-jobs/races";
 import { Professions } from "../crafting-jobs/professions";
 import { AdventuringJobs } from "../adventuring-jobs/adventuring-jobs";
 import { JsonSerializable } from "../json-serializable";
+import { v4 as uuid } from 'uuid';
 
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
@@ -65,6 +66,7 @@ export class Character implements JsonSerializable {
 	supplementalRacialJobLevels: [{ job: RacialJob; level: number; }],
 	adventuringJobLevels: [{ job: AdventuringJob; level: number; }],
 	craftingJobLevels: [{ job: CraftingJob; level: number; }] ) {
+		this.uuid = uuid();
 		this.name = name;
 		this.title = title;
 		this.primaryRacialJob = primaryRacialJob;
