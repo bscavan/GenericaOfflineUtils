@@ -1,9 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Job } from '../job';
-import { BlankAdventuringJob } from '../adventuring-jobs/blank-adventuring-job';
-import { Attributes, AttributeKeys } from '../attribute-keys';
+import { Attributes, Defenses } from '../attribute-keys';
 import * as FileSaver from 'file-saver';
-import { AdventuringJob } from '../adventuring-jobs/adventuring-job';
 import { AdventuringJobs } from '../adventuring-jobs/adventuring-jobs';
 import { JobService } from '../job-service';
 import { Professions } from '../crafting-jobs/professions';
@@ -28,7 +26,9 @@ export class JobPageComponent implements OnInit {
 	public currentJobsList: Job[];
 	// TODO: Keep this list sorted alphabetically?
 	public orderedAttributes: {affectedAttribute: Attributes; pointsPerLevel: number;}[] = [];
-	public orderedBaseAttributes: {affectedAttribute: Attributes; pointsPerLevel: number;}[] = [];
+	public orderedBaseAttributes: {affectedAttribute: Attributes; baseValue: number;}[] = [];
+	public orderedAffectedDefenses: {affectedDefense: Defenses, pointsPerLevel: number}[] = [];
+	public orderedBaseDefenses: {affectedDefense: Defenses, baseValue: number}[] = [];
 	selectedJobType: JobTypes;
 
 	public static job_service: JobService;
@@ -55,9 +55,15 @@ export class JobPageComponent implements OnInit {
 	recreateOrderedAttributes() {
 		this.orderedAttributes = [];
 		this.orderedBaseAttributes = [];
+		this.orderedAffectedDefenses = []
+		this.orderedBaseDefenses = [];
 
 		this.currentJob.affectedAttributes.forEach((currentElement) => {
 			this.orderedAttributes.push(currentElement);
+		});
+
+		this.currentJob.affectedDefenses.forEach((currentElement) => {
+			this.orderedAffectedDefenses.push(currentElement);
 		});
 
 		if(isJobWithBaseAttributes(this.currentJob)) {
@@ -67,8 +73,15 @@ export class JobPageComponent implements OnInit {
 			 * it's "A-OK"
 			 */
 			let jobInProgress = this.currentJob as any as JobWithBaseAttributes;
+
 			jobInProgress.getBaseAttributes().forEach((currentElement) => {
 				this.orderedBaseAttributes.push(currentElement);
+			});
+
+			// TODO: Consider splitting baseDefenses off from JobWithBaseAttributes.
+
+			jobInProgress.getBaseDefenses().forEach((currentElement) => {
+				this.orderedBaseDefenses.push(currentElement);
 			});
 		}
 	}
@@ -77,6 +90,8 @@ export class JobPageComponent implements OnInit {
 		this.currentJob = this.jobService.getCurrentJob(this.selectedJobType);
 		this.orderedAttributes = [];
 		this.orderedBaseAttributes = [];
+		this.orderedAffectedDefenses = [];
+		this.orderedBaseDefenses = [];
 
 		// Set<{affectedAttribute: Attributes, pointsPerLevel: number}>;
 		this.currentJob.affectedAttributes.forEach((currentElement) => {
@@ -85,6 +100,16 @@ export class JobPageComponent implements OnInit {
 				pointsPerLevel: 0
 			}
 			this.orderedAttributes.push(newCurrentElement);
+		});
+
+		// TODO: Add a method of controlling whether or not affectedDefenses
+		// are displayed in the UI.
+		this.currentJob.affectedDefenses.forEach((currentElement) => {
+			let newCurrentElement = {
+				affectedDefense: currentElement.affectedDefense,
+				pointsPerLevel: 0
+			}
+			this.orderedAffectedDefenses.push(newCurrentElement);
 		});
 
 		if(isJobWithBaseAttributes(this.currentJob)) {
@@ -97,9 +122,17 @@ export class JobPageComponent implements OnInit {
 			jobInProgress.getBaseAttributes().forEach((currentElement) => {
 				let newCurrentElement = {
 					affectedAttribute: currentElement.affectedAttribute,
-					pointsPerLevel: 0
+					baseValue: 0
 				}
 				this.orderedBaseAttributes.push(newCurrentElement);
+			});
+
+			jobInProgress.getBaseDefenses().forEach((currentElement) => {
+				let newCurrentElement = {
+					affectedDefense: currentElement.affectedDefense,
+					baseValue: 0
+				}
+				this.orderedBaseDefenses.push(newCurrentElement);
 			});
 		}
 	}

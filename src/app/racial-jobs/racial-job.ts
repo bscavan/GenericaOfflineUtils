@@ -1,5 +1,5 @@
 import { Job } from "../job";
-import { Attributes, Defenses, Pools } from "../attribute-keys";
+import { Attributes, Defenses, Pools, AttributeKeys } from "../attribute-keys";
 import { SerializationUtil } from "../serialization-util";
 import { JobTypes } from "../shared-constants"
 import { JobWithBaseAttributes, TYPE } from "./job-with-base-attributes";
@@ -28,12 +28,38 @@ export class RacialJob extends Job implements JobWithBaseAttributes{
 	numberOfCraftingJobSlots: number,
 	canBeSupplementalJob: boolean) {
 		super(name, JobTypes.RACIAL_JOB, affectedAttributes, affectedDefenses, basePools);
-		this.baseAttributes = baseAttributes;
-		this.baseDefenses = baseDefenses;
+		this.baseAttributes = new Set<{affectedAttribute: Attributes; baseValue: number;}>();
+		this.baseDefenses = new Set<{affectedDefense: Defenses; baseValue: number; }>();
 		this.numberOfsupplementalRacialJobSlots = numberOfsupplementalRacialJobSlots;
 		this.numberOfAdventuringJobSlots = numberOfAdventuringJobSlots;
 		this.numberOfCraftingJobSlots = numberOfCraftingJobSlots;
 		this.canBeSupplementalJob = canBeSupplementalJob;
+
+		// FIXME: Clean up this code
+		// Tally up the provided stats
+		let foundBaseAttributes = new Map<Attributes, number>();
+		let foundBaseDefenses = new Map<Defenses, number>();
+
+		baseAttributes.forEach(item => {
+			foundBaseAttributes.set(item.affectedAttribute, item.baseValue);
+		});
+
+		baseDefenses.forEach(item => {
+			foundBaseDefenses.set(item.affectedDefense, item.baseValue);
+		});
+
+		// Initialize every stat to the provided value or zero if none exists.
+		AttributeKeys.getAttributeSets().forEach((currentAttributeSet) => {
+			let currentOffensive = this.defaultIfUndefined(foundBaseAttributes.get(currentAttributeSet.offensiveAttribute));
+			this.baseAttributes.add({affectedAttribute: currentAttributeSet.offensiveAttribute, baseValue: currentOffensive});
+
+			// This is elsewhere called the "defensive" attribute, but that's really confusing when right next to "defense"
+			let currentSecondary = this.defaultIfUndefined(foundBaseAttributes.get(currentAttributeSet.defensiveAttribute));
+			this.baseAttributes.add({affectedAttribute: currentAttributeSet.defensiveAttribute, baseValue: currentSecondary});
+
+			let currentDefense = this.defaultIfUndefined(foundBaseDefenses.get(currentAttributeSet.defense));
+			this.baseDefenses.add({affectedDefense: currentAttributeSet.defense, baseValue: currentDefense});
+		});
 	}
 
 	getEmptyRacialJob() {
@@ -61,6 +87,14 @@ export class RacialJob extends Job implements JobWithBaseAttributes{
 
 	public getBaseDefenses() {
 		return this.baseDefenses;
+	}
+
+	public setBaseDefenses(baseDefenses: Set<{affectedDefense: Defenses, baseValue: number}>) {
+		this.baseDefenses = baseDefenses;
+	}
+
+	public addBaseDefenses(newBaseDefense: {affectedDefense: Defenses, baseValue: number}) {
+		this.baseDefenses.add(newBaseDefense);
 	}
 
 	public serializeToJSON() {

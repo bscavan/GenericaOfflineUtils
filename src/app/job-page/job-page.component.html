@@ -120,6 +120,42 @@
 	</table>
 </div>
 
+<br>
+
+<div *ngIf="isJobWithBaseAttributes(this.currentJob)">
+	<span style="font-weight: bold">Base defenses values imparted:</span>
+	<table>
+		<td *ngFor="let current of this.orderedBaseDefenses; let i = index">
+			<tr class="attribute-bar">
+				{{current.affectedDefense.toString()}}
+			</tr>
+			<tr>
+				<input style="width:125px" type="number"
+				(change)="updateJobBaseDefenses(current)"
+				[(ngModel)]="current.baseValue"
+				min="0"/>
+			</tr>
+		</td>
+	</table>
+
+	<br>
+
+	<span style="font-weight: bold">Defenses gained per level:</span>
+	<table>
+		<td *ngFor="let current of this.orderedAffectedDefenses; let i = index">
+			<tr class="attribute-bar">
+				{{current.affectedDefense.toString()}}
+			</tr>
+			<tr>
+				<input style="width:125px" type="number"
+				(change)="updateJobAffectedDefenses(current)"
+				[(ngModel)]="current.pointsPerLevel"
+				min="0"/>
+			</tr>
+		</td>
+	</table>
+</div>
+
 <button (click)="this.loadIntoCollection(currentJob)">Save Job</button>
 <button (click)="this.clearCurrentJob()">New Job</button>
 <button (click)="saveNewSkill()">saveNewSkill()</button>

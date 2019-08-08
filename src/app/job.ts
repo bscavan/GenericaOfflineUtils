@@ -25,7 +25,6 @@ export abstract class Job implements JsonSerializable {
 	affectedAttributes: Set<{affectedAttribute: Attributes, pointsPerLevel: number}>,
 	affectedDefenses: Set<{affectedDefense: Defenses, pointsPerLevel: number}>,
 	basePools: Set<{affectedPool: Pools, baseValue: number}>) {
-		// FIXME: Randomly generate this value.
 		this.uuid = uuid();
 		this.name = name;
 		this.jobType = jobType;
@@ -34,6 +33,7 @@ export abstract class Job implements JsonSerializable {
 		this.basePools = new Set<{affectedPool: Pools, baseValue: number}>();
 		this.skills = new Map<number, Set<Skill>>();
 
+		// FIXME: Clean up this code
 		// Tally up the provided stats
 		let foundAttributes = new Map<Attributes, number>();
 		let foundDefenses = new Map<Defenses, number>();
@@ -56,8 +56,9 @@ export abstract class Job implements JsonSerializable {
 			let currentOffensive = this.defaultIfUndefined(foundAttributes.get(currentAttributeSet.offensiveAttribute));
 			this.affectedAttributes.add({affectedAttribute: currentAttributeSet.offensiveAttribute, pointsPerLevel: currentOffensive});
 
-			let currentDefensive = this.defaultIfUndefined(foundAttributes.get(currentAttributeSet.defensiveAttribute));
-			this.affectedAttributes.add({affectedAttribute: currentAttributeSet.defensiveAttribute, pointsPerLevel: currentDefensive});
+			// This is elsewhere called the "defensive" attribute, but that's really confusing when right next to "defense"
+			let currentSecondary = this.defaultIfUndefined(foundAttributes.get(currentAttributeSet.defensiveAttribute));
+			this.affectedAttributes.add({affectedAttribute: currentAttributeSet.defensiveAttribute, pointsPerLevel: currentSecondary});
 
 			let currentDefense = this.defaultIfUndefined(foundDefenses.get(currentAttributeSet.defense));
 			this.affectedDefenses.add({affectedDefense: currentAttributeSet.defense, pointsPerLevel: currentDefense});
@@ -91,7 +92,7 @@ export abstract class Job implements JsonSerializable {
 	 * Returns the provided value if it is a defined number, otherwise zero.
 	 * @param x The number to check for an undefined value.
 	 */
-	private defaultIfUndefined(x: number): number {
+	protected defaultIfUndefined(x: number): number {
 		let returnValue = (isNullOrUndefined(x)) ? 0 : x;
 		return returnValue;
 	}
