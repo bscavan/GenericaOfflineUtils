@@ -5,7 +5,7 @@ import { isNullOrUndefined } from "util";
 import { v4 as uuid } from 'uuid';
 import { Skill } from "./skills/skill";
 
-export class Job implements JsonSerializable {
+export abstract class Job implements JsonSerializable {
 	public static readonly LABEL = "job";
 	//TODO: Add support for skills
 	// TODO: Add support for tracking Job descriptions

@@ -83,7 +83,28 @@
 	<input type="text" [(ngModel)]="this.currentJob.name"/>
 </div>
 
+<div *ngIf="isJobWithBaseAttributes(this.currentJob)">
+	<br>
+	<span style="font-weight: bold">Base attribute values imparted:</span>
+	<table>
+		<td *ngFor="let current of this.orderedBaseAttributes; let i = index">
+			<tr class="attribute-bar">
+				{{current.affectedAttribute.toString()}}
+			</tr>
+			<tr>
+				<input style="width:125px" type="number"
+				(change)="updateJobBaseAttributes(current)"
+				[(ngModel)]="current.baseValue"
+				min="0"/>
+			</tr>
+		</td>
+	</table>
+</div>
+
+<br>
+
 <div>
+	<span style="font-weight: bold">Attributes gained per level:</span>
 	<table>
 		<td *ngFor="let current of this.orderedAttributes; let i = index">
 			<tr class="attribute-bar">
@@ -91,7 +112,7 @@
 			</tr>
 			<tr>
 				<input style="width:125px" type="number"
-				(change)="updateJobAttributes(current)"
+				(change)="updateJobAffectedAttributes(current)"
 				[(ngModel)]="current.pointsPerLevel"
 				min="0"/>
 			</tr>
@@ -101,6 +122,6 @@
 
 <button (click)="this.loadIntoCollection(currentJob)">Save Job</button>
 <button (click)="this.clearCurrentJob()">New Job</button>
+<button (click)="saveNewSkill()">saveNewSkill()</button>
 <!--This button is only here to facilitate debugging with 'ng serve'.-->
 <button hidden (click)="recreateOrderedAttributes()">reUp</button>
-<button (click)="saveNewSkill()">saveNewSkill()</button>

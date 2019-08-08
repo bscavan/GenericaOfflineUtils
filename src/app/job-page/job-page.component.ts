@@ -10,6 +10,8 @@ import { Professions } from '../crafting-jobs/professions';
 import { Races } from '../racial-jobs/races';
 import { JobTypes } from '../shared-constants'
 import { Skill, Currency, Duration, Qualifier, Denomination } from '../skills/skill';
+import { RacialJob } from '../racial-jobs/racial-job';
+import { JobWithBaseAttributes, isJobWithBaseAttributes } from '../racial-jobs/job-with-base-attributes';
 
 @Component({
   selector: 'app-job-page',
@@ -26,6 +28,7 @@ export class JobPageComponent implements OnInit {
 	public currentJobsList: Job[];
 	// TODO: Keep this list sorted alphabetically?
 	public orderedAttributes: {affectedAttribute: Attributes; pointsPerLevel: number;}[] = [];
+	public orderedBaseAttributes: {affectedAttribute: Attributes; pointsPerLevel: number;}[] = [];
 	selectedJobType: JobTypes;
 
 	public static job_service: JobService;
@@ -43,19 +46,37 @@ export class JobPageComponent implements OnInit {
 	}
 
 	// TODO: Expand out from just orderedAttributes, eventually covering all of the features of the three job types...
+	// TODO: Rename this resetAllAttributes()?
 	public resetOrderedAttributes() {
 		this.currentJob = this.jobService.getCurrentJob(this.selectedJobType);
-		this.orderedAttributes = [];
+		this.recreateOrderedAttributes();
+	}
 
-		// Set<{affectedAttribute: Attributes, pointsPerLevel: number}>;
+	recreateOrderedAttributes() {
+		this.orderedAttributes = [];
+		this.orderedBaseAttributes = [];
+
 		this.currentJob.affectedAttributes.forEach((currentElement) => {
 			this.orderedAttributes.push(currentElement);
 		});
+
+		if(isJobWithBaseAttributes(this.currentJob)) {
+			/*
+			 * Note, TS won't allow for a direct cast in this instance because
+			 * it "may be a mistake." However, if we first cast to "any" then
+			 * it's "A-OK"
+			 */
+			let jobInProgress = this.currentJob as any as JobWithBaseAttributes;
+			jobInProgress.getBaseAttributes().forEach((currentElement) => {
+				this.orderedBaseAttributes.push(currentElement);
+			});
+		}
 	}
 
 	public clearOrderedAttributes() {
 		this.currentJob = this.jobService.getCurrentJob(this.selectedJobType);
 		this.orderedAttributes = [];
+		this.orderedBaseAttributes = [];
 
 		// Set<{affectedAttribute: Attributes, pointsPerLevel: number}>;
 		this.currentJob.affectedAttributes.forEach((currentElement) => {
@@ -65,6 +86,22 @@ export class JobPageComponent implements OnInit {
 			}
 			this.orderedAttributes.push(newCurrentElement);
 		});
+
+		if(isJobWithBaseAttributes(this.currentJob)) {
+			/*
+			 * Note, TS won't allow for a direct cast in this instance because
+			 * it "may be a mistake." However, if we first cast to "any" then
+			 * it's "A-OK"
+			 */
+			let jobInProgress = this.currentJob as any as JobWithBaseAttributes;
+			jobInProgress.getBaseAttributes().forEach((currentElement) => {
+				let newCurrentElement = {
+					affectedAttribute: currentElement.affectedAttribute,
+					pointsPerLevel: 0
+				}
+				this.orderedBaseAttributes.push(newCurrentElement);
+			});
+		}
 	}
 
 	// FIXME: Currently these callbacks are not working.
@@ -106,15 +143,17 @@ export class JobPageComponent implements OnInit {
 		this.recreateOrderedAttributes();
 	}
 
-	recreateOrderedAttributes() {
-		this.orderedAttributes = [];
+	updateJobBaseAttributes(attributeItem) {
+		if(isJobWithBaseAttributes(this.currentJob) == false){
+			console.error("updateJobBaseAttributes() was called on a Job that does not provide them.")
+			return;
+		}
 
-		this.currentJob.affectedAttributes.forEach((currentElement) => {
-			this.orderedAttributes.push(currentElement);
-		});
+		let targetJob = this.currentJob as RacialJob;
+		targetJob.addBaseAttributes(attributeItem);
 	}
 
-	updateJobAttributes(attributeItem) {
+	updateJobAffectedAttributes(attributeItem) {
 		this.currentJob.affectedAttributes.add(attributeItem);
 	}
 
@@ -204,5 +243,9 @@ export class JobPageComponent implements OnInit {
 
 		let otherSkill = new Skill(null, null, null, null);
 		otherSkill.deserializeFromJSON(jobFileAsJson);
+	}
+
+	public isJobWithBaseAttributes(input: Job) {
+		return isJobWithBaseAttributes(this.currentJob);
 	}
 }
