@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Job } from '../job';
-import { Attributes, Defenses } from '../attribute-keys';
+import { Attributes, Defenses, Pools } from '../attribute-keys';
 import * as FileSaver from 'file-saver';
 import { AdventuringJobs } from '../adventuring-jobs/adventuring-jobs';
 import { JobService } from '../job-service';
@@ -29,6 +29,7 @@ export class JobPageComponent implements OnInit {
 	public orderedBaseAttributes: {affectedAttribute: Attributes; baseValue: number;}[] = [];
 	public orderedAffectedDefenses: {affectedDefense: Defenses, pointsPerLevel: number}[] = [];
 	public orderedBaseDefenses: {affectedDefense: Defenses, baseValue: number}[] = [];
+	public orderedBasePools: {affectedPool: Pools, baseValue: number}[];
 	selectedJobType: JobTypes;
 
 	public static job_service: JobService;
@@ -57,6 +58,7 @@ export class JobPageComponent implements OnInit {
 		this.orderedBaseAttributes = [];
 		this.orderedAffectedDefenses = []
 		this.orderedBaseDefenses = [];
+		this.orderedBasePools = [];
 
 		this.currentJob.affectedAttributes.forEach((currentElement) => {
 			this.orderedAttributes.push(currentElement);
@@ -64,6 +66,10 @@ export class JobPageComponent implements OnInit {
 
 		this.currentJob.affectedDefenses.forEach((currentElement) => {
 			this.orderedAffectedDefenses.push(currentElement);
+		});
+
+		this.currentJob.basePools.forEach((currentElement) => {
+			this.orderedBasePools.push(currentElement);
 		});
 
 		if(isJobWithBaseAttributes(this.currentJob)) {
@@ -110,6 +116,15 @@ export class JobPageComponent implements OnInit {
 				pointsPerLevel: 0
 			}
 			this.orderedAffectedDefenses.push(newCurrentElement);
+		});
+
+		this.currentJob.basePools.forEach((currentElement) => {
+			let newPoolElement = {
+				affectedPool: currentElement.affectedPool,
+				baseValue: 0
+			};
+
+			this.orderedBasePools.push(newPoolElement);
 		});
 
 		if(isJobWithBaseAttributes(this.currentJob)) {
@@ -188,6 +203,24 @@ export class JobPageComponent implements OnInit {
 
 	updateJobAffectedAttributes(attributeItem) {
 		this.currentJob.affectedAttributes.add(attributeItem);
+	}
+
+	updateJobBaseDefense(defensesItem) {
+		if(isJobWithBaseAttributes(this.currentJob) == false){
+			console.error("updateJobBaseDefense() was called on a Job that does not provide them.")
+			return;
+		}
+
+		let targetJob = this.currentJob as RacialJob;
+		targetJob.addBaseDefenses(defensesItem);
+	}
+
+	updateJobAffectedDefenses(defensesItem) {
+		this.currentJob.affectedDefenses.add(defensesItem);
+	}
+
+	updateJobBasePools(poolsItem) {
+		this.currentJob.basePools.add(poolsItem);
 	}
 
 	// Currently this won't upload a job if every attribute is zero. Is this wrong?

@@ -1,7 +1,7 @@
 
 import { Component, OnInit, Input } from '@angular/core';
 import { Character } from '../../character/character';
-import { Pools, Attributes } from '../../attribute-keys';
+import { Pools, Attributes, Defenses } from '../../attribute-keys';
 
 @Component({
   selector: 'app-attribute-sidebar',
@@ -74,5 +74,25 @@ export class AttributeSidebarComponent implements OnInit {
 
 	public getPerception(character: Character): number {
 		return character.getAttribute(Attributes.PER);
+	}
+
+	public getArmor(character: Character): number {
+		return character.getDefense(Defenses.ARM);
+	}
+
+	public getMentalFortitude(character: Character): number {
+		return character.getDefense(Defenses.MFORT);
+	}
+
+	public getEndurance(character: Character): number {
+		return character.getDefense(Defenses.END);
+	}
+
+	public getCool(character: Character): number {
+		return character.getDefense(Defenses.COOL);
+	}
+
+	public getFate(character: Character): number {
+		return character.getDefense(Defenses.FATE);
 	}
 }

@@ -154,6 +154,22 @@
 			</tr>
 		</td>
 	</table>
+	<br>
+
+	<span style="font-weight: bold">Base pool values imparted:</span>
+	<table>
+		<td *ngFor="let current of this.orderedBasePools; let i = index">
+			<tr class="attribute-bar">
+				{{current.affectedPool.toString()}}
+			</tr>
+			<tr>
+				<input style="width:125px" type="number"
+				(change)="updateJobBasePools(current)"
+				[(ngModel)]="current.baseValue"
+				min="0"/>
+			</tr>
+		</td>
+	</table>
 </div>
 
 <button (click)="this.loadIntoCollection(currentJob)">Save Job</button>

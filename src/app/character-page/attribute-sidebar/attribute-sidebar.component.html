@@ -1,163 +1,237 @@
 <!-- TODO: Rewrite this using an ngFor loop. -->
 <table>
-	<div style="background-color: slategray; border-width: 3px; border-style:solid; border-color: black; border-radius: 10px;">
-		<tr class="bottom-border">
-			<td>
-				<div class="top-attribute">
+	<td>
+		<table>
+			<div style="background-color: slategray; border-width: 3px; border-style:solid; border-color: black; border-radius: 10px;">
+				<tr class="bottom-border">
 					<td>
-						<b>STR:</b>
+						<div class="top-attribute">
+							<td>
+								<b>STR:</b>
+							</td>
+							<td>
+								{{this.getStrength(characterFocus)}}
+							</td>
+						</div>
+						<tr>
+							<td style="width:70%">
+								<b>CON:</b>
+							</td>
+							<td style="width:30%" class="value-cell">
+								{{this.getConstitution(characterFocus)}}
+							</td>
+						</tr>
 					</td>
-					<td>
-						{{this.getStrength(characterFocus)}}
-					</td>
-				</div>
-				<tr>
-					<td style="width:70%">
-						<b>CON:</b>
-					</td>
-					<td style="width:30%" class="value-cell">
-						{{this.getConstitution(characterFocus)}}
+		
+					<td class="left-border">
+						<tr>
+							<td style="width:70%">
+								<b>HP:</b>
+							</td>
+							<td style="width:30%">
+								{{this.getHP(characterFocus)}}
+							</td>
+						</tr>
 					</td>
 				</tr>
-			</td>
+				<tr class="bottom-border">
+					<td>
+						<div class="top-attribute">
+							<td>
+								<b>INT:</b>
+							</td>
+							<td>
+								{{this.getIntelligence(characterFocus)}}
+							</td>
+						</div>
+						<tr>
+							<td>
+								<b>WIS:</b>
+							</td>
+							<td>
+								{{this.getWisdom(characterFocus)}}
+							</td>
+						</tr>
+					</td>
+		
+					<td class="left-border">
+						<tr>
+							<td>
+								<b>SAN:</b>
+							</td>
+							<td class="value-cell">
+								{{this.getSanity(characterFocus)}}
+							</td>
+						</tr>
+					</td>
+				</tr>
+		
+				<tr class="bottom-border">
+					<td>
+						<div class="top-attribute">
+							<td>
+								<b>DEX:</b>
+							</td>
+							<td>
+								{{this.getDexterity(characterFocus)}}
+							</td>
+						</div>
+						<tr>
+							<td>
+								<b>AGL:</b>
+							</td>
+							<td>
+								{{this.getAgility(characterFocus)}}
+							</td>
+						</tr>
+					</td>
+		
+					<td class="left-border">
+						<tr>
+							<td>
+								<b>STA:</b>
+							</td>
+							<td class="value-cell">
+								{{this.getStamina(characterFocus)}}
+							</td>
+						</tr>
+					</td>
+				</tr>
+		
+				<tr class="bottom-border">
+					<td>
+						<div class="top-attribute">
+							<td>
+								<b>CHA:</b>
+							</td>
+							<td>
+								{{this.getCharisma(characterFocus)}}
+							</td>
+						</div>
+						<tr>
+							<td>
+								<b>Will:</b>
+							</td>
+							<td>
+								{{this.getWill(characterFocus)}}
+							</td>
+						</tr>
+					</td>
+		
+					<td class="left-border">
+						<tr>
+							<td>
+								<b>MOX:</b>
+							</td>
+							<td class="value-cell">
+								{{this.getMoxie(characterFocus)}}
+							</td>
+						</tr>
+					</td>
+				</tr>
+		
+				<tr>
+					<td>
+						<div class="top-attribute">
+							<td>
+								<b>LUCK:</b>
+							</td>
+							<td>
+								{{this.getLuck(characterFocus)}}
+							</td>
+						</div>
+						<tr>
+							<td>
+								<b>PER:</b>
+							</td>
+							<td>
+								{{this.getPerception(characterFocus)}}
+							</td>
+						</tr>
+					</td>
+		
+					<td class="left-border">
+						<tr>
+							<td>
+								<b>FOR:</b>
+							</td>
+							<td class="value-cell">
+								{{this.getFortune(characterFocus)}}
+							</td>
+						</tr>
+					</td>
+				</tr>
+			</div>
+		</table>
+	</td>
+	<td>
+		<table>
+			<div style="background-color: slategray; border-width: 3px; border-style:solid; border-color: black; border-radius: 10px;">
+				<tr class="bottom-border">
+					<td class="left-border; trick-height">
+						<tr>
+							<td style="width:70%">
+								<b>ARM:</b>
+							</td>
+							<td style="width:30%">
+								{{this.getArmor(characterFocus)}}
+							</td>
+						</tr>
+					</td>
+				</tr>
 
-			<td class="left-border">
-				<tr>
-					<td style="width:70%">
-						<b>HP:</b>
-					</td>
-					<td style="width:30%">
-						{{this.getHP(characterFocus)}}
-					</td>
-				</tr>
-			</td>
-		</tr>
-		<tr class="bottom-border">
-			<td>
-				<div class="top-attribute">
-					<td>
-						<b>INT:</b>
-					</td>
-					<td>
-						{{this.getIntelligence(characterFocus)}}
-					</td>
-				</div>
-				<tr>
-					<td>
-						<b>WIS:</b>
-					</td>
-					<td>
-						{{this.getWisdom(characterFocus)}}
+				<tr class="bottom-border">
+					<td class="left-border; trick-height">
+						<tr>
+							<td style="width:70%">
+								<b>MFORT:</b>
+							</td>
+							<td style="width:30%">
+								{{this.getMentalFortitude(characterFocus)}}
+							</td>
+						</tr>
 					</td>
 				</tr>
-			</td>
 
-			<td class="left-border">
-				<tr>
-					<td>
-						<b>SAN:</b>
-					</td>
-					<td class="value-cell">
-						{{this.getSanity(characterFocus)}}
+				<tr class="bottom-border">
+					<td class="left-border; trick-height">
+						<tr>
+							<td style="width:70%">
+								<b>END:</b>
+							</td>
+							<td style="width:30%">
+								{{this.getEndurance(characterFocus)}}
+							</td>
+						</tr>
 					</td>
 				</tr>
-			</td>
-		</tr>
 
-		<tr class="bottom-border">
-			<td>
-				<div class="top-attribute">
-					<td>
-						<b>DEX:</b>
-					</td>
-					<td>
-						{{this.getDexterity(characterFocus)}}
-					</td>
-				</div>
-				<tr>
-					<td>
-						<b>AGL:</b>
-					</td>
-					<td>
-						{{this.getAgility(characterFocus)}}
+				<tr class="bottom-border">
+					<td class="left-border; trick-height">
+						<tr>
+							<td style="width:70%">
+								<b>COOL:</b>
+							</td>
+							<td style="width:30%">
+								{{this.getCool(characterFocus)}}
+							</td>
+						</tr>
 					</td>
 				</tr>
-			</td>
 
-			<td class="left-border">
-				<tr>
-					<td>
-						<b>STA:</b>
-					</td>
-					<td class="value-cell">
-						{{this.getStamina(characterFocus)}}
-					</td>
-				</tr>
-			</td>
-		</tr>
-
-		<tr class="bottom-border">
-			<td>
-				<div class="top-attribute">
-					<td>
-						<b>CHA:</b>
-					</td>
-					<td>
-						{{this.getCharisma(characterFocus)}}
-					</td>
-				</div>
-				<tr>
-					<td>
-						<b>Will:</b>
-					</td>
-					<td>
-						{{this.getWill(characterFocus)}}
+				<tr class="bottom-border">
+					<td class="left-border; trick-height">
+						<tr>
+							<td style="width:70%">
+								<b>FATE:</b>
+							</td>
+							<td style="width:30%">
+								{{this.getFate(characterFocus)}}
+							</td>
+						</tr>
 					</td>
 				</tr>
-			</td>
-
-			<td class="left-border">
-				<tr>
-					<td>
-						<b>MOX:</b>
-					</td>
-					<td class="value-cell">
-						{{this.getMoxie(characterFocus)}}
-					</td>
-				</tr>
-			</td>
-		</tr>
-
-		<tr>
-			<td>
-				<div class="top-attribute">
-					<td>
-						<b>LUCK:</b>
-					</td>
-					<td>
-						{{this.getLuck(characterFocus)}}
-					</td>
-				</div>
-				<tr>
-					<td>
-						<b>PER:</b>
-					</td>
-					<td>
-						{{this.getPerception(characterFocus)}}
-					</td>
-				</tr>
-			</td>
-
-			<td class="left-border">
-				<tr>
-					<td>
-						<b>FOR:</b>
-					</td>
-					<td class="value-cell">
-						{{this.getFortune(characterFocus)}}
-					</td>
-				</tr>
-			</td>
-		</tr>
-	</div>
+			</div>
+		</table>
+	</td>
 </table>

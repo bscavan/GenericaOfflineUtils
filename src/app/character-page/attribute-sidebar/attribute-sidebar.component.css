@@ -10,6 +10,10 @@
 	border-bottom-color: black;
 }
 
+.trick-height {
+	height: 55px;
+}
+
 .left-border {
 	border-left-width: 3px;
 	border-left-style: solid;
