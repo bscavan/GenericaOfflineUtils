@@ -83,6 +83,15 @@
 	<input type="text" [(ngModel)]="this.currentJob.name"/>
 </div>
 
+<div *ngIf="currentJobIsARacialJob()">
+	Adventuring Job Slots:
+	<input type="number" [(ngModel)]="this.adventuringJobSlotsOnDisplay"
+	(change)="changeCurrentAdventuringJobSlots()">
+	Crafting Job Slots:
+	<input type="number" [(ngModel)]="this.craftingJobSlotsOnDisplay"
+	(change)="changeCurrentCraftingJobSlots()">
+</div>
+
 <div *ngIf="isJobWithBaseAttributes(this.currentJob)">
 	<br>
 	<span style="font-weight: bold">Base attribute values imparted:</span>

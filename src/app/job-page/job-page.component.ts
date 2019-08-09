@@ -10,6 +10,7 @@ import { JobTypes } from '../shared-constants'
 import { Skill, Currency, Duration, Qualifier, Denomination } from '../skills/skill';
 import { RacialJob } from '../racial-jobs/racial-job';
 import { JobWithBaseAttributes, isJobWithBaseAttributes } from '../racial-jobs/job-with-base-attributes';
+import { CharacterService } from '../character/character-service';
 
 @Component({
   selector: 'app-job-page',
@@ -30,11 +31,15 @@ export class JobPageComponent implements OnInit {
 	public orderedAffectedDefenses: {affectedDefense: Defenses, pointsPerLevel: number}[] = [];
 	public orderedBaseDefenses: {affectedDefense: Defenses, baseValue: number}[] = [];
 	public orderedBasePools: {affectedPool: Pools, baseValue: number}[];
+
+	public adventuringJobSlotsOnDisplay;
+	public craftingJobSlotsOnDisplay;
+
 	selectedJobType: JobTypes;
 
 	public static job_service: JobService;
 
-	constructor(private jobService: JobService) {
+	constructor(private jobService: JobService, private characterService: CharacterService) {
 		JobPageComponent.job_service = jobService;
 	}
 
@@ -189,6 +194,16 @@ export class JobPageComponent implements OnInit {
 	public switchJob(newJob: Job) {
 		this.currentJob = newJob;
 		this.recreateOrderedAttributes();
+
+		// Updates the job slot limits
+		if(this.currentJobIsARacialJob()) {
+			let currentJob = this.currentJob as RacialJob;
+			this.adventuringJobSlotsOnDisplay = currentJob.numberOfAdventuringJobSlots;
+			this.craftingJobSlotsOnDisplay = currentJob.numberOfCraftingJobSlots;
+		} else {
+			this.adventuringJobSlotsOnDisplay = -1;
+			this.craftingJobSlotsOnDisplay = -1;
+		}
 	}
 
 	updateJobBaseAttributes(attributeItem) {
@@ -311,7 +326,50 @@ export class JobPageComponent implements OnInit {
 		otherSkill.deserializeFromJSON(jobFileAsJson);
 	}
 
+	public currentJobIsARacialJob() {
+		return this.currentJob instanceof RacialJob;
+	}
+
 	public isJobWithBaseAttributes(input: Job) {
 		return isJobWithBaseAttributes(this.currentJob);
+	}
+
+	// FIXME: consolidate these methods, reducing duplication.
+	public changeCurrentAdventuringJobSlots() {
+		if(this.currentJobIsARacialJob() == false) {
+			return;
+		}
+
+		let currentJob = this.currentJob as RacialJob;
+
+		if(currentJob === this.characterService.characterFocus.primaryRacialJob) {
+			// The user is currently editing the job they are using in the characterPage!
+			if(confirm("You are about to alter the number of adventuring job slots alotted to a character in progress. Are you sure you wish to do this?") == false) {
+				this.adventuringJobSlotsOnDisplay = currentJob.numberOfAdventuringJobSlots;
+				return;
+			}
+		}
+
+		currentJob.numberOfAdventuringJobSlots = this.adventuringJobSlotsOnDisplay;
+		this.characterService.characterFocus.handlePrimaryRaceChange();
+	}
+
+	public changeCurrentCraftingJobSlots() {
+		if(this.currentJobIsARacialJob() == false) {
+			return;
+		}
+
+		let currentJob = this.currentJob as RacialJob;
+
+		if(currentJob === this.characterService.characterFocus.primaryRacialJob) {
+			// The user is currently editing the job they are using in the characterPage!
+			if(confirm("You are about to alter the number of crafting job slots alotted to a character in progress. Are you sure you wish to do this?") == false) {
+				this.craftingJobSlotsOnDisplay = currentJob.numberOfCraftingJobSlots;
+				return;
+			}
+		}
+
+		currentJob.numberOfCraftingJobSlots = this.craftingJobSlotsOnDisplay;
+		this.characterService.characterFocus.handlePrimaryRaceChange();
 	}
 }
