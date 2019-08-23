@@ -25,11 +25,11 @@ describe('Skill', () => {
 			costDenomination: Currency.GOLD_PIECES
 		}];
 
-		let duration= [{
+		let duration= {
 			amount: 1,
 			timeDenomination: Duration.PASSIVE_CONSTANT,
 			qualifier: Qualifier.NONE
-		}]
+		}
 
 		testSkill = new Skill("Weapon Mastery", "mastery of a weapon", costs, duration);
 	}));

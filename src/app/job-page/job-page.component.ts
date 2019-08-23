@@ -7,7 +7,6 @@ import { JobService } from '../job-service';
 import { Professions } from '../crafting-jobs/professions';
 import { Races } from '../racial-jobs/races';
 import { JobTypes } from '../shared-constants'
-import { Skill, Currency, Duration, Qualifier, Denomination } from '../skills/skill';
 import { RacialJob } from '../racial-jobs/racial-job';
 import { JobWithBaseAttributes, isJobWithBaseAttributes } from '../racial-jobs/job-with-base-attributes';
 import { CharacterService } from '../character/character-service';
@@ -304,26 +303,8 @@ export class JobPageComponent implements OnInit {
 		this.resetCurrentJobsList();
 	}
 
-	public saveNewSkill() {
-		let costs = [{
-			costAmount: 1,
-			costDenomination: Currency.GOLD_PIECES
-		}];
-
-		let duration= {
-			amount: 1,
-			timeDenomination: Duration.PASSIVE_CONSTANT,
-			qualifier: Qualifier.NONE
-		};
-
-		let testSkill = new Skill("Weapon Mastery", "mastery of a weapon", costs, duration);
-		let skillJson = testSkill.serializeToJSON();
-		skillJson = JSON.stringify(skillJson);
-
-		let jobFileAsJson = JSON.parse(skillJson.toString());
-
-		let otherSkill = new Skill(null, null, null, null);
-		otherSkill.deserializeFromJSON(jobFileAsJson);
+	public getCurrentJobSkillCount() {
+		return this.currentJob.skills.size;
 	}
 
 	public currentJobIsARacialJob() {

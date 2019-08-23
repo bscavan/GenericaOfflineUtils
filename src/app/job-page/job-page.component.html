@@ -20,6 +20,7 @@
 		<!-- TODO: Alert the user that they are about to wipe out their work and ask for confirmation...-->
 		<a class="dropdown-item dropdown-item" (click)="clearCurrentJob()">Clear current job definition</a>
 		<a class="dropdown-item dropdown-item" (click)="deleteCurrentJob()">Remove current job from collection</a>
+		<!--TODO: Add a "duplicate" or a "save as" button so the user can work off an existing job?-->
 	</div>
 </div>
 <div>
@@ -181,8 +182,31 @@
 	</table>
 </div>
 
+<!-- Skills section: -->
+<div style="max-height: 25%; overflow-y:auto">
+	Job Skills:
+	<!--TODO: Wire this up to let you add skills. Make a modal for it?-->
+	<button (click)="addNewSkill()">+</button>
+	<div *ngIf="this.currentJob.skills.size <= 0"
+	style="font-style:italic">
+		No skills provided
+	</div>
+
+	<div *ngFor="let currentLevel of this.currentJob.skills.keys()">
+		<span class="level-header">level {{currentLevel}} skills:</span>
+		<div *ngFor="let currentSkill of this.currentJob.skills.get(currentLevel)"
+		class="level-item">
+			<!--div><span class="line-starter">name:</span><input type="textbox" [(ngModel)]="currentSkill.name"></div-->
+			<div><span class="line-starter">name:</span>{{currentSkill.name}}</div>
+			<!--div><span class="line-starter">description:</span><input type="textbox" [(ngModel)]="currentSkill.description"></div-->
+			<div><span class="line-starter">description:</span>{{currentSkill.description}}</div>
+			<!-- Costs -->
+			<!-- Duration -->
+		</div>
+	</div>
+</div>
+
 <button (click)="this.loadIntoCollection(currentJob)">Save Job</button>
 <button (click)="this.clearCurrentJob()">New Job</button>
-<button (click)="saveNewSkill()">saveNewSkill()</button>
 <!--This button is only here to facilitate debugging with 'ng serve'.-->
 <button hidden (click)="recreateOrderedAttributes()">reUp</button>

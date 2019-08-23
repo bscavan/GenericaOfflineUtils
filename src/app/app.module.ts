@@ -14,6 +14,8 @@ import { AppRoutingModule } from './app-routing-module';
 import { APP_BASE_HREF } from '@angular/common';
 import { CharacterService } from './character/character-service';
 import { JobService } from './job-service';
+import { SkillPageComponent } from './skill-page/skill-page.component';
+import { SkillService } from './skills/skill-service';
 
 
 @NgModule({
@@ -24,7 +26,8 @@ import { JobService } from './job-service';
 	AttributeSidebarComponent,
 	PointBuyComponent,
 	ImportModalComponent,
-	JobPageComponent
+	JobPageComponent,
+	SkillPageComponent
   ],
   imports: [
 	NgbModule.forRoot(),
@@ -35,7 +38,8 @@ import { JobService } from './job-service';
   providers: [
 	{provide: APP_BASE_HREF, useValue: '/'},
 	CharacterService,
-	JobService
+	JobService,
+	SkillService
 ],
   bootstrap: [AppComponent]
 })

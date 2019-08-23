@@ -1,0 +1,16 @@
+.line-starter {
+	font-weight: bold
+}
+
+.skill-box {
+	max-width: 75%;
+	padding-bottom: 1%;
+	border-width: 1px;
+	border-style:solid;
+	border-color: rgb(114, 114, 114);
+	border-radius: 5px;
+}
+
+.description {
+	width: 100%;
+}

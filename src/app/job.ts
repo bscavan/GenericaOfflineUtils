@@ -4,6 +4,7 @@ import { JsonSerializable } from "./json-serializable";
 import { isNullOrUndefined } from "util";
 import { v4 as uuid } from 'uuid';
 import { Skill } from "./skills/skill";
+import { SkillService } from "./skills/skill-service";
 
 export abstract class Job implements JsonSerializable {
 	public static readonly LABEL = "job";
@@ -68,6 +69,12 @@ export abstract class Job implements JsonSerializable {
 		});
 	}
 
+	public addSkillFromService(levelGained: number, uuid: string) {
+		// TODO: Use the uuid to pull a skill from the service!
+		let foundSkill: Skill = null;
+		this.addSkill(levelGained, foundSkill);
+	}
+
 	/**
 	 * Adds the provided skill to the list of skills this job provides at the
 	 * specified level.
@@ -86,6 +93,8 @@ export abstract class Job implements JsonSerializable {
 
 		skillsAtLevel.add(skillToAdd);
 		this.skills.set(levelGained, skillsAtLevel);
+		// TODO: Make the following line possible:
+		//SkillService.addSkillIfMissing(skillToAdd);
 	}
 
 	/**
@@ -147,7 +156,10 @@ export abstract class Job implements JsonSerializable {
 
 			// Iterate over each of skill elements in the json and add them to the Set.
 			for(let currentSkillIndex in currentSkillSetJson) {
-				currentSkillSet.add(Skill.deserializeNewSkillFromJSON(currentSkillSetJson[currentSkillIndex]));
+				let deserializedSkill = Skill.deserializeNewSkillFromJSON(currentSkillSetJson[currentSkillIndex]);
+				currentSkillSet.add(deserializedSkill);
+				// TODO: Make the following line possible:
+				//SkillService.addSkillIfMissing(deserializedSkill);
 			}
 
 			// TODO: Handle improper input.
