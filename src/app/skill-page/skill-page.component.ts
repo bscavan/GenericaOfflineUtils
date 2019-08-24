@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SkillService } from '../skills/skill-service';
+import { Skill } from '../skills/skill';
 
 @Component({
 	selector: 'app-skill-page',
@@ -8,36 +9,29 @@ import { SkillService } from '../skills/skill-service';
 })
 export class SkillPageComponent implements OnInit {
 
-	allSkillKeys;
+	allSkillKeys = [];
 
-	constructor(public skillService: SkillService) {
+	constructor() {
 		this.getAllSkillKeys();
 	}
 
 	ngOnInit() {
 	}
 
-	/*
-
-	Well crap.
-	I just realized we're using a map to handle these skills, but I'm giving
-	the user the ability to change their names, and the names are the keys.
-	That's not going to work.
-
-	Also, I don't have any support for the concept of a "blank skill" which I
-	will need for defining new ones on this page.
-
-	*/
 	public addNewSkill() {
-		this.skillService.addBlankSkill();
+		SkillService.addBlankSkill();
 		this.getAllSkillKeys();
 	}
 
 	public getAllSkillKeys() {
-		this.allSkillKeys = this.skillService.allSkills.keys();
+		this.allSkillKeys = [];
+
+		SkillService.allSkills.forEach((value: Skill, key: string) => {
+			this.allSkillKeys.push(key);
+		});
 	}
 
 	public getSkill(uuid: string) {
-		return this.skillService.allSkills.get(uuid);
+		return SkillService.allSkills.get(uuid);
 	}
 }

@@ -1,10 +1,8 @@
 skillPage component:
 <button (click)="addNewSkill()">+</button>
-<div *ngFor="let currentSkill of this.skillService.allSkills.keys()" class="skill-box">
-	<!--div><span class="line-starter">name:</span> {{this.skillService.allSkills.get(currentSkill).name}}</div-->
-	<div><span class="line-starter">name:</span> <input type="textbox" [(ngModel)]="this.skillService.allSkills.get(currentSkill).name"></div>
-	<!--div><span class="line-starter">description:</span> {{this.skillService.allSkills.get(currentSkill).description}}</div-->
-	<div><span class="line-starter">description:</span> <input type="textbox" class="description" [(ngModel)]="this.skillService.allSkills.get(currentSkill).description"></div>
+<div *ngFor="let currentSkill of allSkillKeys" class="skill-box">
+	<div><span class="line-starter">name:</span> <input type="textbox" [(ngModel)]="this.getSkill(currentSkill).name"></div>
+	<div><span class="line-starter">description:</span> <input type="textbox" class="description" [(ngModel)]="this.getSkill(currentSkill).description"></div>
 	<!-- TODO: Add a button for removing this skill from the skillService. -->
 
 </div>

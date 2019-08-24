@@ -9,7 +9,7 @@ export class SkillService {
 	 * The Keys of this map are the skills uuid values and the Values are the
 	 * Skills themselves.
 	 */
-	allSkills: Map<string, Skill> = new Map<string, Skill>();
+	static allSkills: Map<string, Skill> = new Map<string, Skill>();
 
 	constructor() {
 		/*
@@ -33,8 +33,8 @@ export class SkillService {
 		*/
 	}
 
-	public addSkill(newSkill: Skill) {
-		this.allSkills.set(newSkill.uuid, newSkill);
+	public static addSkill(newSkill: Skill) {
+		SkillService.allSkills.set(newSkill.uuid, newSkill);
 	}
 
 	/**
@@ -43,9 +43,9 @@ export class SkillService {
 	// FIXME: Handle the null values in this. Either initialize them to default
 	// values or figure out how to handle this in the HTML without it breaking
 	// anything over there.
-	public addBlankSkill() {
+	public static addBlankSkill() {
 		let newSkill = new Skill("", "", null, null);
-		this.allSkills.set(newSkill.uuid, newSkill);
+		SkillService.allSkills.set(newSkill.uuid, newSkill);
 	}
 
 	/**
@@ -54,17 +54,17 @@ export class SkillService {
 	 * exists with that name then it is not added and false is returned.
 	 * @param newSkill 
 	 */
-	public addSkillIfMissing(newSkill: Skill): boolean {
-		if(this.allSkills.has(newSkill.uuid) == false) {
-			this.allSkills.set(newSkill.uuid, newSkill);
+	public static addSkillIfMissing(newSkill: Skill): boolean {
+		if(SkillService.allSkills.has(newSkill.uuid) == false) {
+			SkillService.allSkills.set(newSkill.uuid, newSkill);
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public getSkill(uuid: string): Skill {
-		return this.allSkills.get(uuid);
+	public static getSkill(uuid: string): Skill {
+		return SkillService.allSkills.get(uuid);
 	}
 
 	// TODO: Add a means of retrieving skills by name. It isn't foolproof, but it's necessary.
