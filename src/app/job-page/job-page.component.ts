@@ -11,7 +11,7 @@ import { RacialJob } from '../racial-jobs/racial-job';
 import { JobWithBaseAttributes, isJobWithBaseAttributes } from '../racial-jobs/job-with-base-attributes';
 import { CharacterService } from '../character/character-service';
 import { SkillService } from '../skills/skill-service';
-import { Skill } from '../skills/skill';
+import { Skill, Qualifier, Currency, SpecialCost } from '../skills/skill';
 import { isNullOrUndefined } from 'util';
 
 @Component({
@@ -21,6 +21,13 @@ import { isNullOrUndefined } from 'util';
 })
 export class JobPageComponent implements OnInit {
 	public readonly LABEL = Job.LABEL;
+
+	// These values are here so the skill section can recognize
+	// them and handle displaying them differently.
+	public NONE_QUALIFIER = Qualifier.NONE;
+	public NONE_QUALIFIER_SPECIAL_COST = SpecialCost.NONE;
+	public N_A_QUALIFIER = Currency.NOT_APPLICABLE;
+
 
 	// This value exists to a ngbRadio group in the html will have something to bind to.
 	// Its value is never important.

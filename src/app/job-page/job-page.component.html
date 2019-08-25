@@ -204,18 +204,45 @@
 		No skills provided
 	</div>
 
-	<div *ngFor="let currentLevel of this.currentJob.skills.keys()">
+	<div *ngFor="let currentLevel of this.currentJob.skills.keys()"
+	style="padding-bottom: 1%">
 		<span class="level-header">level {{currentLevel}} skills:</span>
 		<div *ngFor="let currentSkill of this.currentJob.skills.get(currentLevel)"
 		class="level-item">
-			<div><span class="line-starter">name:</span>{{currentSkill.name}}</div>
-			<div><span class="line-starter">description:</span>{{currentSkill.description}}</div>
-			<!-- Costs -->
-			<!-- Duration -->
+			<table style="width: 100%;">
+				<td style="width: 98%;">
+					<div><span class="line-starter">Name: </span>{{currentSkill.name}}</div>
+				</td>
+				<td>
+					<button style="right: 0px">X</button>
+					<!-- TODO: Wire this button up to remove the skill. -->
+				</td>
+			</table>
+			<div><span class="line-starter">Description: </span>{{currentSkill.description}}</div>
+			<div><span class="line-starter">Duration: </span>
+				<span *ngIf="currentSkill.duration.amount > 0">
+					{{currentSkill.duration.amount}} 
+				</span>
 
-			<!-- TODO: Wire this button up to remove the skill. -->
-			<!-- TODO: Reposition this button to be at the upper-left corner of the skill's area. -->
-			<button>X</button>
+				{{currentSkill.duration.timeDenomination}} 
+
+				<span *ngIf="currentSkill.duration.qualifier !== NONE_QUALIFIER">
+					{{currentSkill.duration.qualifier}}
+				</span>
+			</div>
+			<div *ngIf="currentSkill.costs.length > 0">
+				<span class="line-starter">Costs: </span>
+				<ul>
+					<li *ngFor="let currentCost of currentSkill.costs">
+						<span *ngIf="currentCost.costDenomination !== NONE_QUALIFIER_SPECIAL_COST
+						|| currentCost.costDenomination !== N_A_QUALIFIER">
+							{{currentCost.costAmount}} 
+						</span>
+						<span>{{currentCost.costDenomination}}</span>
+					</li>
+				</ul>
+				<!-- TODO: Remove the extra padding showing up here when the Unordered List is present. -->
+			</div>
 		</div>
 	</div>
 </div>

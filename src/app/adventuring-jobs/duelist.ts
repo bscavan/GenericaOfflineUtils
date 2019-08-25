@@ -32,7 +32,7 @@ export class Duelist extends AdventuringJob {
 
 		let parry = new Skill("Parry", "While you have your specialized weapon drawn", null, null);
 		//parry.addCost(5, Pools.MOX);
-		parry.setDuration(1, Duration.PASSIVE_CONSTANT, Qualifier.NONE);
+		parry.setDuration(0, Duration.PASSIVE_CONSTANT, Qualifier.NONE);
 
 		duelist.addSkill(5, parry);
 

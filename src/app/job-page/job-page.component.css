@@ -4,8 +4,12 @@
 }
 
 .level-item {
+	max-width: 75%;
 	padding-left: 1%;
 	padding-bottom: 1%;
+	border-style: solid;
+	border-color: rgb(95, 94, 94);
+	border-radius: 5px;
 }
 
 .line-starter {

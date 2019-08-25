@@ -95,6 +95,7 @@ export class Skill implements JsonSerializable {
 	* cost. For these, the base cost is listed in the costAmount and the
 	* description will contain more details.
 	*/
+	// TODO: Go throughout the project and replace hard-coded JSON like this with Classes!
 	public costs: {costAmount: number, costDenomination: Denomination}[];
 
 	/*
