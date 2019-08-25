@@ -10,6 +10,9 @@ import { JobTypes } from '../shared-constants'
 import { RacialJob } from '../racial-jobs/racial-job';
 import { JobWithBaseAttributes, isJobWithBaseAttributes } from '../racial-jobs/job-with-base-attributes';
 import { CharacterService } from '../character/character-service';
+import { SkillService } from '../skills/skill-service';
+import { Skill } from '../skills/skill';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-job-page',
@@ -22,6 +25,7 @@ export class JobPageComponent implements OnInit {
 	// This value exists to a ngbRadio group in the html will have something to bind to.
 	// Its value is never important.
 	public radioButtoSelection: number;
+
 	public currentJob: Job;
 	public currentJobsList: Job[];
 	// TODO: Keep this list sorted alphabetically?
@@ -34,7 +38,11 @@ export class JobPageComponent implements OnInit {
 	public adventuringJobSlotsOnDisplay;
 	public craftingJobSlotsOnDisplay;
 
-	selectedJobType: JobTypes;
+	public selectedJobType: JobTypes;
+
+	public selectedSkillUUID;
+	public selectedSkillLevel;
+	public displaySkillSelect = false;
 
 	public static job_service: JobService;
 
@@ -352,5 +360,30 @@ export class JobPageComponent implements OnInit {
 
 		currentJob.numberOfCraftingJobSlots = this.craftingJobSlotsOnDisplay;
 		this.characterService.characterFocus.handlePrimaryRaceChange();
+	}
+
+	// TODO: Stop using this method for the *ngFor. It's causing errors in the console log.
+	public getAllSkillKeys() {
+		let allSkillKeys = [];
+
+		SkillService.allSkills.forEach((value: Skill, key: string) => {
+			allSkillKeys.push(key);
+		});
+
+		return allSkillKeys;
+	}
+
+	public getSkill(uuid: string) {
+		return SkillService.allSkills.get(uuid);
+	}
+
+	public attemptToAddSkill() {
+		if(this.selectedSkillLevel >= 0 && isNullOrUndefined(this.selectedSkillUUID) == false) {
+			this.currentJob.addSkill(this.selectedSkillLevel, this.getSkill(this.selectedSkillUUID));
+		}
+
+		this.selectedSkillLevel = 0;
+		this.selectedSkillUUID = null;
+		this.displaySkillSelect = false;
 	}
 }

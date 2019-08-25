@@ -185,8 +185,20 @@
 <!-- Skills section: -->
 <div style="max-height: 25%; overflow-y:auto">
 	Job Skills:
-	<!--TODO: Wire this up to let you add skills. Make a modal for it?-->
-	<button (click)="addNewSkill()">+</button>
+	<button (click)="displaySkillSelect = !displaySkillSelect">+</button>
+	
+	<div *ngIf="displaySkillSelect">
+		<!-- TODO: Add tooltips that explain these inputs-->
+		<span>
+			<input type="number" [(ngModel)]="selectedSkillLevel">
+			<select [(ngModel)]="selectedSkillUUID">
+				<option *ngFor="let currentSkillKey of this.getAllSkillKeys()"
+				[value]="currentSkillKey">{{this.getSkill(currentSkillKey).name}}</option>
+			</select>
+			<button (click)="attemptToAddSkill()">Add skill</button>
+		</span>
+	</div>
+
 	<div *ngIf="this.currentJob.skills.size <= 0"
 	style="font-style:italic">
 		No skills provided
@@ -196,12 +208,14 @@
 		<span class="level-header">level {{currentLevel}} skills:</span>
 		<div *ngFor="let currentSkill of this.currentJob.skills.get(currentLevel)"
 		class="level-item">
-			<!--div><span class="line-starter">name:</span><input type="textbox" [(ngModel)]="currentSkill.name"></div-->
 			<div><span class="line-starter">name:</span>{{currentSkill.name}}</div>
-			<!--div><span class="line-starter">description:</span><input type="textbox" [(ngModel)]="currentSkill.description"></div-->
 			<div><span class="line-starter">description:</span>{{currentSkill.description}}</div>
 			<!-- Costs -->
 			<!-- Duration -->
+
+			<!-- TODO: Wire this button up to remove the skill. -->
+			<!-- TODO: Reposition this button to be at the upper-left corner of the skill's area. -->
+			<button>X</button>
 		</div>
 	</div>
 </div>
