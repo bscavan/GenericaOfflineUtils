@@ -214,7 +214,7 @@
 					<div><span class="line-starter">Name: </span>{{currentSkill.name}}</div>
 				</td>
 				<td>
-					<button style="right: 0px">X</button>
+					<button (click)="removeSkill(currentLevel, currentSkill)" style="right: 0px">X</button>
 					<!-- TODO: Wire this button up to remove the skill. -->
 				</td>
 			</table>

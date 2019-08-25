@@ -95,6 +95,16 @@ export abstract class Job implements JsonSerializable {
 		SkillService.addSkillIfMissing(skillToAdd);
 	}
 
+	public removeSkill(level: number, skillToRemove: Skill) {
+		let skillsAtLevel = this.skills.get(level);
+
+		if(isNullOrUndefined(skillsAtLevel) || skillsAtLevel.size <= 0) {
+			return false;
+		}
+
+		return skillsAtLevel.delete(skillToRemove);
+	}
+
 	/**
 	 * Returns the provided value if it is a defined number, otherwise zero.
 	 * @param x The number to check for an undefined value.

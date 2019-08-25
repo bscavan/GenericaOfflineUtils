@@ -393,4 +393,8 @@ export class JobPageComponent implements OnInit {
 		this.selectedSkillUUID = null;
 		this.displaySkillSelect = false;
 	}
+
+	public removeSkill(level: number, skillToRemove: Skill) {
+		this.currentJob.removeSkill(level, skillToRemove);
+	}
 }
