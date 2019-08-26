@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SkillService } from '../skills/skill-service';
-import { Skill } from '../skills/skill';
+import { Skill, Duration, Denomination } from '../skills/skill';
 
 @Component({
 	selector: 'app-skill-page',
@@ -10,13 +10,15 @@ import { Skill } from '../skills/skill';
 export class SkillPageComponent implements OnInit {
 
 	allSkillKeys = [];
+	allDurations = Skill.getAllDurations();
+	allQualifiers = Skill.getAllQualifiers();
+	allDenominations = Skill.getAllDenominations();
 
 	constructor() {
 		this.getAllSkillKeys();
 	}
 
-	ngOnInit() {
-	}
+	ngOnInit() {}
 
 	public addNewSkill() {
 		SkillService.addBlankSkill();

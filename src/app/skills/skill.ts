@@ -79,6 +79,10 @@ export enum SpecialCost {
 export type Denomination = Pools | Currency | SpecialCost;
 
 export class Skill implements JsonSerializable {
+	private static allDurations = Skill.gatherAllDurations();
+	private static allQualifiers = Skill.gatherAllQualifiers();
+	private static allDenominations = Skill.gatherAllCosts();
+
 	public static readonly LABEL = "skill";
 	public static readonly DEFAULT_SKILL_DURATION = {
 		amount: 1,
@@ -189,5 +193,55 @@ export class Skill implements JsonSerializable {
 
 		let blob = new Blob(jobJsonArray, {type: 'text/plain' });
 		FileSaver.saveAs(blob, this.name + ".json");
+	}
+
+	private static gatherAllDurations() {
+		let allDurations = [];
+
+		for (let item in Duration) {
+			allDurations.push(item);
+		}
+
+		return allDurations;
+	}
+
+	private static gatherAllCosts() {
+		let allCosts = [];
+
+		for (let item in Pools) {
+			allCosts.push(item);
+		}
+
+		for (let item in Currency) {
+			allCosts.push(item);
+		}
+
+		for (let item in SpecialCost) {
+			allCosts.push(item);
+		}
+
+		return allCosts;
+	}
+
+	private static gatherAllQualifiers() {
+		let allQualifiers = [];
+
+		for (let item in Qualifier) {
+			allQualifiers.push(item);
+		}
+
+		return allQualifiers;
+	}
+
+	public static getAllDurations() {
+		return Skill.allDurations;
+	}
+
+	public static getAllDenominations() {
+		return Skill.allDenominations;
+	}
+
+	public static getAllQualifiers() {
+		return Skill.allQualifiers;
 	}
 }

@@ -4,7 +4,31 @@ skillPage component:
 	<div><span class="line-starter">name:</span> <input type="textbox" [(ngModel)]="this.getSkill(currentSkill).name"></div>
 	<div><span class="line-starter">description:</span> <input type="textbox" class="description" [(ngModel)]="this.getSkill(currentSkill).description"></div>
 	<!-- TODO: Add a button for removing this skill from the skillService. -->
-	<div><span class="line-starter">duration:</span> </div>
-	<div><span class="line-starter">costs:</span> </div>
 
+	<div><span class="line-starter">duration:</span> </div>
+	<span>
+		Amount: <input type="number" [(ngModel)]="this.getSkill(currentSkill).duration.amount"> 
+		Time Denomination: 
+		<select [(ngModel)]="this.getSkill(currentSkill).duration.timeDenomination">
+			<option *ngFor="let currentDuration of allDurations">{{currentDuration}}</option>
+		</select> 
+		Qualifier: 
+		<select [(ngModel)]="this.getSkill(currentSkill).duration.qualifier">
+			<option *ngFor="let currentQualifier of allQualifiers">{{currentQualifier}}</option>
+		</select>
+	</span>
+
+	<div *ngIf="this.getSkill(currentSkill).costs.length > 0">
+		<span class="line-starter">
+			costs:
+		</span>
+	</div>
+	<span *ngFor="let currentCost of this.getSkill(currentSkill).costs">
+		Amount: <input type="number" [(ngModel)]="currentCost.costAmount"> 
+		Denomination: 
+		<select [(ngModel)]="currentCost.costDenomination">
+			<option *ngFor="let currentDenomination of allDenominations">{{currentDenomination}}</option>
+		</select>
+		<!-- TODO: Add buttons for adding costs and removing them!  -->
+	</span>
 </div>
