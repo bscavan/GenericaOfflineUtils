@@ -67,6 +67,10 @@ export class SkillService {
 		return SkillService.allSkills.get(uuid);
 	}
 
+	public static removeSkill(uuid: string): boolean {
+		return SkillService.allSkills.delete(uuid);
+	}
+
 	// TODO: Add a means of retrieving skills by name. It isn't foolproof, but it's necessary.
 	// TODO: Add a means of adding skills if they don't exist. One that isn't dependent on uuid,
 	// but on its actual contents.

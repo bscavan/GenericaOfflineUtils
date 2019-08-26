@@ -139,7 +139,15 @@ export class Skill implements JsonSerializable {
 		this.costs.push({
 			costAmount: newCostAmount,
 			costDenomination: newCostDenomination
-		})
+		});
+	}
+
+	public addEmptyCost() {
+		this.addCost(0, Currency.NOT_APPLICABLE);
+	}
+
+	public removeCost(index: number) {
+		this.costs.splice(index, 1);
 	}
 
 	public setDuration(newDurationAmount: number, newDurationDenomination: Duration, newDurationQualifier: Qualifier) {
