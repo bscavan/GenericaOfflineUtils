@@ -1,5 +1,8 @@
 Skills:
 <button (click)="addNewSkill()">+</button>
+<div *ngIf="allSkillKeys.length == 0">
+	(No skills to display)
+</div>
 <div *ngFor="let currentSkillUUID of allSkillKeys" class="skill-box">
 	<div>
 		<span class="line-starter">name: </span>

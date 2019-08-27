@@ -18,7 +18,6 @@ const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 export class Character implements JsonSerializable {
 	public static readonly LABEL = "character";
 	// TODO: Write support for banking jobs!
-	// FIXME: Randomly generate this value.
 	public uuid: string;
 	public name: string;
 	public title: string;
@@ -60,12 +59,17 @@ export class Character implements JsonSerializable {
 	protected buffsToAttributes: Map<string, {targetAttribute: Attributes; value: number}>;
 	protected debuffsToAttributes: Map<string, {targetAttribute: Attributes; value: number}>;
 
+	protected grindPoints: number;
+	protected levelPoints: number;
+
 	constructor(name: string, title: string,
 	primaryRacialJob: RacialJob,
 	levelsInPrimaryRacialJob: number,
 	supplementalRacialJobLevels: [{ job: RacialJob; level: number; }],
 	adventuringJobLevels: [{ job: AdventuringJob; level: number; }],
-	craftingJobLevels: [{ job: CraftingJob; level: number; }] ) {
+	craftingJobLevels: [{ job: CraftingJob; level: number; }],
+	grindPoints,
+	levelPoints) {
 		this.uuid = uuid();
 		this.name = name;
 		this.title = title;
@@ -79,6 +83,9 @@ export class Character implements JsonSerializable {
 		this.decreasesToAttributes = new Map<string, {targetAttribute: Attributes; value: number}>();
 		this.buffsToAttributes = new Map<string, {targetAttribute: Attributes; value: number}>();
 		this.debuffsToAttributes = new Map<string, {targetAttribute: Attributes; value: number}>();
+
+		this.grindPoints = grindPoints;
+		this.levelPoints = levelPoints;
 
 		this.enforceJobSlotLimits();
 		this.initializeCharacterGenAttributes();
@@ -97,7 +104,7 @@ export class Character implements JsonSerializable {
 		crafting.pop();
 
 		return new Character("", "", BlankRacialJob.generateBlankRacialJob(),
-		0, racial, adventuring, crafting);
+		0, racial, adventuring, crafting, 0, 0);
 	}
 
 	public addRacialJobLevels(newJob: RacialJob, levelsTaken: number) {
@@ -725,6 +732,9 @@ export class Character implements JsonSerializable {
 		json["buffsToAttributes"] = this.serializeAdjustmentMap(this.buffsToAttributes);
 		json["debuffsToAttributes"] = this.serializeAdjustmentMap(this.debuffsToAttributes);
 
+		json["grindPoints"] = this.grindPoints;
+		json["levelPoints"] = this.levelPoints;
+
 		return json;
 	}
 
@@ -752,6 +762,9 @@ export class Character implements JsonSerializable {
 
 		this.buffsToAttributes = this.deserializeAdjustmentMap(this.buffsToAttributes);
 		this.debuffsToAttributes = this.deserializeAdjustmentMap(this.debuffsToAttributes);
+
+		this.grindPoints = json.grindPoints;
+		this.levelPoints = json.levelPoints;
 
 		this.recalculateAttributes();
 

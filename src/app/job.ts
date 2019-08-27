@@ -9,7 +9,6 @@ import { SkillService } from "./skills/skill-service";
 export abstract class Job implements JsonSerializable {
 	public static readonly LABEL = "job";
 	//TODO: Add support for skills
-	// TODO: Add support for tracking Job descriptions
 	// TODO: Add support for tracking unlock requirements.
 	public uuid: string;
 	name: string;

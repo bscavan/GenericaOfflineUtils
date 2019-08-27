@@ -27,7 +27,7 @@ class TestCharacter extends Character {
 
 		super("Jaxby NimbleFingers", "Master Assassin",
 			primaryRacialJob, 1, supplementalRacialJobsArray,
-			adventuringJobLevels, craftingJobLevels);
+			adventuringJobLevels, craftingJobLevels, 0, 0);
 	}
 }
 
