@@ -11,6 +11,8 @@ export class SkillService {
 	 */
 	static allSkills: Map<string, Skill> = new Map<string, Skill>();
 
+	// TODO: Add a collection for holding the general skills!
+
 	constructor() {
 		/*
 		// TODO: Remove these skills once we're done testing.

@@ -48,6 +48,7 @@ export class Character implements JsonSerializable {
 	protected totalPools: Map<Pools, number> = new Map();
 
 	//TODO: Add support for listing the skills each class brings, along with their levels?
+	// These are mapped by their UUID, not their names!
 	protected classSkills: Map<string, number> = new Map();
 	// Generic skills requre a separate collection in skill-service?
 	protected genericSkills: Map<Skill, number> = new Map();
