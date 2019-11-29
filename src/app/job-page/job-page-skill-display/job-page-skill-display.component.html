@@ -1,40 +1,42 @@
-<div *ngFor="let currentLevel of this.jobFocus.skills.keys()"
-style="padding-bottom: 1%">
-  <span class="level-header">level {{currentLevel}} skills:</span>
-  <div *ngFor="let currentSkill of this.jobFocus.skills.get(currentLevel)"
-  class="level-item">
-    <table style="width: 100%;">
-      <td style="width: 98%;">
-        <div><span class="line-starter">Name: </span>{{currentSkill.name}}</div>
-      </td>
-      <td>
-        <button (click)="removeSkill(currentLevel, currentSkill)" style="right: 0px">X</button>
-      </td>
-    </table>
-    <div><span class="line-starter">Description: </span>{{currentSkill.description}}</div>
-    <div><span class="line-starter">Duration: </span>
-      <span *ngIf="currentSkill.duration.amount > 0">
-        {{currentSkill.duration.amount}} 
-      </span>
+<div *ngIf="this.jobFocus != undefined && this.jobFocus.skills != undefined">
+  <div *ngFor="let currentLevel of this.jobFocus.skills.keys()"
+  style="padding-bottom: 1%">
+    <span class="level-header">level {{currentLevel}} skills:</span>
+    <div *ngFor="let currentSkill of this.jobFocus.skills.get(currentLevel)"
+    class="level-item">
+      <table style="width: 100%;">
+        <td style="width: 98%;">
+          <div><span class="line-starter">Name: </span>{{currentSkill.name}}</div>
+        </td>
+        <td *ngIf="editable === 'true'">
+          <button (click)="removeSkill(currentLevel, currentSkill)" style="right: 0px">X</button>
+        </td>
+      </table>
+      <div><span class="line-starter">Description: </span>{{currentSkill.description}}</div>
+      <div><span class="line-starter">Duration: </span>
+        <span *ngIf="currentSkill.duration.amount > 0">
+          {{currentSkill.duration.amount}} 
+        </span>
 
-      {{currentSkill.duration.timeDenomination}} 
+        {{currentSkill.duration.timeDenomination}} 
 
-      <span *ngIf="currentSkill.duration.qualifier !== NONE_QUALIFIER">
-        {{currentSkill.duration.qualifier}}
-      </span>
-    </div>
-    <div *ngIf="currentSkill.costs.length > 0">
-      <span class="line-starter">Costs: </span>
-      <ul>
-        <li *ngFor="let currentCost of currentSkill.costs">
-          <span *ngIf="currentCost.costDenomination !== NONE_QUALIFIER_SPECIAL_COST
-          || currentCost.costDenomination !== N_A_QUALIFIER">
-            {{currentCost.costAmount}} 
-          </span>
-          <span>{{currentCost.costDenomination}}</span>
-        </li>
-      </ul>
-      <!-- TODO: Remove the extra padding showing up here when the Unordered List is present. -->
+        <span *ngIf="currentSkill.duration.qualifier !== NONE_QUALIFIER">
+          {{currentSkill.duration.qualifier}}
+        </span>
+      </div>
+      <div *ngIf="currentSkill.costs.length > 0">
+        <span class="line-starter">Costs: </span>
+        <ul>
+          <li *ngFor="let currentCost of currentSkill.costs">
+            <span *ngIf="currentCost.costDenomination !== NONE_QUALIFIER_SPECIAL_COST
+            || currentCost.costDenomination !== N_A_QUALIFIER">
+              {{currentCost.costAmount}} 
+            </span>
+            <span>{{currentCost.costDenomination}}</span>
+          </li>
+        </ul>
+        <!-- TODO: Remove the extra padding showing up here when the Unordered List is present. -->
+      </div>
     </div>
   </div>
 </div>

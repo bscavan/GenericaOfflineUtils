@@ -28,6 +28,9 @@ export class CharacterPageComponent implements OnInit {
 	// Control for the ngIf on the PointBuy component.
 	expandPointBuyOptions: boolean = false;
 
+	// Control for the ngIf on the skills component.
+	expandSkillsSection: boolean = false;
+
 	// Control for the ngIf on the manual/testing controls.
 	expandOptions:boolean = false;
 

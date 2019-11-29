@@ -10,6 +10,7 @@ import { Skill } from '../../skills/skill';
 export class JobPageSkillDisplayComponent implements OnInit {
 
   @Input() jobFocus: Job;
+  @Input() editable;
 
   constructor() { }
 
