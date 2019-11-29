@@ -84,11 +84,6 @@ export class Skill implements JsonSerializable {
 	private static allDenominations = Skill.gatherAllCosts();
 
 	public static readonly LABEL = "skill";
-	public static readonly DEFAULT_SKILL_DURATION = {
-		amount: 1,
-		timeDenomination: Duration.PASSIVE_CONSTANT,
-		qualifier: Qualifier.NONE
-	}
 
 	public uuid: string;
 	public name: string;
@@ -125,10 +120,18 @@ export class Skill implements JsonSerializable {
 		}
 
 		if(isNullOrUndefined(duration)) {
-			this.duration = Skill.DEFAULT_SKILL_DURATION;
+			this.duration = this.generateDefaultSkillDuration();
 		} else {
 			this.duration = duration;
 		}
+	}
+
+	public generateDefaultSkillDuration() {
+		return {
+			amount: 1,
+			timeDenomination: Duration.PASSIVE_CONSTANT,
+			qualifier: Qualifier.NONE
+		};;
 	}
 
 	public setCost(newCost: {costAmount: number, costDenomination: Denomination}[]) {

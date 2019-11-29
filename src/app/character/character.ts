@@ -12,6 +12,7 @@ import { Professions } from "../crafting-jobs/professions";
 import { AdventuringJobs } from "../adventuring-jobs/adventuring-jobs";
 import { JsonSerializable } from "../json-serializable";
 import { v4 as uuid } from 'uuid';
+import { Skill } from "../skills/skill";
 
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
@@ -47,6 +48,10 @@ export class Character implements JsonSerializable {
 	protected totalPools: Map<Pools, number> = new Map();
 
 	//TODO: Add support for listing the skills each class brings, along with their levels?
+	protected classSkills: Map<string, number> = new Map();
+	// Generic skills requre a separate collection in skill-service?
+	protected genericSkills: Map<Skill, number> = new Map();
+
 	// support for spending level points (calculating costs) and grind points (on skills or stats)?
 
 	// TODO: Handle current values of pools?
