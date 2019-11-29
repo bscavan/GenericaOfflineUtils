@@ -207,10 +207,17 @@
 
 		<div *ngFor="let currentLevel of this.characterService.characterFocus.primaryRacialJob.skills.keys()"
 		style="padding-bottom: 1%">
-			<span class="level-header">level {{currentLevel}} skills:</span>
+			<div class="level-header">level {{currentLevel}} skills:</div>
+
 			<div *ngFor="let currentSkill of this.characterService.characterFocus.primaryRacialJob.skills.get(currentLevel)"
 			class="level-item">
-			<app-skill-item-display [currentSkill]="currentSkill" [editable]="'false'"></app-skill-item-display>
+				<app-skill-item-display [currentSkill]="currentSkill"
+				[currentLevel]="currentLevel" [editable]="'false'" style="float: left"></app-skill-item-display>
+				<div style="text-align: right">
+					Skill Level: 
+					<input type="number" (change)="updateSkillLevel(this.characterService.characterFocus, currentSkill.uuid, $event)"
+					[value]="getSkillLevel(this.characterService.characterFocus, currentSkill.uuid)">
+				</div>
 			</div>
 		</div>
 	</div>
@@ -224,10 +231,17 @@
 
 			<div *ngFor="let currentLevel of currentSupplementalRace.job.skills.keys()"
 			style="padding-bottom: 1%">
-				<span class="level-header">level {{currentLevel}} skills:</span>
+				<div class="level-header">level {{currentLevel}} skills:</div>
+
 				<div *ngFor="let currentSkill of currentSupplementalRace.job.skills.get(currentLevel)"
 				class="level-item">
-				<app-skill-item-display [currentSkill]="currentSkill" [editable]="'false'"></app-skill-item-display>
+					<app-skill-item-display [currentSkill]="currentSkill"
+					[currentLevel]="currentLevel" [editable]="'false'" style="float: left"></app-skill-item-display>
+					<div style="text-align: right">
+						Skill Level: 
+						<input type="number" (change)="updateSkillLevel(this.characterService.characterFocus, currentSkill.uuid, $event)"
+						[value]="getSkillLevel(this.characterService.characterFocus, currentSkill.uuid)">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -242,10 +256,17 @@
 
 			<div *ngFor="let currentLevel of currentAdventuringJob.job.skills.keys()"
 			style="padding-bottom: 1%">
-				<span class="level-header">level {{currentLevel}} skills:</span>
+				<div class="level-header">level {{currentLevel}} skills:</div>
+
 				<div *ngFor="let currentSkill of currentAdventuringJob.job.skills.get(currentLevel)"
 				class="level-item">
-				<app-skill-item-display [currentSkill]="currentSkill" [editable]="'false'"></app-skill-item-display>
+					<app-skill-item-display [currentSkill]="currentSkill"
+					[currentLevel]="currentLevel" [editable]="'false'" style="float: left"></app-skill-item-display>
+					<div style="text-align: right">
+						Skill Level: 
+						<input type="number" (change)="updateSkillLevel(this.characterService.characterFocus, currentSkill.uuid, $event)"
+						[value]="getSkillLevel(this.characterService.characterFocus, currentSkill.uuid)">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -260,10 +281,17 @@
 
 			<div *ngFor="let currentLevel of currentCraftingJob.job.skills.keys()"
 			style="padding-bottom: 1%">
-				<span class="level-header">level {{currentLevel}} skills:</span>
+				<div class="level-header">level {{currentLevel}} skills:</div>
+
 				<div *ngFor="let currentSkill of currentCraftingJob.job.skills.get(currentLevel)"
 				class="level-item">
-				<app-skill-item-display [currentSkill]="currentSkill" [editable]="'false'"></app-skill-item-display>
+					<app-skill-item-display [currentSkill]="currentSkill"
+					[currentLevel]="currentLevel" [editable]="'false'" style="float: left"></app-skill-item-display>
+					<div style="text-align: right">
+						Skill Level: 
+						<input type="number" (change)="updateSkillLevel(this.characterService.characterFocus, currentSkill.uuid, $event)"
+						[value]="getSkillLevel(this.characterService.characterFocus, currentSkill.uuid)">
+					</div>
 				</div>
 			</div>
 		</div>

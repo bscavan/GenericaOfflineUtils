@@ -49,9 +49,9 @@ export class Character implements JsonSerializable {
 
 	//TODO: Add support for listing the skills each class brings, along with their levels?
 	// These are mapped by their UUID, not their names!
-	protected classSkills: Map<string, number> = new Map();
+	public classSkills: Map<string, number> = new Map();
 	// Generic skills requre a separate collection in skill-service?
-	protected genericSkills: Map<Skill, number> = new Map();
+	public genericSkills: Map<Skill, number> = new Map();
 
 	// support for spending level points (calculating costs) and grind points (on skills or stats)?
 
@@ -99,6 +99,7 @@ export class Character implements JsonSerializable {
 		// TODO: Push them into a separate class?
 		this.recalculateAttributes();
 		this.printFullStats();
+		this.classSkills.get("")
 	}
 
 	public static generateBlankCharacter(): Character {

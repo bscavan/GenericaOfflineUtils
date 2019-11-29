@@ -86,4 +86,23 @@ export class CharacterPageComponent implements OnInit {
 		let blob = new Blob(characterJsonArray, {type: 'text/plain' });
 		FileSaver.saveAs(blob, filename);
 	}
+
+	getSkillLevel(characterFocus: Character, uuid: string) {
+		return characterFocus.classSkills.get(uuid);
+	}
+
+	updateSkillLevel(characterFocus: Character, uuid: string, event) {
+		let newValue = event.target.value;
+
+		if(newValue < 0) {
+			console.error("Cannot set a skill level to less than zero.")
+			// Revert the value of the input to it's previous state.
+			event.target.value = characterFocus.classSkills.get(uuid);
+			return;
+		}
+
+		// TODO: Determine if they are trying to set the skill level above the limit here...
+
+		characterFocus.classSkills.set(uuid, newValue);
+	}
 }
