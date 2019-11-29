@@ -200,14 +200,13 @@
 	<!-- Don't display anything in these if the job doesn't offer skills? -->
 
 	<!-- One section for the primary racial job -->
-	<div *ngIf="this.characterService.characterFocus.primaryRacialJob.job != undefined
-		&& this.characterService.characterFocus.primaryRacialJob.job.skills != undefined
-		&& (this.characterService.characterFocus.primaryRacialJob.job.skills.size > 0)">
-			<span class="job-title">{{this.characterService.characterFocus.primaryRacialJob.job.name}}</span>
-			<app-job-page-skill-display [jobFocus]="this.characterService.characterFocus.primaryRacialJob.job"
-			[editable]="'false'"></app-job-page-skill-display>
-		</div>
-	
+	<div *ngIf="this.characterService.characterFocus.primaryRacialJob != undefined
+	&& this.characterService.characterFocus.primaryRacialJob.skills != undefined
+	&& (this.characterService.characterFocus.primaryRacialJob.skills.size > 0)">
+		<span class="job-title">{{this.characterService.characterFocus.primaryRacialJob.name}}</span>
+		<app-job-page-skill-display [jobFocus]="this.characterService.characterFocus.primaryRacialJob"
+		[editable]="'false'"></app-job-page-skill-display>
+	</div>
 
 	<!-- One section for each of the supplemental racial jobs -->
 	<div *ngFor="let currentSupplementalRace of this.characterService.characterFocus.supplementalRacialJobLevels">
@@ -228,6 +227,7 @@
 			<span class="job-title">{{currentAdventuringJob.job.name}}</span>
 			<app-job-page-skill-display [jobFocus]="currentAdventuringJob.job"
 			[editable]="'false'"></app-job-page-skill-display>
+		</div>
 	</div>
 
 	<!-- One section for each of the crafting jobs -->
@@ -238,5 +238,6 @@
 			<span class="job-title">{{currentCraftingJob.job.name}}</span>
 			<app-job-page-skill-display [jobFocus]="currentCraftingJob.job"
 			[editable]="'false'"></app-job-page-skill-display>
+		</div>
 	</div>
 </div>
