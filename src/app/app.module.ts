@@ -16,7 +16,7 @@ import { CharacterService } from './character/character-service';
 import { JobService } from './job-service';
 import { SkillPageComponent } from './skill-page/skill-page.component';
 import { SkillService } from './skills/skill-service';
-import { JobPageSkillDisplayComponent } from './job-page/job-page-skill-display/job-page-skill-display.component';
+import { SkillItemDisplayComponent } from './job-page/skill-item-display/skill-item-display.component';
 
 
 @NgModule({
@@ -29,7 +29,7 @@ import { JobPageSkillDisplayComponent } from './job-page/job-page-skill-display/
 	ImportModalComponent,
 	JobPageComponent,
 	SkillPageComponent,
-	JobPageSkillDisplayComponent
+	SkillItemDisplayComponent
   ],
   imports: [
 	NgbModule.forRoot(),

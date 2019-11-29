@@ -205,7 +205,18 @@
 		No skills provided
 	</div>
 
-	<app-job-page-skill-display [jobFocus]="this.currentJob" [editable]="'true'"></app-job-page-skill-display>
+	<div *ngIf="this.currentJob != undefined && this.currentJob.skills != undefined">
+		<div *ngFor="let currentLevel of this.currentJob.skills.keys()"
+		style="padding-bottom: 1%">
+			<span class="level-header">level {{currentLevel}} skills:</span>
+			<div *ngFor="let currentSkill of this.currentJob.skills.get(currentLevel)"
+			class="level-item">
+				<app-skill-item-display [currentJob]="currentJob"
+				[currentLevel]="currentLevel" [currentSkill]="currentSkill"
+				[editable]="'true'"></app-skill-item-display>
+			</div>
+		</div>
+	</div>
 </div>
 
 <button (click)="this.loadIntoCollection(currentJob)">Save Job</button>

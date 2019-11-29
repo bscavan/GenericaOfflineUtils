@@ -204,8 +204,15 @@
 	&& this.characterService.characterFocus.primaryRacialJob.skills != undefined
 	&& (this.characterService.characterFocus.primaryRacialJob.skills.size > 0)">
 		<span class="job-title">{{this.characterService.characterFocus.primaryRacialJob.name}}</span>
-		<app-job-page-skill-display [jobFocus]="this.characterService.characterFocus.primaryRacialJob"
-		[editable]="'false'"></app-job-page-skill-display>
+
+		<div *ngFor="let currentLevel of this.characterService.characterFocus.primaryRacialJob.skills.keys()"
+		style="padding-bottom: 1%">
+			<span class="level-header">level {{currentLevel}} skills:</span>
+			<div *ngFor="let currentSkill of this.characterService.characterFocus.primaryRacialJob.skills.get(currentLevel)"
+			class="level-item">
+			<app-skill-item-display [currentSkill]="currentSkill" [editable]="'false'"></app-skill-item-display>
+			</div>
+		</div>
 	</div>
 
 	<!-- One section for each of the supplemental racial jobs -->
@@ -214,8 +221,15 @@
 		&& currentSupplementalRace.job.skills != undefined
 		&& (currentSupplementalRace.job.skills.size > 0)">
 			<span class="job-title">{{currentSupplementalRace.job.name}}</span>
-			<app-job-page-skill-display [jobFocus]="currentSupplementalRace.job"
-			[editable]="'false'"></app-job-page-skill-display>
+
+			<div *ngFor="let currentLevel of currentSupplementalRace.job.skills.keys()"
+			style="padding-bottom: 1%">
+				<span class="level-header">level {{currentLevel}} skills:</span>
+				<div *ngFor="let currentSkill of currentSupplementalRace.job.skills.get(currentLevel)"
+				class="level-item">
+				<app-skill-item-display [currentSkill]="currentSkill" [editable]="'false'"></app-skill-item-display>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -225,8 +239,15 @@
 		&& currentAdventuringJob.job.skills != undefined
 		&& (currentAdventuringJob.job.skills.size > 0)">
 			<span class="job-title">{{currentAdventuringJob.job.name}}</span>
-			<app-job-page-skill-display [jobFocus]="currentAdventuringJob.job"
-			[editable]="'false'"></app-job-page-skill-display>
+
+			<div *ngFor="let currentLevel of currentAdventuringJob.job.skills.keys()"
+			style="padding-bottom: 1%">
+				<span class="level-header">level {{currentLevel}} skills:</span>
+				<div *ngFor="let currentSkill of currentAdventuringJob.job.skills.get(currentLevel)"
+				class="level-item">
+				<app-skill-item-display [currentSkill]="currentSkill" [editable]="'false'"></app-skill-item-display>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -236,8 +257,15 @@
 		&& currentCraftingJob.job.skills != undefined
 		&& (currentCraftingJob.job.skills.size > 0)">
 			<span class="job-title">{{currentCraftingJob.job.name}}</span>
-			<app-job-page-skill-display [jobFocus]="currentCraftingJob.job"
-			[editable]="'false'"></app-job-page-skill-display>
+
+			<div *ngFor="let currentLevel of currentCraftingJob.job.skills.keys()"
+			style="padding-bottom: 1%">
+				<span class="level-header">level {{currentLevel}} skills:</span>
+				<div *ngFor="let currentSkill of currentCraftingJob.job.skills.get(currentLevel)"
+				class="level-item">
+				<app-skill-item-display [currentSkill]="currentSkill" [editable]="'false'"></app-skill-item-display>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

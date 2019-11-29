@@ -101,7 +101,13 @@ export abstract class Job implements JsonSerializable {
 			return false;
 		}
 
-		return skillsAtLevel.delete(skillToRemove);
+		let returnValue = skillsAtLevel.delete(skillToRemove)
+
+		if(skillsAtLevel.size == 0) {
+			this.skills.delete(level);
+		}
+
+		return returnValue;
 	}
 
 	/**
