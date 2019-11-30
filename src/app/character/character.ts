@@ -742,7 +742,19 @@ export class Character implements JsonSerializable {
 		json["grindPoints"] = this.grindPoints;
 		json["levelPoints"] = this.levelPoints;
 
+		json["classSkills"] = SerializationUtil.serializeMap(this.classSkills);
+
 		return json;
+	}
+
+	public deserializeSkillsMap(mapToDeserialize: Map<string, number>) {
+		let returnMap = new Map<string, number>();
+
+		for(let key in mapToDeserialize) {
+			returnMap.set(key, mapToDeserialize[key]);
+		}
+
+		return returnMap;
 	}
 
 	/*
@@ -772,6 +784,8 @@ export class Character implements JsonSerializable {
 
 		this.grindPoints = json.grindPoints;
 		this.levelPoints = json.levelPoints;
+
+		this.classSkills = this.deserializeSkillsMap(json.classSkills);
 
 		this.recalculateAttributes();
 
