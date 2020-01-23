@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ImportModalComponent } from './import-modal.component';
+import { CharacterService } from '../../character/character-service';
 
 describe('ImportModalComponent', () => {
   let component: ImportModalComponent;
@@ -8,7 +9,10 @@ describe('ImportModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ImportModalComponent ]
+      declarations: [ ImportModalComponent ],
+      providers: [
+        CharacterService
+      ],
     })
     .compileComponents();
   }));

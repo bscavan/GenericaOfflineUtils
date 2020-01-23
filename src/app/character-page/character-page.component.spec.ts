@@ -4,6 +4,7 @@ import { CharacterPageComponent } from './character-page.component';
 import { FormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Jaxby } from '../character/jaxby';
+import { CharacterService } from '../character/character-service';
 
 describe('CharacterPageComponent', () => {
 	let component: CharacterPageComponent;
@@ -17,7 +18,10 @@ describe('CharacterPageComponent', () => {
 			],
 			schemas: [
 				NO_ERRORS_SCHEMA
-			]
+			],
+			providers: [
+			  CharacterService
+			],
 		})
 		.compileComponents();
 	}));

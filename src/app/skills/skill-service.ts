@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Skill } from "./skill";
+import { ClassSkill } from "./class-skill";
+import { GenericSkill } from "./generic-skill";
 
 @Injectable()
 export class SkillService {
@@ -9,9 +11,15 @@ export class SkillService {
 	 * The Keys of this map are the skills uuid values and the Values are the
 	 * Skills themselves.
 	 */
-	static allSkills: Map<string, Skill> = new Map<string, Skill>();
+	static allClassSkills: Map<string, ClassSkill> = new Map<string, Skill>();
 
-	// TODO: Add a collection for holding the general skills!
+	/**
+	 * A Map of all skills assignable directly to characters instead of being
+	 * imparted by levels in jobs.
+	 * The Keys of this map are the skills uuid values and the Values are the
+	 * Skills themselves.
+	 */
+	static allGenericSkills: Map<string, GenericSkill> = new Map<string, Skill>();
 
 	constructor() {
 		/*
@@ -35,42 +43,82 @@ export class SkillService {
 		*/
 	}
 
-	public static addSkill(newSkill: Skill) {
-		SkillService.allSkills.set(newSkill.uuid, newSkill);
+	public static addClassSkill(newSkill: ClassSkill) {
+		SkillService.allClassSkills.set(newSkill.uuid, newSkill);
 	}
 
 	/**
-	 * Adds a new, unpopulated skill to the collection.
+	 * Adds a new, unpopulated skill to allClassSkills.
 	 */
 	// FIXME: Handle the null values in this. Either initialize them to default
 	// values or figure out how to handle this in the HTML without it breaking
 	// anything over there.
-	public static addBlankSkill() {
-		let newSkill = new Skill("", "", null, null);
-		SkillService.allSkills.set(newSkill.uuid, newSkill);
+	public static addBlankClassSkill() {
+		let newSkill = new ClassSkill("", "", null, null, true);
+		SkillService.allClassSkills.set(newSkill.uuid, newSkill);
 	}
 
 	/**
-	 * Checks allSkills for an entry mapped to the name of the provided skill.
-	 * If none exists then it is added and true is returned. If a skill already
-	 * exists with that name then it is not added and false is returned.
+	 * Checks allClassSkills for an entry mapped to the name of the provided
+	 * skill. If none exists then it is added and true is returned. If a class
+	 * skill already exists with that name then it is not added and false is
+	 * returned.
 	 * @param newSkill 
 	 */
-	public static addSkillIfMissing(newSkill: Skill): boolean {
-		if(SkillService.allSkills.has(newSkill.uuid) == false) {
-			SkillService.allSkills.set(newSkill.uuid, newSkill);
+	public static addClassSkillIfMissing(newSkill: ClassSkill): boolean {
+		if(SkillService.allClassSkills.has(newSkill.uuid) == false) {
+			SkillService.allClassSkills.set(newSkill.uuid, newSkill);
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public static getSkill(uuid: string): Skill {
-		return SkillService.allSkills.get(uuid);
+	public static getClassSkill(uuid: string): ClassSkill {
+		return SkillService.allClassSkills.get(uuid);
 	}
 
-	public static removeSkill(uuid: string): boolean {
-		return SkillService.allSkills.delete(uuid);
+	public static removeClassSkill(uuid: string): boolean {
+		return SkillService.allClassSkills.delete(uuid);
+	}
+
+	public static addGenericSkill(newSkill: GenericSkill) {
+		SkillService.allClassSkills.set(newSkill.uuid, newSkill);
+	}
+
+	/**
+	 * Adds a new, unpopulated skill to allGenericSkills.
+	 */
+	// FIXME: Handle the null values in this. Either initialize them to default
+	// values or figure out how to handle this in the HTML without it breaking
+	// anything over there.
+	public static addBlankGenericSkill() {
+		let newSkill = new GenericSkill("", "", null, null, true);
+		SkillService.allGenericSkills.set(newSkill.uuid, newSkill);
+	}
+
+	/**
+	 * Checks allGenericSkills for an entry mapped to the name of the provide
+	 * skill. If none exists then it is added and true is returned. If a
+	 * generic skill already exists with that name then it is not added and
+	 * false is returned.
+	 * @param newSkill 
+	 */
+	public static addGenericSkillIfMissing(newSkill: GenericSkill): boolean {
+		if(SkillService.allGenericSkills.has(newSkill.uuid) == false) {
+			SkillService.allGenericSkills.set(newSkill.uuid, newSkill);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static getGenericSkill(uuid: string): GenericSkill {
+		return SkillService.allGenericSkills.get(uuid);
+	}
+
+	public static removeGenericSkill(uuid: string): boolean {
+		return SkillService.allGenericSkills.delete(uuid);
 	}
 
 	// TODO: Add a means of retrieving skills by name. It isn't foolproof, but it's necessary.

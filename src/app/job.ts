@@ -70,7 +70,7 @@ export abstract class Job implements JsonSerializable {
 
 	public addSkillFromService(levelGained: number, uuid: string) {
 		// TODO: Test this.
-		this.addSkill(levelGained, SkillService.getSkill(uuid));
+		this.addSkill(levelGained, SkillService.getClassSkill(uuid));
 	}
 
 	/**
@@ -91,7 +91,7 @@ export abstract class Job implements JsonSerializable {
 
 		skillsAtLevel.add(skillToAdd);
 		this.skills.set(levelGained, skillsAtLevel);
-		SkillService.addSkillIfMissing(skillToAdd);
+		SkillService.addClassSkillIfMissing(skillToAdd);
 	}
 
 	public removeSkill(level: number, skillToRemove: Skill) {
@@ -171,7 +171,7 @@ export abstract class Job implements JsonSerializable {
 			for(let currentSkillIndex in currentSkillSetJson) {
 				let deserializedSkill = Skill.deserializeNewSkillFromJSON(currentSkillSetJson[currentSkillIndex]);
 				currentSkillSet.add(deserializedSkill);
-				SkillService.addSkillIfMissing(deserializedSkill);
+				SkillService.addClassSkillIfMissing(deserializedSkill);
 			}
 
 			// TODO: Handle improper input.

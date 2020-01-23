@@ -88,6 +88,7 @@ export class Skill implements JsonSerializable {
 	public uuid: string;
 	public name: string;
 	public description: string;
+	public doesLevel: boolean;
 
 	/*
 	* NOTE: Some abilities, such as the Animator's "Animus" skill have a scaling
@@ -108,10 +109,12 @@ export class Skill implements JsonSerializable {
 
 	public constructor(name: string, description: string,
 	costs: {costAmount: number, costDenomination: Denomination}[],
-	duration: {amount: number, timeDenomination: Duration, qualifier: Qualifier}) {
+	duration: {amount: number, timeDenomination: Duration, qualifier: Qualifier},
+	doesLevel: boolean) {
 		this.uuid = uuid();
 		this.name = name;
 		this.description = description;
+		this.doesLevel = doesLevel;
 
 		if(isNullOrUndefined(costs)) {
 			this.costs = [];
@@ -161,6 +164,10 @@ export class Skill implements JsonSerializable {
 		};
 	}
 
+	public setDoesLevel(doesLevel: boolean) {
+		this.doesLevel = doesLevel;
+	}
+
 	public serializeToJSON() {
 		let json = {};
 		json["uuid"] = this.uuid;
@@ -168,6 +175,7 @@ export class Skill implements JsonSerializable {
 		json["description"] = this.description;
 		json["costs"] = this.costs;
 		json["duration"] = this.duration;
+		json["doesLevel"] = this.doesLevel;
 		return json;
 	}
 
@@ -177,17 +185,19 @@ export class Skill implements JsonSerializable {
 		this.description = json.description;
 		this.costs = json.costs;
 		this.duration = json.duration;
+		this.doesLevel = json.doesLevel;
 		return this;
 	}
 
 	public static deserializeNewSkillFromJSON(json): Skill {
-		let deserializedSkill = new Skill(null, null, null, null);
+		let deserializedSkill = new Skill(null, null, null, null, true);
 
 		deserializedSkill.uuid = json.uuid;
 		deserializedSkill.name = json.name;
 		deserializedSkill.description = json.description;
 		deserializedSkill.costs = json.costs;
 		deserializedSkill.duration = json.duration;
+		deserializedSkill.doesLevel = json.doesLevel;
 
 		return deserializedSkill;
 	}

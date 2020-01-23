@@ -1,7 +1,7 @@
 import { async, TestBed } from '@angular/core/testing';
 import { Skill, Currency, Qualifier, Duration } from './skill';
 import { AppComponent } from '../app.component';
-import { NO_ERRORS_SCHEMA } from '@angular/compiler/src/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('Skill', () => {
 	let testSkill: Skill;
@@ -31,7 +31,7 @@ describe('Skill', () => {
 			qualifier: Qualifier.NONE
 		}
 
-		testSkill = new Skill("Weapon Mastery", "mastery of a weapon", costs, duration);
+		testSkill = new Skill("Weapon Mastery", "mastery of a weapon", costs, duration, true);
 	}));
 
 	it(`should correctly serialize and deserialize skill `, async(() => {
@@ -40,7 +40,7 @@ describe('Skill', () => {
 
 		let jobFileAsJson = JSON.parse(skillJson.toString());
 
-		let otherSkill = new Skill(null, null, null, null);
+		let otherSkill = new Skill(null, null, null, null, true);
 		otherSkill.deserializeFromJSON(jobFileAsJson);
 	}));
 });

@@ -373,7 +373,7 @@ export class JobPageComponent implements OnInit {
 	public getAllSkillKeys() {
 		let allSkillKeys = [];
 
-		SkillService.allSkills.forEach((value: Skill, key: string) => {
+		SkillService.allClassSkills.forEach((value: Skill, key: string) => {
 			allSkillKeys.push(key);
 		});
 
@@ -381,7 +381,7 @@ export class JobPageComponent implements OnInit {
 	}
 
 	public getSkill(uuid: string) {
-		return SkillService.allSkills.get(uuid);
+		return SkillService.allClassSkills.get(uuid);
 	}
 
 	public attemptToAddSkill() {
