@@ -9,47 +9,81 @@ import { Skill, Duration, Denomination } from '../skills/skill';
 })
 export class SkillPageComponent implements OnInit {
 
-	allSkillKeys = [];
+	allClassSkillKeys = [];
+	allGenericSkillKeys = [];
 	allDurations = Skill.getAllDurations();
 	allQualifiers = Skill.getAllQualifiers();
 	allDenominations = Skill.getAllDenominations();
 
 	constructor() {
-		this.getAllSkillKeys();
+		this.getAllClassSkillKeys();
 	}
 
 	ngOnInit() {}
 
-	public addNewSkill() {
+	public addNewClassSkill() {
 		SkillService.addBlankClassSkill();
-		this.getAllSkillKeys();
+		this.getAllClassSkillKeys();
 	}
 
-	public getAllSkillKeys() {
-		this.allSkillKeys = [];
+	public getAllClassSkillKeys() {
+		this.allClassSkillKeys = [];
 
 		SkillService.allClassSkills.forEach((value: Skill, key: string) => {
-			this.allSkillKeys.push(key);
+			this.allClassSkillKeys.push(key);
 		});
 	}
 
-	public getSkill(uuid: string) {
+	public getClassSkill(uuid: string) {
 		return SkillService.allClassSkills.get(uuid);
 	}
 
-	public removeSkill(uuid: string) {
-		if(confirm("You are about to delete a skill. There may be job that provide this skill and characters with progress in it. If so, this may break them. Are you sure you wish to do this?")) {
+	public removeClassSkill(uuid: string) {
+		if(confirm("You are about to delete a class skill. There may be job that provide this skill and characters with progress in it. If so, this may break them. Are you sure you wish to do this?")) {
 			let returnValue = SkillService.removeClassSkill(uuid);
-			this.getAllSkillKeys();
+			this.getAllClassSkillKeys();
 			return returnValue;
 		}
 	}
 
-	public addNewCost(uuid: string) {
+	public addNewCostToClassSkill(uuid: string) {
 		SkillService.getClassSkill(uuid).addEmptyCost();
 	}
 
-	public removeCost(uuid: string, index: number) {
+	public removeCostFromClassSkill(uuid: string, index: number) {
 		SkillService.getClassSkill(uuid).removeCost(index);
+	}
+	
+	public addNewGenericSkill() {
+		SkillService.addBlankGenericSkill();
+		this.getAllGenericSkillKeys();
+	}
+
+	public getAllGenericSkillKeys() {
+		this.allGenericSkillKeys = [];
+
+		SkillService.allGenericSkills.forEach((value: Skill, key: string) => {
+			this.allGenericSkillKeys.push(key);
+		});
+	}
+
+	public getGenericSkill(uuid: string) {
+		return SkillService.allGenericSkills.get(uuid);
+	}
+
+	public removeGenericSkill(uuid: string) {
+		if(confirm("You are about to delete a general skill. There may be characters with progress in it. If so, this may break them. Are you sure you wish to do this?")) {
+			let returnValue = SkillService.removeGenericSkill(uuid);
+			this.getAllGenericSkillKeys();
+			return returnValue;
+		}
+	}
+
+	public addNewCostToGenericSkill(uuid: string) {
+		SkillService.getGenericSkill(uuid).addEmptyCost();
+	}
+
+	public removeCostFromGenericSkill(uuid: string, index: number) {
+		SkillService.getGenericSkill(uuid).removeCost(index);
 	}
 }

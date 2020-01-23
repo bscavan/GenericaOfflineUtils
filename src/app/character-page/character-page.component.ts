@@ -10,6 +10,7 @@ import { SkillService } from '../skills/skill-service';
 import { isNull } from 'util';
 import { Job } from '../job';
 import { Skill } from '../skills/skill';
+import { GenericSkill } from '../skills/generic-skill';
 
 
 
@@ -28,6 +29,12 @@ export class CharacterPageComponent implements OnInit {
 	allAdventuringJobs = AdventuringJobs.getAllAdventuringJobs();
 	allCraftingJobs = Professions.getAllCraftingJobs();
 	expanded: boolean = true;
+
+	// control for the ngIf that displays the dropdown of generic skills to add.
+	showGenericSkillDropdown: boolean = false;
+
+	genericSkillToAdd: GenericSkill = null;
+	genericSkillToAddUUID: string = null;
 
 	// Control for the ngIf on the PointBuy component.
 	expandPointBuyOptions: boolean = false;
@@ -91,8 +98,12 @@ export class CharacterPageComponent implements OnInit {
 		FileSaver.saveAs(blob, filename);
 	}
 
-	getSkillLevel(characterFocus: Character, uuid: string) {
+	getClassSkillLevel(characterFocus: Character, uuid: string) {
 		return characterFocus.classSkills.get(uuid);
+	}
+
+	getGenericSkillLevel(characterFocus: Character, uuid: string) {
+		return characterFocus.genericSkills.get(uuid);
 	}
 
 	updateClassSkillLevel(characterFocus: Character, uuid: string, event) {
@@ -241,5 +252,42 @@ export class CharacterPageComponent implements OnInit {
 		});
 
 		return highestJobLevelFound;
+	}
+
+	public getGenericSkill(uuid: string): Skill {
+		return SkillService.getGenericSkill(uuid);
+	}
+
+	public getAllGenericSkills(): Map<string, GenericSkill> {
+		return SkillService.allGenericSkills;
+	}
+
+	public getAllGenericSkillKeys() {
+		return SkillService.allGenericSkills.keys();
+	}
+
+	public addGenericSkillToCharacter() {
+		if(this.genericSkillToAddUUID == null) {
+			console.log("No skill specified to add.")
+			return;
+		}
+
+		let genericSkills = this.characterService.characterFocus.genericSkills;
+
+		// If the character does not already have ranks in this skill...
+		if(genericSkills.has(this.genericSkillToAddUUID) == false) {
+			genericSkills.set(this.genericSkillToAddUUID, 0);
+		}
+
+		this.showGenericSkillDropdown = false;
+		this.genericSkillToAdd = null;
+		this.genericSkillToAddUUID = null;
+	}
+
+	public removeGenericSkillFromCharacter(skillToRemove: GenericSkill) {
+		if(this.characterService.characterFocus.genericSkills.delete(skillToRemove.uuid) == false) {
+			console.error("Cannot delete skill with uuid: [" + skillToRemove.uuid
+				+ "] because the character does not know it.");
+		}
 	}
 }

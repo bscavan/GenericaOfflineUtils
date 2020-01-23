@@ -1,26 +1,27 @@
-Skills:
-<button (click)="addNewSkill()">+</button>
-<div *ngIf="allSkillKeys.length == 0">
-	(No skills to display)
+Class Skills:
+<button (click)="addNewClassSkill()">+</button>
+<div *ngIf="allClassSkillKeys.length == 0">
+	(No class skills to display)
 </div>
-<div *ngFor="let currentSkillUUID of allSkillKeys" class="skill-box">
+<div *ngFor="let currentSkillUUID of allClassSkillKeys" class="skill-box">
 	<div>
 		<span class="line-starter">name: </span>
-		<input type="textbox" [(ngModel)]="this.getSkill(currentSkillUUID).name">
-		<button (click)="removeSkill(currentSkillUUID)" style="right: 0px">X</button>
+		<input type="textbox" [(ngModel)]="this.getClassSkill(currentSkillUUID).name">
+		<button (click)="removeClassSkill(currentSkillUUID)" style="right: 0px">X</button>
 	</div>
-	<div><span class="line-starter">description:</span> <input type="textbox" class="description" [(ngModel)]="this.getSkill(currentSkillUUID).description"></div>
+	<div><span class="line-starter">description:</span> <input type="textbox" class="description" [(ngModel)]="this.getClassSkill(currentSkillUUID).description"></div>
 	<!-- TODO: Add a button for removing this skill from the skillService. -->
 
 	<div><span class="line-starter">duration:</span> </div>
 	<span>
-		Amount: <input type="number" [(ngModel)]="this.getSkill(currentSkillUUID).duration.amount"> 
+		<!-- TODO: Figure out how to define a variable in the html rather than recalling getClassSkill so many times... -->
+		Amount: <input type="number" [(ngModel)]="this.getClassSkill(currentSkillUUID).duration.amount"> 
 		Time Denomination: 
-		<select [(ngModel)]="this.getSkill(currentSkillUUID).duration.timeDenomination">
+		<select [(ngModel)]="this.getClassSkill(currentSkillUUID).duration.timeDenomination">
 			<option *ngFor="let currentDuration of allDurations">{{currentDuration}}</option>
 		</select> 
 		Qualifier: 
-		<select [(ngModel)]="this.getSkill(currentSkillUUID).duration.qualifier">
+		<select [(ngModel)]="this.getClassSkill(currentSkillUUID).duration.qualifier">
 			<option *ngFor="let currentQualifier of allQualifiers">{{currentQualifier}}</option>
 		</select>
 	</span>
@@ -29,17 +30,64 @@ Skills:
 		<span class="line-starter">
 			costs:
 		</span>
-		<button (click)="addNewCost(currentSkillUUID)">+</button>
+		<button (click)="addNewCostToClassSkill(currentSkillUUID)">+</button>
 	</div>
-	<div *ngIf="this.getSkill(currentSkillUUID).costs.length <= 0">
+	<div *ngIf="this.getClassSkill(currentSkillUUID).costs.length <= 0">
 		(No costs to display)
 	</div>
-	<div *ngFor="let currentCost of this.getSkill(currentSkillUUID).costs; let i = index">
+	<div *ngFor="let currentCost of this.getClassSkill(currentSkillUUID).costs; let i = index">
 		Amount: <input type="number" [(ngModel)]="currentCost.costAmount"> 
 		Denomination: 
 		<select [(ngModel)]="currentCost.costDenomination">
 			<option *ngFor="let currentDenomination of allDenominations">{{currentDenomination}}</option>
 		</select>
-		<button (click)="removeCost(currentSkillUUID, i)" style="right: 0px">X</button>
+		<button (click)="removeCostFromClassSkill(currentSkillUUID, i)" style="right: 0px">X</button>
+	</div>
+</div>
+
+General Skills:
+<button (click)="addNewGenericSkill()">+</button>
+<div *ngIf="allGenericSkillKeys.length == 0">
+	(No General skills to display)
+</div>
+<div *ngFor="let currentSkillUUID of allGenericSkillKeys" class="skill-box">
+	<div>
+		<span class="line-starter">name: </span>
+		<input type="textbox" [(ngModel)]="this.getGenericSkill(currentSkillUUID).name">
+		<button (click)="removeGenericSkill(currentSkillUUID)" style="right: 0px">X</button>
+	</div>
+	<div><span class="line-starter">description:</span> <input type="textbox" class="description" [(ngModel)]="this.getGenericSkill(currentSkillUUID).description"></div>
+	<!-- TODO: Add a button for removing this skill from the skillService. -->
+
+	<div><span class="line-starter">duration:</span> </div>
+	<span>
+		<!-- TODO: Figure out how to define a variable in the html rather than recalling getGenericSkill so many times... -->
+		Amount: <input type="number" [(ngModel)]="this.getGenericSkill(currentSkillUUID).duration.amount"> 
+		Time Denomination: 
+		<select [(ngModel)]="this.getGenericSkill(currentSkillUUID).duration.timeDenomination">
+			<option *ngFor="let currentDuration of allDurations">{{currentDuration}}</option>
+		</select> 
+		Qualifier: 
+		<select [(ngModel)]="this.getGenericSkill(currentSkillUUID).duration.qualifier">
+			<option *ngFor="let currentQualifier of allQualifiers">{{currentQualifier}}</option>
+		</select>
+	</span>
+
+	<div>
+		<span class="line-starter">
+			costs:
+		</span>
+		<button (click)="addNewCostToGenericSkill(currentSkillUUID)">+</button>
+	</div>
+	<div *ngIf="this.getGenericSkill(currentSkillUUID).costs.length <= 0">
+		(No costs to display)
+	</div>
+	<div *ngFor="let currentCost of this.getGenericSkill(currentSkillUUID).costs; let i = index">
+		Amount: <input type="number" [(ngModel)]="currentCost.costAmount"> 
+		Denomination: 
+		<select [(ngModel)]="currentCost.costDenomination">
+			<option *ngFor="let currentDenomination of allDenominations">{{currentDenomination}}</option>
+		</select>
+		<button (click)="removeCostFromGenericSkill(currentSkillUUID, i)" style="right: 0px">X</button>
 	</div>
 </div>

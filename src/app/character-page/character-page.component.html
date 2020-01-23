@@ -180,7 +180,7 @@
 <button ngbTooltip="Display character skills" (click)="expandSkillsSection = ! expandSkillsSection">Skills</button>
 
 <div *ngIf="expandSkillsSection">
-	<!-- TODO: A section to show the character's general skills -->
+	<h3 style="border-bottom: 1px;">Class Skills:</h3>
 
 	<!-- A section to show each of the character's class skills -->
 	<!--
@@ -195,8 +195,13 @@
 	<!--
 		Each skill should display their name only. When clicked on they will
 		expand out to show their cost, description, etc.
-	-->
 
+	-->
+	<!--
+		TODO: Show the level limits of skills here!
+		Also indicate when the level has been artificially raised due to multiple
+		jobs offering the skill.
+	-->
 	<!-- Don't display anything in these if the job doesn't offer skills? -->
 
 	<!-- One section for the primary racial job -->
@@ -216,7 +221,7 @@
 				<div style="text-align: right">
 					Skill Level: 
 					<input type="number" (change)="updateClassSkillLevel(this.characterService.characterFocus, currentSkill.uuid, $event)"
-					[value]="getSkillLevel(this.characterService.characterFocus, currentSkill.uuid)">
+					[value]="getClassSkillLevel(this.characterService.characterFocus, currentSkill.uuid)">
 				</div>
 			</div>
 		</div>
@@ -240,7 +245,7 @@
 					<div style="text-align: right">
 						Skill Level: 
 						<input type="number" (change)="updateClassSkillLevel(this.characterService.characterFocus, currentSkill.uuid, $event)"
-						[value]="getSkillLevel(this.characterService.characterFocus, currentSkill.uuid)">
+						[value]="getClassSkillLevel(this.characterService.characterFocus, currentSkill.uuid)">
 					</div>
 				</div>
 			</div>
@@ -265,7 +270,7 @@
 					<div style="text-align: right">
 						Skill Level: 
 						<input type="number" (change)="updateClassSkillLevel(this.characterService.characterFocus, currentSkill.uuid, $event)"
-						[value]="getSkillLevel(this.characterService.characterFocus, currentSkill.uuid)">
+						[value]="getClassSkillLevel(this.characterService.characterFocus, currentSkill.uuid)">
 					</div>
 				</div>
 			</div>
@@ -290,10 +295,37 @@
 					<div style="text-align: right">
 						Skill Level: 
 						<input type="number" (change)="updateClassSkillLevel(this.characterService.characterFocus, currentSkill.uuid, $event)"
-						[value]="getSkillLevel(this.characterService.characterFocus, currentSkill.uuid)">
+						[value]="getClassSkillLevel(this.characterService.characterFocus, currentSkill.uuid)">
 					</div>
 				</div>
 			</div>
+		</div>
+	</div>
+
+	<!-- TODO: Consider the ability to minimize this section... -->
+	<h3 style="border-bottom: 1px;">General Skills:</h3>
+	<button (click)="showGenericSkillDropdown = true">+</button>
+
+	<div *ngIf="showGenericSkillDropdown">
+		<select [(ngModel)]="genericSkillToAddUUID">
+			<option *ngFor="let currentGenericSkill of getAllGenericSkillKeys()" 
+			[value]="currentGenericSkill">
+				{{getGenericSkill(currentGenericSkill).name}}
+			</option>
+		</select>
+		<button (click)="addGenericSkillToCharacter()">Add Skill</button>
+	</div>
+	<!-- getAllGenericSkills -->
+	<div *ngFor="let currentSkillUUID of this.characterService.characterFocus.genericSkills.keys()">
+		<div class="level-item">
+			<app-skill-item-display [currentSkill]="getGenericSkill(currentSkillUUID)"
+			[currentLevel]="currentLevel" [editable]="'false'" style="float: left"></app-skill-item-display>
+			<div style="text-align: right">
+				Skill Level: 
+				<input type="number" (change)="updateGenericSkillLevel(this.characterService.characterFocus, currentSkillUUID, $event)"
+				[value]="getGenericSkillLevel(this.characterService.characterFocus, currentSkillUUID)">
+			</div>
+			<button style="float: right;" (click)="removeGenericSkillFromCharacter(getGenericSkill(currentSkillUUID))">X</button>
 		</div>
 	</div>
 </div>
