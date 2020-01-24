@@ -59,18 +59,15 @@
 				[(ngModel)]="this.characterService.characterFocus.primaryRacialJobLevel"
 				(change)="this.characterService.characterFocus.recalculateAttributes()">
 			</div>
-		
-			<!-- TODO: Add support for supplemental RacialJobs -->
 		</div>
 		<!-- TODO: Add additonal "job slots" for special cases based off properties to be later
 				added into RacialJob. Jobs like Toy Golem and Manabeast allow for a second racial job,
 				whereas half-breed is a non-statted "job" that gives two additional slots.
 				Also link the number of generated Adventuring and Crafting Job selection dropdowns
 				to the values the primary race allows for.
-		
-			TODO: Add support for setting the levels the character has in each of these jobs.
+
 			TODO: Prevent instances of BlankAdventuringJob and BlankCraftingJob from displaying their level controls here...
-		
+
 			TODO: Handle Beastkin here, with the first job auto-populating to Human
 			(give a tooltip for that), and the second opening up a list of Beast jobs.
 			Note, they only get one job! It's a custom one created for them on the fly.

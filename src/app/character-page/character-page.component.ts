@@ -11,6 +11,7 @@ import { isNull } from 'util';
 import { Job } from '../job';
 import { Skill } from '../skills/skill';
 import { GenericSkill } from '../skills/generic-skill';
+import { JobsFoundItem } from './jobs-found-item';
 
 
 
@@ -128,30 +129,38 @@ export class CharacterPageComponent implements OnInit {
 		if(foundSkill.doesLevel == false) {
 			console.error("Cannot set the level of a level-less skill.");
 			characterFocus.classSkills.set(uuid, 0);
+			event.target.value = 0;
 		}
 		
 		// Determine which job(s) the character got this skill from.
 		// The limit is set to the (highest job level*5), with a 5 level increase
 		// for each additional job
-		let jobsProvidingSkill: Job[] = [];
-		let highestJobFound: Job = null;
-		let highestJobLevelFound = 0;
+		let jobsFoundItem: JobsFoundItem = new JobsFoundItem();
+
 
 		// TODO: Determine if we should terminate searching early if any of the found jobs is at the level-limit (currently level 25...)
 		// TODO: Only call this method after a character's levels in a job have changed...
-		this.findJobsBySkill(foundSkill, characterFocus.adventuringJobLevels, jobsProvidingSkill, highestJobFound, highestJobLevelFound);
-		this.findJobsBySkill(foundSkill, characterFocus.craftingJobLevels, jobsProvidingSkill, highestJobFound, highestJobLevelFound);
-		this.findJobsBySkill(foundSkill, characterFocus.supplementalRacialJobLevels, jobsProvidingSkill, highestJobFound, highestJobLevelFound);
-		this.classSkillSearchHelper(foundSkill, characterFocus.primaryRacialJob, characterFocus.primaryRacialJobLevel,
-			jobsProvidingSkill, highestJobFound, highestJobLevelFound);
+		jobsFoundItem = this.findJobsBySkill(foundSkill, characterFocus.adventuringJobLevels, jobsFoundItem);
+		jobsFoundItem = this.findJobsBySkill(foundSkill, characterFocus.craftingJobLevels, jobsFoundItem);
+		jobsFoundItem = this.findJobsBySkill(foundSkill, characterFocus.supplementalRacialJobLevels, jobsFoundItem);
+		jobsFoundItem = this.classSkillSearchHelper(foundSkill, characterFocus.primaryRacialJob, characterFocus.primaryRacialJobLevel,
+			jobsFoundItem);
 
-		let actualSkillLevelLimit = (highestJobLevelFound * 5) + (jobsProvidingSkill.length * 5);
+		// A count of how many jobs grant this skill beyond the first.
+		let numberOfSkillDuplicates = 0;
+
+		if(jobsFoundItem.jobsProvidingSkill.length > 0 ) {
+			numberOfSkillDuplicates = jobsFoundItem.jobsProvidingSkill.length - 1;
+		}
+
+		let actualSkillLevelLimit = (jobsFoundItem.highestJobLevelFound * 5) + (numberOfSkillDuplicates * 5);
 		// TODO: Add a set of skill-level buffs to the character?
 		// Should that be handled at a different time?
 
 		if(newValue > actualSkillLevelLimit) {
 			console.error("Cannot set the level of a class skill to a value greater than five times the highest level a character has in any job granting the skill plus five for each additional job granting that skill");
 			characterFocus.classSkills.set(uuid, actualSkillLevelLimit);
+			event.target.value = actualSkillLevelLimit;
 			return;
 		}
 
@@ -159,17 +168,27 @@ export class CharacterPageComponent implements OnInit {
 	}
 
 	// TODO: Only call this method after a character's levels in a job have changed...
+	// TODO: Enforce updates to the skill limits whenever this is called.
 	private findJobsBySkill(skillToFind: Skill, jobCollection: [{job: Job; level: number;}],
-	jobsProvidingSkill: Job[], highestJobFound: Job, highestJobLevelFound: number) {
-		jobCollection.forEach((value, charactersLevelInThisJob) => {
+	jobsFoundItem: JobsFoundItem): JobsFoundItem {
+		let jobsFoundItem2 = jobsFoundItem;
+		jobCollection.forEach((value) => {
 			let currentJob = value.job;
-			this.classSkillSearchHelper(skillToFind, currentJob, charactersLevelInThisJob,
-				jobsProvidingSkill, highestJobFound, highestJobLevelFound);
+			let charactersLevelInThisJob = value.level;
+
+			if(charactersLevelInThisJob > 0) {
+				jobsFoundItem2 = this.classSkillSearchHelper(skillToFind, currentJob, charactersLevelInThisJob,
+					jobsFoundItem);
+			}
 		});
+
+		return jobsFoundItem2;
 	}
 
 	private classSkillSearchHelper(skillToFind: Skill, currentJob: Job, charactersLevelInThisJob: number,
-	jobsProvidingSkill: Job[], highestJobFound: Job, highestJobLevelFound: number) {
+		jobsFoundItem: JobsFoundItem): JobsFoundItem {
+		let jobsFoundItem2 = jobsFoundItem;
+
 		currentJob.skills.forEach((skillsLearnedAtThisLevel: Set<Skill>, levelTheseSkillAreLearned) => {
 			if(charactersLevelInThisJob >= levelTheseSkillAreLearned) {
 				/*
@@ -178,17 +197,19 @@ export class CharacterPageComponent implements OnInit {
 				 */
 				if(skillsLearnedAtThisLevel.has(skillToFind)) {
 					// prevent duplicates
-					if(jobsProvidingSkill.includes(currentJob) == false) {
-						jobsProvidingSkill.push(currentJob);
+					if(jobsFoundItem2.jobsProvidingSkill.includes(currentJob) == false) {
+						jobsFoundItem2.jobsProvidingSkill.push(currentJob);
 					}
 
-					if(charactersLevelInThisJob > highestJobLevelFound) {
-						highestJobLevelFound = charactersLevelInThisJob;
-						highestJobFound = currentJob;
+					if(charactersLevelInThisJob > jobsFoundItem2.highestJobLevelFound) {
+						jobsFoundItem2.highestJobLevelFound = charactersLevelInThisJob;
+						jobsFoundItem2.highestJobFound = currentJob;
 					}
 				}
 			}
 		})
+
+		return jobsFoundItem2;
 	}
 
 	updateGenericSkillLevel(characterFocus: Character, uuid: string, event) {
@@ -202,11 +223,13 @@ export class CharacterPageComponent implements OnInit {
 		}
 
 		// Get the actual skill object for this from the skill service and find out if it is level-less
-		let foundSkill = SkillService.allClassSkills.get(uuid);
+		let foundSkill = SkillService.allGenericSkills.get(uuid);
 
 		if(isNull(foundSkill)) {
 			console.error("Cannot set levels in a skill that does not exist.");
 			// TODO: Determine if this uuid should be removed now...
+			// Revert the value of the input to it's previous state.
+			event.target.value = characterFocus.genericSkills.get(uuid);
 			return;
 		}
 
@@ -214,6 +237,8 @@ export class CharacterPageComponent implements OnInit {
 		// They usually have a limited number of uses per day or are passive constants.
 		if(foundSkill.doesLevel == false) {
 			console.error("Cannot set the level of a level-less skill.");
+			// Set the value to 0.
+			event.target.value = 0;
 			characterFocus.genericSkills.set(uuid, 0);
 		}
 
@@ -222,6 +247,9 @@ export class CharacterPageComponent implements OnInit {
 
 		if(newValue > actualSkillLevelLimit) {
 			console.error("Cannot set the level of a generic skill to a value greater than ten times the highest level a character has in any job.");
+
+			// Set the selector's value to the limit.
+			event.target.value = actualSkillLevelLimit;
 			characterFocus.genericSkills.set(uuid, actualSkillLevelLimit);
 			return;
 		}
@@ -233,21 +261,21 @@ export class CharacterPageComponent implements OnInit {
 		// TODO: Determine if we should terminate early if the level-limit is ever found...
 		let highestJobLevelFound: number = characterFocus.primaryRacialJobLevel;
 
-		characterFocus.adventuringJobLevels.forEach((value, level) => {
-			if(level > highestJobLevelFound) {
-				highestJobLevelFound = level;
+		characterFocus.adventuringJobLevels.forEach((value) => {
+			if(value.level > highestJobLevelFound) {
+				highestJobLevelFound = value.level;
 			}
 		});
 
-		characterFocus.craftingJobLevels.forEach((value, level) => {
-			if(level > highestJobLevelFound) {
-				highestJobLevelFound = level;
+		characterFocus.craftingJobLevels.forEach((value) => {
+			if(value.level > highestJobLevelFound) {
+				highestJobLevelFound = value.level;
 			}
 		});
 
-		characterFocus.supplementalRacialJobLevels.forEach((value, level) => {
-			if(level > highestJobLevelFound) {
-				highestJobLevelFound = level;
+		characterFocus.supplementalRacialJobLevels.forEach((value) => {
+			if(value.level > highestJobLevelFound) {
+				highestJobLevelFound = value.level;
 			}
 		});
 
