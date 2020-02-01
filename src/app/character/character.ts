@@ -12,7 +12,7 @@ import { Professions } from "../crafting-jobs/professions";
 import { AdventuringJobs } from "../adventuring-jobs/adventuring-jobs";
 import { JsonSerializable } from "../json-serializable";
 import { v4 as uuid } from 'uuid';
-import { Skill } from "../skills/skill";
+import { isNullOrUndefined } from "util";
 
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
@@ -22,6 +22,7 @@ export class Character implements JsonSerializable {
 	public uuid: string;
 	public name: string;
 	public title: string;
+	public bio: string;
 	primaryRacialJob: RacialJob;
 	primaryRacialJobLevel: number;
 	/* FIXME:
@@ -46,6 +47,7 @@ export class Character implements JsonSerializable {
 	// Some races, like manabeasts, have base values added to their pools
 	protected basePools: Map<Pools, number> = new Map();
 	protected totalPools: Map<Pools, number> = new Map();
+	protected currentPools: Map<Pools, number> = new Map();
 
 	// These are mapped by their UUID, not their names!
 	public classSkills: Map<string, number> = new Map();
@@ -67,6 +69,12 @@ export class Character implements JsonSerializable {
 	protected grindPoints: number;
 	protected levelPoints: number;
 
+	// Control changed when the character class skills. Reverted to false when they do not.
+	// TODO: Whenever jobs or job levels change this needs to be updated!
+	// Also when we load the character!
+	hasLearnedClassSkills: boolean = false;
+	hasAnyClassSkills: boolean = false;
+
 	constructor(name: string, title: string,
 	primaryRacialJob: RacialJob,
 	levelsInPrimaryRacialJob: number,
@@ -78,6 +86,7 @@ export class Character implements JsonSerializable {
 		this.uuid = uuid();
 		this.name = name;
 		this.title = title;
+		this.bio = "";
 		this.primaryRacialJob = primaryRacialJob;
 		this.primaryRacialJobLevel = levelsInPrimaryRacialJob;
 		this.supplementalRacialJobLevels = supplementalRacialJobLevels
@@ -399,6 +408,68 @@ export class Character implements JsonSerializable {
 		// TODO: Handle racial stat caps, like Beast's max INT, and Peskie's max STR
 	}
 
+	public capCurrentPools() {
+		this.totalPools.forEach((value:number, key: Pools) => {
+			let maxPoolValue = this.totalPools.get(key);
+			let currentPoolValue = this.currentPools.get(key)
+
+			if(currentPoolValue > maxPoolValue) {
+				this.currentPools.set(key, maxPoolValue);
+			}
+		});
+	}
+
+	public maxOutCurrentPools() {
+		this.totalPools.forEach((value:number, key: Pools) => {
+			this.currentPools.set(key, this.totalPools.get(key));
+		});
+	}
+
+	// TODO: Call this method whenever job levels change...
+	// TODO: Add a conditional section to the front-end to show when hasLearnedClassSkills is false.
+	public checkForAvailableSkills() {
+		this.hasLearnedClassSkills = false;
+		this.hasAnyClassSkills = false;
+		
+		if(isNullOrUndefined(this.primaryRacialJob) == false) {
+			this.primaryRacialJob.skills.forEach((setOfSkills, levelSkillsAreLearnedAt) => {
+				if(setOfSkills.size > 0) {
+					this.hasAnyClassSkills = true;
+
+					// If there are skills learned at a level the character has reached...
+					if(levelSkillsAreLearnedAt >= this.primaryRacialJobLevel) {
+						this.hasLearnedClassSkills = true;
+						return;
+					}
+				}
+			});
+
+			this.skillCheckHelper(this.supplementalRacialJobLevels);
+		}
+
+		this.skillCheckHelper(this.adventuringJobLevels);
+		this.skillCheckHelper(this.craftingJobLevels);
+	}
+
+	private skillCheckHelper(jobAndLevelMap: [{job: Job, level: number}]) {
+		jobAndLevelMap.forEach((currentJobAndLevel) => {
+			let currentJob = currentJobAndLevel.job;
+			let currentLevel = currentJobAndLevel.level;
+
+			currentJob.skills.forEach((setOfSkills, levelSkillsAreLearnedAt) => {
+				if(setOfSkills.size > 0) {
+					this.hasAnyClassSkills = true;
+
+					// If there are skills learned at a level the character has reached...
+					if(levelSkillsAreLearnedAt >= currentLevel) {
+						this.hasLearnedClassSkills = true;
+						return;
+					}
+				}
+			});
+		});
+	}
+
 	public getBaseAttribute(attribute: Attributes): number {
 		return this.baseAttributes.get(attribute);
 	}
@@ -713,6 +784,7 @@ export class Character implements JsonSerializable {
 		json["uuid"] = this.uuid;
 		json["name"] = this.name;
 		json["title"] = this.title;
+		json["bio"] = this.bio;
 		json["primaryRacialJob"] = this.primaryRacialJob.serializeToJSON();
 		json["primaryRacialJobLevel"] = this.primaryRacialJobLevel;
 
@@ -764,6 +836,7 @@ export class Character implements JsonSerializable {
 		this.uuid = json.uuid;
 		this.name = json.name;
 		this.title = json.title;
+		this.bio = json.bio;
 
 		this.primaryRacialJob = Races.deserializeRacialJob(json.primaryRacialJob);
 		this.primaryRacialJobLevel = json.primaryRacialJobLevel;

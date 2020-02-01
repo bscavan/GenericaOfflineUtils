@@ -9,7 +9,7 @@ import { Character } from '../character/character';
 import { SkillService } from '../skills/skill-service';
 import { isNull } from 'util';
 import { Job } from '../job';
-import { Skill } from '../skills/skill';
+import { Skill, Qualifier, SpecialCost } from '../skills/skill';
 import { GenericSkill } from '../skills/generic-skill';
 import { JobsFoundItem } from './jobs-found-item';
 
@@ -316,6 +316,22 @@ export class CharacterPageComponent implements OnInit {
 		if(this.characterService.characterFocus.genericSkills.delete(skillToRemove.uuid) == false) {
 			console.error("Cannot delete skill with uuid: [" + skillToRemove.uuid
 				+ "] because the character does not know it.");
+		}
+	}
+
+	public showSkillDuration(otherSkill: Skill) {
+		if(otherSkill.duration.qualifier === Qualifier.NONE) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public showCost(cost) {
+		if(cost.costDenomination === SpecialCost.NONE) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 }
