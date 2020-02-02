@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Skill } from "./skill";
 import { ClassSkill } from "./class-skill";
 import { GenericSkill } from "./generic-skill";
+import { isNullOrUndefined } from "util";
 
 @Injectable()
 export class SkillService {
@@ -71,6 +72,27 @@ export class SkillService {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	public static addClassSkillFromJsonIfMissing(json): boolean {
+		if(isNullOrUndefined(json)) {
+			// TODO: Fail. Loudly.
+			return null;
+		} else {
+			SkillService.addClassSkillIfMissing(Skill.deserializeNewSkillFromJSON(json));
+		}
+	}
+
+	public static addClassSkillFromJsonArrayIfMissing(jsonArray) {
+		if(isNullOrUndefined(jsonArray)) {
+			// TODO: Fail. Loudly.
+			return null;
+		} else {
+			// TODO: Test this out.
+			jsonArray.forEach(skillElement => {
+				SkillService.addClassSkillFromJsonIfMissing(skillElement);
+			});
 		}
 	}
 

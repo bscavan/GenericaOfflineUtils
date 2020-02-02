@@ -17,6 +17,8 @@ import { JobService } from './job-service';
 import { SkillPageComponent } from './skill-page/skill-page.component';
 import { SkillService } from './skills/skill-service';
 import { SkillItemDisplayComponent } from './job-page/skill-item-display/skill-item-display.component';
+import { ConfigService, ConfigModule } from './config-service';
+import { ConnectionBackend, HttpModule } from '@angular/http';
 
 
 @NgModule({
@@ -35,13 +37,16 @@ import { SkillItemDisplayComponent } from './job-page/skill-item-display/skill-i
 	NgbModule.forRoot(),
 	BrowserModule,
 	FormsModule,
-	AppRoutingModule
+	AppRoutingModule,
+	HttpModule,
   ],
   providers: [
 	{provide: APP_BASE_HREF, useValue: '/'},
 	CharacterService,
 	JobService,
-	SkillService
+	SkillService,
+	ConfigService,
+	ConfigModule.init()
 ],
   bootstrap: [AppComponent]
 })

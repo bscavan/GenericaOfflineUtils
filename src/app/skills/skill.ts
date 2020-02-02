@@ -192,6 +192,7 @@ export class Skill implements JsonSerializable {
 	public static deserializeNewSkillFromJSON(json): Skill {
 		let deserializedSkill = new Skill(null, null, null, null, true);
 
+		// FIXME: This method doesn't first check the JSON to ensure these fields exist!
 		deserializedSkill.uuid = json.uuid;
 		deserializedSkill.name = json.name;
 		deserializedSkill.description = json.description;

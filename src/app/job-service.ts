@@ -11,6 +11,7 @@ import { Professions } from './crafting-jobs/professions';
 import { Races } from './racial-jobs/races';
 import { isNullOrUndefined } from 'util';
 import { JobTypes } from './shared-constants'
+import { ConfigService } from './config-service';
 
 @Injectable()
 export class JobService {
@@ -22,7 +23,7 @@ export class JobService {
 	public craftingJobInProgress: CraftingJob;
 	public racialJobInProgress: RacialJob;
 
-	constructor() {
+	constructor(configService: ConfigService) {
 		this.adventuringJobInProgress = BlankAdventuringJob.generateFullyPopulatedBlankAdventuringJob();
 		this.craftingJobInProgress = BlankCraftingJob.generateFullyPopulatedBlankCraftingJob();
 		this.racialJobInProgress = BlankRacialJob.generateFullyPopulatedBlankRacialJob();
@@ -33,6 +34,9 @@ export class JobService {
 		Races.getAllRaces();
 		Professions.getAllCraftingJobs();
 		AdventuringJobs.getAllAdventuringJobs();
+
+		let foundJobsJson = configService.getJobsJson();
+		// TODO: Confirm this isn't giving us a 404 or anything before plugging it into the upload method...
 	}
 
 	public getCurrentJob(jobType: JobTypes): Job {
@@ -84,6 +88,18 @@ export class JobService {
 			Professions.addCraftingJob(newJob);
 		} else if (newJob instanceof RacialJob) {
 			Races.addRacialJob(newJob);
+		}
+	}
+
+	public uploadJobsIntoCollectionFromJSONArray(jsonArray) {
+		if(isNullOrUndefined(jsonArray)) {
+			// TODO: Fail. Loudly.
+			return null;
+		} else {
+			// TODO: Test this out.
+			jsonArray.forEach(jobElement => {
+				this.uploadJobIntoCollectionFromJSON(jobElement);
+			});
 		}
 	}
 

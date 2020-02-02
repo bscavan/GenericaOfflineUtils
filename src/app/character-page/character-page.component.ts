@@ -12,6 +12,7 @@ import { Job } from '../job';
 import { Skill, Qualifier, SpecialCost } from '../skills/skill';
 import { GenericSkill } from '../skills/generic-skill';
 import { JobsFoundItem } from './jobs-found-item';
+import { ConfigService } from '../config-service';
 
 
 
@@ -46,8 +47,7 @@ export class CharacterPageComponent implements OnInit {
 	// Control for the ngIf on the manual/testing controls.
 	expandOptions:boolean = false;
 
-	constructor(public characterService: CharacterService) {
-	}
+	constructor(public characterService: CharacterService, configService: ConfigService) {}
 
 	ngOnInit() { }
 

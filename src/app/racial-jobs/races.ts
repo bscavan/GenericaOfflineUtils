@@ -13,8 +13,8 @@ export class Races {
 	// TODO: Add support for races that have supplemental job slots, but only
 	// allow specific races as options, ex: half-breeds only allow two-skill jobs,
 	// and beastkin are humans with one beast job...
-	private static allRaces: RacialJob[] = null;
-	private static allSupplementalRaces: RacialJob[] = null;
+	private static allRaces: RacialJob[] = [];
+	private static allSupplementalRaces: RacialJob[] = [];
 
 	// TODO: Refactor this so that the underlying structure of the collection is a map?
 	// TODO: Refactor this so that new jobs can be added via JSON (which gets deserialized)
@@ -32,7 +32,7 @@ export class Races {
 	}
 
 	private static compileSupplementalRaces() {
-		let supplementalRaces = []
+		let supplementalRaces = [];
 
 		this.getAllRaces().forEach((currentRace) => {
 			if(currentRace.canBeSupplementalJob) {
@@ -45,7 +45,7 @@ export class Races {
 
 	// Use this to iterate over all the racial job options offered in the front-end
 	public static getAllRaces(): RacialJob[] {
-		if(this.allRaces == null) {
+		if(this.allRaces == null || this.allRaces.length <= 0) {
 			this.allRaces = this.compileRaces();
 		}
 
