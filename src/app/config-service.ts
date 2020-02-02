@@ -4,30 +4,27 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map'
 
 
-//import { environment } from 'environments/environment'; //path to your environment files
-
 @Injectable()
 export class ConfigService {
-
-    //private _config: Object
-    //public _config: Object
-    private _env: string;
-
     public static readonly ASSETS_FILES_PATH_ROOT = "./assets/import/";
-    public static readonly SKILLS_JSON_PATH = ConfigService.ASSETS_FILES_PATH_ROOT + "masterSkillsList.json";
-    public static readonly JOBS_JSON_PATH = ConfigService.ASSETS_FILES_PATH_ROOT + "masterJobsList.json";;
+    // FIXME: Create the rest of these master json files...
+    // TODO: Apply alphabetic sorting of job and skill lists after importing?
+    public static readonly CLASS_SKILLS_JSON_PATH = ConfigService.ASSETS_FILES_PATH_ROOT + "masterClassSkillsList.json";
+    public static readonly GENERIC_SKILLS_JSON_PATH = ConfigService.ASSETS_FILES_PATH_ROOT + "masterGenericSkillsList.json";
+    public static readonly JOBS_JSON_PATH = ConfigService.ASSETS_FILES_PATH_ROOT + "masterJobsList.json";
+    public static readonly Characters_JSON_PATH = ConfigService.ASSETS_FILES_PATH_ROOT + "masterCharactersList.json";
 
-    private skillsJson;
+    private _classSkillsJson;
+    private _genericSkillsJson;
     private _jobsJson;
 
     constructor(private _http: Http) { }
 
-    loadAssetFile() {
+    loadJobsAssetFile() {
         return new Promise((resolve, reject) => {
             this._http.get(ConfigService.JOBS_JSON_PATH)
             .map(res => res.json())
             .subscribe((data) => {
-                //this._config = data;
                 // FIXME: Make this _NOT_ break everything on startup if the file can't be found...
                 this._jobsJson = data;
                 resolve(true);
@@ -39,38 +36,100 @@ export class ConfigService {
         });
     }
 
-    public getJobsJson() {
-        return this._jobsJson
+    loadClassSkillsAssetFile() {
+        return new Promise((resolve, reject) => {
+            this._http.get(ConfigService.CLASS_SKILLS_JSON_PATH)
+            .map(res => res.json())
+            .subscribe((data) => {
+                // FIXME: Make this _NOT_ break everything on startup if the file can't be found...
+                this._classSkillsJson = data;
+                resolve(true);
+            },
+            (error: any) => {
+                console.error(error);
+                return Observable.throw(error.json().error || 'Server error');
+            });
+        });
     }
-    // // Is app in the development mode?
-    // isDevmode() {
-    //     return this._env === 'development';
-    // }
-    // // Gets API route based on the provided key
-    // getApi(key: string): string {
-    //     return this._config["API_ENDPOINTS"][key];
-    // }
-    // Gets a value of specified property in the configuration file
-    // get(key: any) {
-    //     return this._config[key];
-    // }
+
+    loadGenericSkillsAssetFile() {
+        return new Promise((resolve, reject) => {
+            this._http.get(ConfigService.GENERIC_SKILLS_JSON_PATH)
+            .map(res => res.json())
+            .subscribe((data) => {
+                // FIXME: Make this _NOT_ break everything on startup if the file can't be found...
+                this._genericSkillsJson = data;
+                resolve(true);
+            },
+            (error: any) => {
+                console.error(error);
+                return Observable.throw(error.json().error || 'Server error');
+            });
+        });
+    }
+
+    public getJobsJson() {
+        return this._jobsJson;
+    }
+
+    public getClassSkillsJson() {
+        return this._classSkillsJson;
+    }
+
+    public getGenericSkillsJson() {
+        return this._genericSkillsJson;
+    }
 }
 
-export function ConfigFactory(config: ConfigService) {
-    return () => config.loadAssetFile();
+export function JobsConfigFactory(configService: ConfigService) {
+    return () => configService.loadJobsAssetFile();
 }
 
-export function init() {
+export function initJobAssets() {
     return {
         provide: APP_INITIALIZER,
-        useFactory: ConfigFactory,
+        useFactory: JobsConfigFactory,
         deps: [ConfigService],
         multi: true
     }
 }
 
-const ConfigModule = {
-    init: init
+const JobsConfigModule = {
+    init: initJobAssets
 }
 
-export { ConfigModule };
+export function ClassSkillsConfigFactory(configService: ConfigService) {
+    return () => configService.loadClassSkillsAssetFile();
+}
+
+export function initClassSkillAssets() {
+    return {
+        provide: APP_INITIALIZER,
+        useFactory: ClassSkillsConfigFactory,
+        deps: [ConfigService],
+        multi: true
+    }
+}
+
+const ClassSkillsConfigModule = {
+    init: initClassSkillAssets
+}
+
+export function GenericSkillsConfigFactory(configService: ConfigService) {
+    return () => configService.loadGenericSkillsAssetFile();
+}
+
+export function initGenericSkillAssets() {
+    return {
+        provide: APP_INITIALIZER,
+        useFactory: GenericSkillsConfigFactory,
+        deps: [ConfigService],
+        multi: true
+    }
+}
+
+const GenericSkillsConfigModule = {
+    init: initGenericSkillAssets
+}
+
+export { JobsConfigModule, ClassSkillsConfigModule, GenericSkillsConfigModule };

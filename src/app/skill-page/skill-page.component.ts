@@ -15,7 +15,14 @@ export class SkillPageComponent implements OnInit {
 	allQualifiers = Skill.getAllQualifiers();
 	allDenominations = Skill.getAllDenominations();
 
-	constructor() {
+	/**
+	 * Constructor for service that handles class and generic skills.
+	 * NOTICE: This import of SkillService is absolutely necessary. Without it 
+	 * the SkillService will not be initialized and it will never load the
+	 * skill json file(s) from the assets directory on startup...
+	 * @param skillService 
+	 */
+	constructor(skillService: SkillService) {
 		this.getAllClassSkillKeys();
 	}
 

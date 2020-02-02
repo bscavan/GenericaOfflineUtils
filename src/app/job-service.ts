@@ -35,8 +35,9 @@ export class JobService {
 		Professions.getAllCraftingJobs();
 		AdventuringJobs.getAllAdventuringJobs();
 
-		let foundJobsJson = configService.getJobsJson();
 		// TODO: Confirm this isn't giving us a 404 or anything before plugging it into the upload method...
+		let foundJobsJson = configService.getJobsJson();
+		this.uploadJobsIntoCollectionFromJSONArray(foundJobsJson);
 	}
 
 	public getCurrentJob(jobType: JobTypes): Job {

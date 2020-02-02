@@ -3,6 +3,7 @@ import { Skill } from "./skill";
 import { ClassSkill } from "./class-skill";
 import { GenericSkill } from "./generic-skill";
 import { isNullOrUndefined } from "util";
+import { ConfigService } from "../config-service";
 
 @Injectable()
 export class SkillService {
@@ -22,7 +23,7 @@ export class SkillService {
 	 */
 	static allGenericSkills: Map<string, GenericSkill> = new Map<string, Skill>();
 
-	constructor() {
+	constructor(configService: ConfigService) {
 		/*
 		// TODO: Remove these skills once we're done testing.
 		// TODO: Make sure the skills in jobs get added when the jobs are created.
@@ -42,6 +43,14 @@ export class SkillService {
 		swinger.setDuration(1, Duration.MINUTE, Qualifier.PER_SKILL_LEVEL);
 		this.addSkill(swinger);
 		*/
+
+		// FIXME: This is a largely-static class, meaning the constructor is rarely called.
+		// Migrate these method cals into a helper-method that gets called once before any
+		// of the static methods can be called.
+
+		// TODO: Confirm this isn't giving us a 404 or anything before plugging it into the upload method...
+		let foundSkillJson = configService.getClassSkillsJson();
+		SkillService.addClassSkillsFromJsonArrayIfMissing(foundSkillJson);
 	}
 
 	public static addClassSkill(newSkill: ClassSkill) {
@@ -84,12 +93,11 @@ export class SkillService {
 		}
 	}
 
-	public static addClassSkillFromJsonArrayIfMissing(jsonArray) {
+	public static addClassSkillsFromJsonArrayIfMissing(jsonArray) {
 		if(isNullOrUndefined(jsonArray)) {
-			// TODO: Fail. Loudly.
+			console.error("The json provided for importing skills was null or undefined.");
 			return null;
 		} else {
-			// TODO: Test this out.
 			jsonArray.forEach(skillElement => {
 				SkillService.addClassSkillFromJsonIfMissing(skillElement);
 			});

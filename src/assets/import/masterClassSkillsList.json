@@ -1,0 +1,65 @@
+[
+	{
+		"uuid": "114e6b13-c29f-49a6-a869-6054f394c559",
+		"name": "Chomp",
+		"description": "Cost: 5 Sta Duration: 1 Attack You have the option of activating chomp when attacking with the brawling skill. A successful attack deals bonus damage equal to the level of your chomp skill",
+		"costs": [],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "PASSIVE CONSTANT",
+			"qualifier": "NONE"
+		},
+		"doesLevel": true
+	},
+	{
+		"uuid": "4694b59c-72d9-44a7-bd59-1d5045ff3406",
+		"name": "Poison Breath",
+		"description": "Vomit acidic breath of clouds. Force everyone in range to make a Constitution save or be poisoned/paralyzed.",
+		"costs": [
+			{
+				"costAmount": 15,
+				"costDenomination": "STA"
+			}
+		],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "ATTACK",
+			"qualifier": "NONE"
+		},
+		"doesLevel": true
+	},
+	{
+		"uuid": "77829326-5103-4a7d-b712-ec6e069fe3c7",
+		"name": "Blessing",
+		"description": "Clerics can have a word with divinity, enhancing a chosen ally in the short or long-term. To enact a blessing, the Cleric spends fortune, increasing one of their attributes by one point for each point of fortune invested. This reduces the Cleric's fortune by the casting cost of blessing until they choose to cancel the spell. A being can only be under the influence of a single blessing at a time. A Cleric can only bestow one blessing at a time. This skill is a spell.",
+		"costs": [
+			{
+				"costAmount": 1,
+				"costDenomination": "FOR"
+			}
+		],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "PASSIVE CONSTANT",
+			"qualifier": "NONE"
+		},
+		"doesLevel": true
+	},
+	{
+		"uuid": "31697cd8-c843-4537-aeba-5405b02de82b",
+		"name": "Holy Smite",
+		"description": "Sometimes turning the other cheek only gets that one struck as well. Sometimes you have to call down the wrath of a god and layeth the smacketh downeth. Holy smite increases your melee attack damage by one for each level of the skill. It also makes a really awesome-looking seethrough aura of a giant weapon around whatever you're using to attack. This skill is a spell.",
+		"costs": [
+			{
+				"costAmount": 10,
+				"costDenomination": "FOR"
+			}
+		],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "MINUTE",
+			"qualifier": "PER_SKILL_LEVEL"
+		},
+		"doesLevel": true
+	}
+]
