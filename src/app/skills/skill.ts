@@ -4,6 +4,11 @@ import { JsonSerializable } from '../json-serializable';
 import * as FileSaver from 'file-saver';
 import { isNullOrUndefined } from 'util';
 
+export enum SkillTypes {
+	CLASS_SKILL = "CLASS_SKILL",
+	GENERIC_SKILL = "GENERIC_SKILL"
+}
+
 /*
  * TODO: Don't forget to provide a means of working in the Bard's borrow skills.
  * Since skills are stored separate from Jobs, this should be possible.
@@ -89,6 +94,7 @@ export class Skill implements JsonSerializable {
 	public name: string;
 	public description: string;
 	public doesLevel: boolean;
+	public type: SkillTypes;
 
 	/*
 	* NOTE: Some abilities, such as the Animator's "Animus" skill have a scaling
@@ -110,11 +116,12 @@ export class Skill implements JsonSerializable {
 	public constructor(name: string, description: string,
 	costs: {costAmount: number, costDenomination: Denomination}[],
 	duration: {amount: number, timeDenomination: Duration, qualifier: Qualifier},
-	doesLevel: boolean) {
+	doesLevel: boolean, type: SkillTypes) {
 		this.uuid = uuid();
 		this.name = name;
 		this.description = description;
 		this.doesLevel = doesLevel;
+		this.type = type;
 
 		if(isNullOrUndefined(costs)) {
 			this.costs = [];
@@ -176,6 +183,7 @@ export class Skill implements JsonSerializable {
 		json["costs"] = this.costs;
 		json["duration"] = this.duration;
 		json["doesLevel"] = this.doesLevel;
+		json["type"] = this.type;
 		return json;
 	}
 
@@ -186,11 +194,12 @@ export class Skill implements JsonSerializable {
 		this.costs = json.costs;
 		this.duration = json.duration;
 		this.doesLevel = json.doesLevel;
+		this.type = json.type;
 		return this;
 	}
 
 	public static deserializeNewSkillFromJSON(json): Skill {
-		let deserializedSkill = new Skill(null, null, null, null, true);
+		let deserializedSkill = new Skill(null, null, null, null, true, null);
 
 		// FIXME: This method doesn't first check the JSON to ensure these fields exist!
 		deserializedSkill.uuid = json.uuid;
@@ -199,6 +208,7 @@ export class Skill implements JsonSerializable {
 		deserializedSkill.costs = json.costs;
 		deserializedSkill.duration = json.duration;
 		deserializedSkill.doesLevel = json.doesLevel;
+		deserializedSkill.type = json.type;
 
 		return deserializedSkill;
 	}

@@ -5,6 +5,8 @@ import { isNullOrUndefined } from 'util';
 import { JobService } from '../../job-service';
 import { Character } from '../../character/character';
 import { Job } from '../../job';
+import { Skill } from '../../skills/skill';
+import { SkillService } from '../../skills/skill-service';
 
 @Component({
 	selector: 'app-import-modal',
@@ -52,6 +54,10 @@ export class ImportModalComponent implements OnInit {
 
 					case Job.LABEL:
 						this.jobService.uploadJobIntoCollectionFromJSON(jobFileAsJson);
+						break;
+
+					case Skill.LABEL:
+						SkillService.addSkillFromJsonIfMissing(jobFileAsJson);
 						break;
 				}
 

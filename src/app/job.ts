@@ -3,7 +3,7 @@ import { SerializationUtil } from "./serialization-util";
 import { JsonSerializable } from "./json-serializable";
 import { isNullOrUndefined } from "util";
 import { v4 as uuid } from 'uuid';
-import { Skill } from "./skills/skill";
+import { Skill, SkillTypes } from "./skills/skill";
 import { SkillService } from "./skills/skill-service";
 
 export abstract class Job implements JsonSerializable {
@@ -170,6 +170,7 @@ export abstract class Job implements JsonSerializable {
 			// Iterate over each of skill elements in the json and add them to the Set.
 			for(let currentSkillIndex in currentSkillSetJson) {
 				let deserializedSkill = Skill.deserializeNewSkillFromJSON(currentSkillSetJson[currentSkillIndex]);
+				deserializedSkill.type = SkillTypes.CLASS_SKILL;
 				currentSkillSet.add(deserializedSkill);
 				SkillService.addClassSkillIfMissing(deserializedSkill);
 			}

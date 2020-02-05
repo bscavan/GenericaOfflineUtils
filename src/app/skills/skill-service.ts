@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Skill } from "./skill";
+import { Skill, SkillTypes } from "./skill";
 import { ClassSkill } from "./class-skill";
 import { GenericSkill } from "./generic-skill";
 import { isNullOrUndefined } from "util";
@@ -89,7 +89,9 @@ export class SkillService {
 			// TODO: Fail. Loudly.
 			return null;
 		} else {
-			SkillService.addClassSkillIfMissing(Skill.deserializeNewSkillFromJSON(json));
+			let newSkill = Skill.deserializeNewSkillFromJSON(json);
+			newSkill.type = SkillTypes.CLASS_SKILL;
+			SkillService.addClassSkillIfMissing(newSkill);
 		}
 	}
 
@@ -143,12 +145,62 @@ export class SkillService {
 		}
 	}
 
+	public static addGenericSkillFromJsonIfMissing(json): boolean {
+		if(isNullOrUndefined(json)) {
+			// TODO: Fail. Loudly.
+			return null;
+		} else {
+			let newSkill = Skill.deserializeNewSkillFromJSON(json);
+			newSkill.type = SkillTypes.GENERIC_SKILL;
+			SkillService.addGenericSkillIfMissing(newSkill);
+		}
+	}
+
+	public static addGenericSkillsFromJsonArrayIfMissing(jsonArray) {
+		if(isNullOrUndefined(jsonArray)) {
+			console.error("The json provided for importing skills was null or undefined.");
+			return null;
+		} else {
+			jsonArray.forEach(skillElement => {
+				SkillService.addGenericSkillFromJsonIfMissing(skillElement);
+			});
+		}
+	}
+
 	public static getGenericSkill(uuid: string): GenericSkill {
 		return SkillService.allGenericSkills.get(uuid);
 	}
 
 	public static removeGenericSkill(uuid: string): boolean {
 		return SkillService.allGenericSkills.delete(uuid);
+	}
+
+	public static addSkillsFromJsonArrayIfMissing(jsonArray) {
+		if(isNullOrUndefined(jsonArray)) {
+			console.error("The json provided for importing skills was null or undefined.");
+			return null;
+		} else {
+			jsonArray.forEach(skillElement => {
+				this.addSkillFromJsonIfMissing(skillElement);
+			});
+		}
+	}
+
+	public static addSkillFromJsonIfMissing(json): boolean {
+		if(isNullOrUndefined(json)) {
+			// TODO: Fail. Loudly.
+			return null;
+		} else {
+			let newSkill = Skill.deserializeNewSkillFromJSON(json);
+
+			if(newSkill.type === SkillTypes.CLASS_SKILL) {
+				SkillService.addClassSkillIfMissing(newSkill);
+			} else {
+				// We are defaulting to generic skills...
+				// TODO: Add a means of converting a generic skill to a class skill?
+				SkillService.addGenericSkillIfMissing(newSkill);
+			}
+		}
 	}
 
 	// TODO: Add a means of retrieving skills by name. It isn't foolproof, but it's necessary.

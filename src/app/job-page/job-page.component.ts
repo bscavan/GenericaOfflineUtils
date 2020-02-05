@@ -54,7 +54,13 @@ export class JobPageComponent implements OnInit {
 
 	public static job_service: JobService;
 
-	constructor(private jobService: JobService, private characterService: CharacterService) {
+	/*
+	 * NOTICE: This import of SkillService is absolutely necessary. Without it 
+	 * the SkillService will not be initialized and it will never load the
+	 * skill json file(s) from the assets directory on startup...
+	 * @param skillService 
+	*/
+	constructor(private jobService: JobService, private characterService: CharacterService, private skillService: SkillService) {
 		JobPageComponent.job_service = jobService;
 	}
 

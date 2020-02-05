@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SkillService } from '../skills/skill-service';
 import { Skill, Duration, Denomination } from '../skills/skill';
+import FileSaver = require('file-saver');
 
 @Component({
 	selector: 'app-skill-page',
@@ -8,6 +9,7 @@ import { Skill, Duration, Denomination } from '../skills/skill';
 	styleUrls: ['./skill-page.component.css']
 })
 export class SkillPageComponent implements OnInit {
+	public readonly LABEL = Skill.LABEL;
 
 	allClassSkillKeys = [];
 	allGenericSkillKeys = [];
@@ -23,17 +25,44 @@ export class SkillPageComponent implements OnInit {
 	 * @param skillService 
 	 */
 	constructor(skillService: SkillService) {
-		this.getAllClassSkillKeys();
+		this.refreshAllClassSkillKeys();
+		this.refreshAllGenericSkillKeys();
+	}
+
+	public skillImportCallback(focus: SkillPageComponent) {
+		focus.refreshAllClassSkillKeys();
+		focus.refreshAllGenericSkillKeys();
 	}
 
 	ngOnInit() {}
 
-	public addNewClassSkill() {
-		SkillService.addBlankClassSkill();
-		this.getAllClassSkillKeys();
+	public saveClassSkill(uuid: string) {
+		let currentSkill = SkillService.allClassSkills.get(uuid);
+		this.saveSkill(currentSkill);
 	}
 
-	public getAllClassSkillKeys() {
+	public saveGenericSkill(uuid: string) {
+		let currentSkill = SkillService.allGenericSkills.get(uuid);
+		this.saveSkill(currentSkill);
+	}
+
+	public saveSkill(skillToSave: Skill) {
+		let skillJson = skillToSave.serializeToJSON();
+		skillJson = JSON.stringify(skillJson);
+
+		let skillJsonArray = [];
+		skillJsonArray.push(skillJson);
+
+		let blob = new Blob(skillJsonArray, {type: 'text/plain' });
+		FileSaver.saveAs(blob, skillToSave.name + ".json");
+	}
+
+	public addNewClassSkill() {
+		SkillService.addBlankClassSkill();
+		this.refreshAllClassSkillKeys();
+	}
+
+	public refreshAllClassSkillKeys() {
 		this.allClassSkillKeys = [];
 
 		SkillService.allClassSkills.forEach((value: Skill, key: string) => {
@@ -48,7 +77,7 @@ export class SkillPageComponent implements OnInit {
 	public removeClassSkill(uuid: string) {
 		if(confirm("You are about to delete a class skill. There may be job that provide this skill and characters with progress in it. If so, this may break them. Are you sure you wish to do this?")) {
 			let returnValue = SkillService.removeClassSkill(uuid);
-			this.getAllClassSkillKeys();
+			this.refreshAllClassSkillKeys();
 			return returnValue;
 		}
 	}
@@ -60,13 +89,14 @@ export class SkillPageComponent implements OnInit {
 	public removeCostFromClassSkill(uuid: string, index: number) {
 		SkillService.getClassSkill(uuid).removeCost(index);
 	}
-	
+
+	// TODO: Make an observable that this will respond to. Whenever the original list updates, all references to it need to also update.
 	public addNewGenericSkill() {
 		SkillService.addBlankGenericSkill();
-		this.getAllGenericSkillKeys();
+		this.refreshAllGenericSkillKeys();
 	}
 
-	public getAllGenericSkillKeys() {
+	public refreshAllGenericSkillKeys() {
 		this.allGenericSkillKeys = [];
 
 		SkillService.allGenericSkills.forEach((value: Skill, key: string) => {
@@ -81,7 +111,7 @@ export class SkillPageComponent implements OnInit {
 	public removeGenericSkill(uuid: string) {
 		if(confirm("You are about to delete a general skill. There may be characters with progress in it. If so, this may break them. Are you sure you wish to do this?")) {
 			let returnValue = SkillService.removeGenericSkill(uuid);
-			this.getAllGenericSkillKeys();
+			this.refreshAllGenericSkillKeys();
 			return returnValue;
 		}
 	}

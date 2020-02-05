@@ -5,6 +5,8 @@
 	<div class="modal-footer">
 		<form>
 			<div>
+				<!-- FIXME: Now that the characterService can track multiple characters, we should allow for importing multiple characters at once! -->
+				<input *ngIf="importType === 'skill'" type="file" (change)="importFile($event)" multiple>
 				<input *ngIf="importType === 'job'" type="file" (change)="importFile($event)" multiple>
 				<input *ngIf="importType === 'character'" type="file" (change)="importFile($event)">
 			</div>

@@ -48,7 +48,13 @@ export class CharacterPageComponent implements OnInit {
 	// Control for the ngIf on the manual/testing controls.
 	expandOptions:boolean = false;
 
-	constructor(public characterService: CharacterService, configService: ConfigService) {}
+	/*
+	 * NOTICE: This import of SkillService is absolutely necessary. Without it 
+	 * the SkillService will not be initialized and it will never load the
+	 * skill json file(s) from the assets directory on startup...
+	 * @param skillService 
+	*/
+	constructor(public characterService: CharacterService, skillService: SkillService, configService: ConfigService) {}
 
 	ngOnInit() { }
 
