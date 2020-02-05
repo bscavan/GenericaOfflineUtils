@@ -85,12 +85,23 @@
 </div>
 
 <div *ngIf="currentJobIsARacialJob()">
+	<!-- Note, they really shouldn't be allowed to set this above one... -->
+	Supplemental Racial Job Slots:
+	<input type="number" [(ngModel)]="this.supplementalRacialJobSlotsOnDisplay"
+	(change)="changeCurrentSupplementalRacialJobSlots()">
 	Adventuring Job Slots:
 	<input type="number" [(ngModel)]="this.adventuringJobSlotsOnDisplay"
 	(change)="changeCurrentAdventuringJobSlots()">
 	Crafting Job Slots:
 	<input type="number" [(ngModel)]="this.craftingJobSlotsOnDisplay"
 	(change)="changeCurrentCraftingJobSlots()">
+
+	<!-- TODO: Make this radioButton a slider -->
+	<form action="">
+		Can be a supplemental job:
+		<input type="radio" [(ngModel)]="this.currentJob.canBeSupplementalJob" value="true">Yes
+		<input type="radio" [(ngModel)]="this.currentJob.canBeSupplementalJob" value="false">No
+	</form>
 </div>
 
 <div *ngIf="isJobWithBaseAttributes(this.currentJob)">

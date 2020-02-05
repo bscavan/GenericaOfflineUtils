@@ -14,8 +14,6 @@ import { GenericSkill } from '../skills/generic-skill';
 import { JobsFoundItem } from './jobs-found-item';
 import { ConfigService } from '../config-service';
 
-
-
 @Component({
   selector: 'app-character-page',
   templateUrl: './character-page.component.html',
@@ -43,6 +41,9 @@ export class CharacterPageComponent implements OnInit {
 
 	// Control for the ngIf on the skills component.
 	expandSkillsSection: boolean = false;
+
+	// Control for the ngIf on the character-loading options
+	public showLoadDropdown: boolean = false;
 
 	// Control for the ngIf on the manual/testing controls.
 	expandOptions:boolean = false;
@@ -97,6 +98,11 @@ export class CharacterPageComponent implements OnInit {
 
 		let blob = new Blob(characterJsonArray, {type: 'text/plain' });
 		FileSaver.saveAs(blob, filename);
+	}
+
+	selectCharacterFromService(index) {
+		this.characterService.selectCharacterAtIndex(index);
+		this.showLoadDropdown = false;
 	}
 
 	getClassSkillLevel(characterFocus: Character, uuid: string) {

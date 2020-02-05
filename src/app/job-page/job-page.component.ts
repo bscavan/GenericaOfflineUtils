@@ -42,6 +42,7 @@ export class JobPageComponent implements OnInit {
 	public orderedBaseDefenses: {affectedDefense: Defenses, baseValue: number}[] = [];
 	public orderedBasePools: {affectedPool: Pools, baseValue: number}[];
 
+	public supplementalRacialJobSlotsOnDisplay;
 	public adventuringJobSlotsOnDisplay;
 	public craftingJobSlotsOnDisplay;
 
@@ -331,6 +332,26 @@ export class JobPageComponent implements OnInit {
 	}
 
 	// FIXME: consolidate these methods, reducing duplication.
+	// FIXME: These methods currently allow for negative values. Fix this.
+	public changeCurrentSupplementalRacialJobSlots() {
+		if(this.currentJobIsARacialJob() == false) {
+			return;
+		}
+
+		let currentJob = this.currentJob as RacialJob;
+
+		if(currentJob === this.characterService.characterFocus.primaryRacialJob) {
+			// The user is currently editing the job they are using in the characterPage!
+			if(confirm("You are about to alter the number of adventuring job slots alotted to a character in progress. Are you sure you wish to do this?") == false) {
+				this.supplementalRacialJobSlotsOnDisplay = currentJob.numberOfsupplementalRacialJobSlots;
+				return;
+			}
+		}
+
+		currentJob.numberOfsupplementalRacialJobSlots = this.supplementalRacialJobSlotsOnDisplay;
+		this.characterService.characterFocus.handlePrimaryRaceChange();
+	}
+
 	public changeCurrentAdventuringJobSlots() {
 		if(this.currentJobIsARacialJob() == false) {
 			return;
