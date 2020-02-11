@@ -49,8 +49,12 @@ export class SkillService {
 		// of the static methods can be called.
 
 		// TODO: Confirm this isn't giving us a 404 or anything before plugging it into the upload method...
-		let foundSkillJson = configService.getClassSkillsJson();
-		SkillService.addClassSkillsFromJsonArrayIfMissing(foundSkillJson);
+		let foundClassSkillsJson = configService.getClassSkillsJson();
+		SkillService.addClassSkillsFromJsonArrayIfMissing(foundClassSkillsJson);
+
+		// TODO: Confirm this isn't giving us a 404 or anything before plugging it into the upload method...
+		let foundGenericSkillJson = configService.getGenericSkillsJson();
+		SkillService.addGenericSkillsFromJsonArrayIfMissing(foundGenericSkillJson);
 	}
 
 	public static addClassSkill(newSkill: ClassSkill) {

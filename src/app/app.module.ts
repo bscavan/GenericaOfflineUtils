@@ -17,7 +17,7 @@ import { JobService } from './job-service';
 import { SkillPageComponent } from './skill-page/skill-page.component';
 import { SkillService } from './skills/skill-service';
 import { SkillItemDisplayComponent } from './job-page/skill-item-display/skill-item-display.component';
-import { ConfigService, JobsConfigModule, ClassSkillsConfigModule } from './config-service';
+import { ConfigService, JobsConfigModule, ClassSkillsConfigModule, CharactersConfigModule, GenericSkillsConfigModule } from './config-service';
 import { ConnectionBackend, HttpModule } from '@angular/http';
 
 
@@ -47,7 +47,9 @@ import { ConnectionBackend, HttpModule } from '@angular/http';
 	SkillService,
 	ConfigService,
 	JobsConfigModule.init(),
-	ClassSkillsConfigModule.init()
+	ClassSkillsConfigModule.init(),
+	GenericSkillsConfigModule.init(),
+	//CharactersConfigModule.init()
 ],
   bootstrap: [AppComponent]
 })

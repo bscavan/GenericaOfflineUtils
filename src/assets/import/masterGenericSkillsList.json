@@ -1,0 +1,15 @@
+[
+    {
+        "uuid": "e58ef0d3-b623-4470-b593-ed05c68b4c7f",
+        "name": "Brawling",
+        "description": "Brawling is used when you’re fighting unarmed, or using natural weaponry",
+        "costs": [],
+        "duration": {
+            "amount": 1,
+            "timeDenomination": "PASSIVE_CONSTANT",
+            "qualifier": "NONE"
+        },
+        "doesLevel": true,
+        "type": "GENERIC_SKILL"
+    }
+]
