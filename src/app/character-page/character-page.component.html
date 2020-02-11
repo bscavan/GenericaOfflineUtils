@@ -328,10 +328,10 @@
 		</select>
 		<button (click)="addGenericSkillToCharacter()">Add Skill</button>
 	</div>
-	<div *ngIf="this.characterService.characterFocus.genericSkills.size === 0 ">
+	<div *ngIf="this.characterService.characterFocus.getGenericSkillsSize() === 0 ">
 		(No general skills to display)
 	</div>
-	<div *ngFor="let currentSkillUUID of this.characterService.characterFocus.genericSkills.keys()">
+	<div *ngFor="let currentSkillUUID of this.characterService.characterFocus.getGenericSkillsKeys()">
 		<div class="level-item">
 			<app-skill-item-display [currentSkill]="getGenericSkill(currentSkillUUID)"
 			[currentLevel]="currentLevel" [editable]="'false'" style="float: left"></app-skill-item-display>

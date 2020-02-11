@@ -51,12 +51,25 @@ export class Character implements JsonSerializable {
 
 	// These are mapped by their UUID, not their names!
 	public classSkills: Map<string, number> = new Map();
-	// Generic skills requre a separate collection in skill-service?
+
+	// FIXME: This needs to be different than the class skills! We need to store the whole skills here!
 	public genericSkills: Map<string, number> = new Map();
 
 	// support for spending level points (calculating costs) and grind points (on skills or stats)?
 
 	// TODO: Handle current values of pools?
+
+	/**
+	 * TODO: Add fields for tracking character statistics such as critical successes and failures,
+	 * times peaceful resolutions were achieved, times needless violence/bloodshed was enacted, 
+	 * negotiations versus intimidations, etc.
+	 * 
+	 * TODO: Track money?
+	 * 
+	 * TODO: Track inventory?
+	 * 
+	 * TODO: Also track unlocked Jobs!
+	 */
 
 	// multiple increases/decreases to the same attribute stack.
 	protected increasesToAttributes: Map<string, {targetAttribute: Attributes; value: number}>;
@@ -814,6 +827,7 @@ export class Character implements JsonSerializable {
 		json["levelPoints"] = this.levelPoints;
 
 		json["classSkills"] = SerializationUtil.serializeMap(this.classSkills);
+		// FIXME: This needs to be different than the class skills! We need to store the whole skills here!
 		json["genericSkills"] = SerializationUtil.serializeMap(this.genericSkills);
 
 		return json;
@@ -859,6 +873,7 @@ export class Character implements JsonSerializable {
 		this.levelPoints = json.levelPoints;
 
 		this.classSkills = this.deserializeSkillsMap(json.classSkills);
+		// FIXME: This needs to be different than the class skills! We need to store the whole skills here!
 		this.genericSkills = this.deserializeSkillsMap(json.genericSkills);
 
 		this.recalculateAttributes();
@@ -868,5 +883,29 @@ export class Character implements JsonSerializable {
 
 	public getLabel() {
 		return Job.LABEL;
+	}
+
+	public getGenericSkillsSize(): number {
+		return this.genericSkills.size;
+	}
+
+	public getGenericSkillsKeys(): IterableIterator<string> {
+		return this.genericSkills.keys();
+	}
+
+	public hasGenericSkill(uuid: string): boolean {
+		return this.genericSkills.has(uuid);
+	}
+
+	public getGenericSkillLevel(uuid: string): number {
+		return this.genericSkills.get(uuid);
+	}
+
+	public setGenericSkillLevel(uuid: string, newLevel: number) {
+		this.genericSkills.set(uuid, newLevel);
+	}
+
+	public deleteGenericSkill(uuid: string): boolean {
+		return this.genericSkills.delete(uuid);
 	}
 }

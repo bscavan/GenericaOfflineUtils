@@ -116,7 +116,7 @@ export class CharacterPageComponent implements OnInit {
 	}
 
 	getGenericSkillLevel(characterFocus: Character, uuid: string) {
-		return characterFocus.genericSkills.get(uuid);
+		return characterFocus.getGenericSkillLevel(uuid);
 	}
 
 	updateClassSkillLevel(characterFocus: Character, uuid: string, event) {
@@ -230,7 +230,7 @@ export class CharacterPageComponent implements OnInit {
 		if(newValue < 0) {
 			console.error("Cannot set a skill level to less than zero.")
 			// Revert the value of the input to it's previous state.
-			event.target.value = characterFocus.genericSkills.get(uuid);
+			event.target.value = characterFocus.getGenericSkillLevel(uuid);
 			return;
 		}
 
@@ -241,7 +241,7 @@ export class CharacterPageComponent implements OnInit {
 			console.error("Cannot set levels in a skill that does not exist.");
 			// TODO: Determine if this uuid should be removed now...
 			// Revert the value of the input to it's previous state.
-			event.target.value = characterFocus.genericSkills.get(uuid);
+			event.target.value = characterFocus.getGenericSkillLevel(uuid);
 			return;
 		}
 
@@ -251,7 +251,7 @@ export class CharacterPageComponent implements OnInit {
 			console.error("Cannot set the level of a level-less skill.");
 			// Set the value to 0.
 			event.target.value = 0;
-			characterFocus.genericSkills.set(uuid, 0);
+			characterFocus.setGenericSkillLevel(uuid, 0);
 		}
 
 		// The limit for general skill levels is ten times a character's highest level in any job
@@ -262,11 +262,11 @@ export class CharacterPageComponent implements OnInit {
 
 			// Set the selector's value to the limit.
 			event.target.value = actualSkillLevelLimit;
-			characterFocus.genericSkills.set(uuid, actualSkillLevelLimit);
+			characterFocus.setGenericSkillLevel(uuid, actualSkillLevelLimit);
 			return;
 		}
 
-		characterFocus.genericSkills.set(uuid, newValue);
+		characterFocus.setGenericSkillLevel(uuid, newValue);
 	}
 
 	private findHighestLevelJob(characterFocus: Character) {
@@ -312,11 +312,9 @@ export class CharacterPageComponent implements OnInit {
 			return;
 		}
 
-		let genericSkills = this.characterService.characterFocus.genericSkills;
-
 		// If the character does not already have ranks in this skill...
-		if(genericSkills.has(this.genericSkillToAddUUID) == false) {
-			genericSkills.set(this.genericSkillToAddUUID, 0);
+		if(this.characterService.characterFocus.hasGenericSkill(this.genericSkillToAddUUID) == false) {
+			this.characterService.characterFocus.setGenericSkillLevel(this.genericSkillToAddUUID, 0);
 		}
 
 		this.showGenericSkillDropdown = false;
@@ -325,7 +323,7 @@ export class CharacterPageComponent implements OnInit {
 	}
 
 	public removeGenericSkillFromCharacter(skillToRemove: GenericSkill) {
-		if(this.characterService.characterFocus.genericSkills.delete(skillToRemove.uuid) == false) {
+		if(this.characterService.characterFocus.deleteGenericSkill(skillToRemove.uuid) == false) {
 			console.error("Cannot delete skill with uuid: [" + skillToRemove.uuid
 				+ "] because the character does not know it.");
 		}
