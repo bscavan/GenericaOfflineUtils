@@ -1,93 +1,91 @@
 [
-    [
-        {
-            "uuid": "a465f9f2-eb95-4f65-9327-e79ed7056c3a",
-            "name": "Centipede",
-            "jobType": "Racial",
-            "affectedAttributes": {
-                "STR": 2,
-                "CON": 7,
-                "INT": 0,
-                "WIS": 0,
-                "DEX": 0,
-                "AGL": 6,
-                "CHA": 0,
-                "WILL": 0,
-                "PER": 1,
-                "LUCK": 1
-            },
-            "affectedDefenses": {
-                "ARM": 8,
-                "MFORT": 0,
-                "END": 0,
-                "COOL": 0,
-                "FATE": 0
-            },
-            "basePools": {
-                "HP": 25,
-                "SAN": 0,
-                "STA": 0,
-                "MOX": 0,
-                "FOR": 0
-            },
-            "skills": {
-                "1": [
-                    {
-                        "uuid": "114e6b13-c29f-49a6-a869-6054f394c559",
-                        "name": "Chomp",
-                        "description": "Cost: 5 Sta Duration: 1 Attack You have the option of activating chomp when attacking with the brawling skill. A successful attack deals bonus damage equal to the level of your chomp skill",
-                        "costs": [],
-                        "duration": {
-                            "amount": 1,
-                            "timeDenomination": "PASSIVE CONSTANT",
-                            "qualifier": "NONE"
-                        },
-                        "doesLevel": true
-                    }
-                ],
-                "5": [
-                    {
-                        "uuid": "4694b59c-72d9-44a7-bd59-1d5045ff3406",
-                        "name": "Poison Breath",
-                        "description": "Vomit acidic breath of clouds. Force everyone in range to make a Constitution save or be poisoned/paralyzed.",
-                        "costs": [
-                            {
-                                "costAmount": 15,
-                                "costDenomination": "STA"
-                            }
-                        ],
-                        "duration": {
-                            "amount": 1,
-                            "timeDenomination": "ATTACK",
-                            "qualifier": "NONE"
-                        },
-                        "doesLevel": true
-                    }
-                ]
-            },
-            "baseAttributes": {
-                "STR": 25,
-                "CON": 25,
-                "INT": 3,
-                "WIS": 0,
-                "DEX": 12,
-                "AGL": 30,
-                "CHA": 0,
-                "WILL": 0,
-                "PER": 12,
-                "LUCK": 12
-            },
-            "baseDefenses": {
-                "ARM": 32,
-                "MFORT": 0,
-                "END": 0,
-                "COOL": 0,
-                "FATE": 0
-            },
-            "numberOfsupplementalRacialJobSlots": 0,
-            "numberOfAdventuringJobSlots": 0,
-            "numberOfCraftingJobSlots": 0,
-            "canBeSupplementalJob": true
-        }
-    ]
+    {
+        "uuid": "a465f9f2-eb95-4f65-9327-e79ed7056c3a",
+        "name": "Centipede",
+        "jobType": "Racial",
+        "affectedAttributes": {
+            "STR": 2,
+            "CON": 7,
+            "INT": 0,
+            "WIS": 0,
+            "DEX": 0,
+            "AGL": 6,
+            "CHA": 0,
+            "WILL": 0,
+            "PER": 1,
+            "LUCK": 1
+        },
+        "affectedDefenses": {
+            "ARM": 8,
+            "MFORT": 0,
+            "END": 0,
+            "COOL": 0,
+            "FATE": 0
+        },
+        "basePools": {
+            "HP": 25,
+            "SAN": 0,
+            "STA": 0,
+            "MOX": 0,
+            "FOR": 0
+        },
+        "skills": {
+            "1": [
+                {
+                    "uuid": "114e6b13-c29f-49a6-a869-6054f394c559",
+                    "name": "Chomp",
+                    "description": "Cost: 5 Sta Duration: 1 Attack You have the option of activating chomp when attacking with the brawling skill. A successful attack deals bonus damage equal to the level of your chomp skill",
+                    "costs": [],
+                    "duration": {
+                        "amount": 1,
+                        "timeDenomination": "PASSIVE CONSTANT",
+                        "qualifier": "NONE"
+                    },
+                    "doesLevel": true
+                }
+            ],
+            "5": [
+                {
+                    "uuid": "4694b59c-72d9-44a7-bd59-1d5045ff3406",
+                    "name": "Poison Breath",
+                    "description": "Vomit acidic breath of clouds. Force everyone in range to make a Constitution save or be poisoned/paralyzed.",
+                    "costs": [
+                        {
+                            "costAmount": 15,
+                            "costDenomination": "STA"
+                        }
+                    ],
+                    "duration": {
+                        "amount": 1,
+                        "timeDenomination": "ATTACK",
+                        "qualifier": "NONE"
+                    },
+                    "doesLevel": true
+                }
+            ]
+        },
+        "baseAttributes": {
+            "STR": 25,
+            "CON": 25,
+            "INT": 3,
+            "WIS": 0,
+            "DEX": 12,
+            "AGL": 30,
+            "CHA": 0,
+            "WILL": 0,
+            "PER": 12,
+            "LUCK": 12
+        },
+        "baseDefenses": {
+            "ARM": 32,
+            "MFORT": 0,
+            "END": 0,
+            "COOL": 0,
+            "FATE": 0
+        },
+        "numberOfsupplementalRacialJobSlots": 0,
+        "numberOfAdventuringJobSlots": 0,
+        "numberOfCraftingJobSlots": 0,
+        "canBeSupplementalJob": true
+    }
 ]

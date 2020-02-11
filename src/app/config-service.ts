@@ -17,6 +17,7 @@ export class ConfigService {
     private _classSkillsJson;
     private _genericSkillsJson;
     private _jobsJson;
+    private _charactersJson;
 
     constructor(private _http: Http) { }
 
@@ -68,6 +69,22 @@ export class ConfigService {
         });
     }
 
+    loadCharactersAssetFile() {
+        return new Promise((resolve, reject) => {
+            this._http.get(ConfigService.Characters_JSON_PATH)
+            .map(res => res.json())
+            .subscribe((data) => {
+                // FIXME: Make this _NOT_ break everything on startup if the file can't be found...
+                this._charactersJson = data;
+                resolve(true);
+            },
+            (error: any) => {
+                console.error(error);
+                return Observable.throw(error.json().error || 'Server error');
+            });
+        });
+    }
+
     public getJobsJson() {
         return this._jobsJson;
     }
@@ -78,6 +95,10 @@ export class ConfigService {
 
     public getGenericSkillsJson() {
         return this._genericSkillsJson;
+    }
+
+    public getCharactersJson() {
+        return this._charactersJson;
     }
 }
 
@@ -132,4 +153,21 @@ const GenericSkillsConfigModule = {
     init: initGenericSkillAssets
 }
 
-export { JobsConfigModule, ClassSkillsConfigModule, GenericSkillsConfigModule };
+export function CharactersConfigFactory(configService: ConfigService) {
+    return () => configService.loadCharactersAssetFile();
+}
+
+export function initCharactersAssets() {
+    return {
+        provide: APP_INITIALIZER,
+        useFactory: CharactersConfigFactory,
+        deps: [ConfigService],
+        multi: true
+    }
+}
+
+const CharactersConfigModule = {
+    init: initCharactersAssets
+}
+
+export { JobsConfigModule, ClassSkillsConfigModule, GenericSkillsConfigModule, CharactersConfigModule };

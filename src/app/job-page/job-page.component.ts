@@ -284,6 +284,7 @@ export class JobPageComponent implements OnInit {
 	}
 
 	public save() {
+		// FIXME: When this method is run without a defined job, it crashes the entire browser...
 		let jobJson = this.currentJob.serializeToJSON();
 		jobJson = JSON.stringify(jobJson);
 		let jobJsonArray = [];

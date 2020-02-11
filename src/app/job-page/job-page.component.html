@@ -97,10 +97,11 @@
 	(change)="changeCurrentCraftingJobSlots()">
 
 	<!-- TODO: Make this radioButton a slider -->
+	<!-- TODO: Hook these up to this.currentJob.canBeSupplementalJob -->
 	<form action="">
 		Can be a supplemental job:
-		<input type="radio" [(ngModel)]="this.currentJob.canBeSupplementalJob" value="true">Yes
-		<input type="radio" [(ngModel)]="this.currentJob.canBeSupplementalJob" value="false">No
+		<input type="radio" value="true">Yes
+		<input type="radio" value="false">No
 	</form>
 </div>
 

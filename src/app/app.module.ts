@@ -49,7 +49,7 @@ import { ConnectionBackend, HttpModule } from '@angular/http';
 	JobsConfigModule.init(),
 	ClassSkillsConfigModule.init(),
 	GenericSkillsConfigModule.init(),
-	//CharactersConfigModule.init()
+	CharactersConfigModule.init()
 ],
   bootstrap: [AppComponent]
 })

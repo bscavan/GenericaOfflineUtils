@@ -8,7 +8,7 @@ import { SkillService } from "./skills/skill-service";
 
 export abstract class Job implements JsonSerializable {
 	public static readonly LABEL = "job";
-	//TODO: Add support for skills
+
 	// TODO: Add support for tracking unlock requirements.
 	public uuid: string;
 	name: string;
@@ -17,8 +17,6 @@ export abstract class Job implements JsonSerializable {
 	// TODO: Migrate affectedDefenses and basePools into RacialJob.
 	affectedDefenses: Set<{affectedDefense: Defenses, pointsPerLevel: number}>;
 	basePools: Set<{affectedPool: Pools, baseValue: number}>;
-	// skills go here?
-
 	skills: Map<number, Set<Skill>>;
 
 	constructor(name: string, jobType: string,
