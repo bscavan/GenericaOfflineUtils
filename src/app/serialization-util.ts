@@ -1,5 +1,6 @@
 import { Attributes, Defenses, Pools } from "./attribute-keys";
 import { Denomination } from "./skills/skill";
+import { GenericSkillItem } from "./character/generic-skill-item";
 
 export class SerializationUtil {
 	/**
@@ -19,6 +20,28 @@ export class SerializationUtil {
 		});
 
 		return serializedObject;
+	}
+
+	public static serializeGenericSkillsItemMap(toSerialize: Map<string, GenericSkillItem>) {
+		let serializedObject = {};
+
+		toSerialize.forEach((currentValue, currentKey) => {
+			serializedObject[currentKey.toString()] = currentValue.serializeToJSON();
+		});
+
+		return serializedObject;
+	}
+
+	public static deserializeGenericSkillsItemMap(toDeserialize) {
+		let deserializedMap: Map<string, GenericSkillItem> = new Map();
+
+		for(let key in toDeserialize) {
+			let currentKey = key;
+			let currentGenericSkillItemJson = toDeserialize[key];
+			deserializedMap.set(currentKey, GenericSkillItem.deserializeFromJson(currentGenericSkillItemJson));
+		}
+
+		return deserializedMap;
 	}
 
 	public static deserializeAttributesMap(toDeserialize) {

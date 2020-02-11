@@ -314,7 +314,8 @@ export class CharacterPageComponent implements OnInit {
 
 		// If the character does not already have ranks in this skill...
 		if(this.characterService.characterFocus.hasGenericSkill(this.genericSkillToAddUUID) == false) {
-			this.characterService.characterFocus.setGenericSkillLevel(this.genericSkillToAddUUID, 0);
+			let genericSkill = SkillService.getGenericSkill(this.genericSkillToAddUUID);
+			this.characterService.characterFocus.addGenericSkillItem(this.genericSkillToAddUUID, genericSkill);
 		}
 
 		this.showGenericSkillDropdown = false;

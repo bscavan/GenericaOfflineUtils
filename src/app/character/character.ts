@@ -13,6 +13,8 @@ import { AdventuringJobs } from "../adventuring-jobs/adventuring-jobs";
 import { JsonSerializable } from "../json-serializable";
 import { v4 as uuid } from 'uuid';
 import { isNullOrUndefined } from "util";
+import { GenericSkill } from "../skills/generic-skill";
+import { GenericSkillItem } from "./generic-skill-item";
 
 const ATTRIBUTE_SETS = AttributeKeys.getAttributeSets();
 
@@ -28,8 +30,8 @@ export class Character implements JsonSerializable {
 	/* FIXME:
 	 * This setup allows for duplicating jobs.
 	 * A better approach would probably be to set this up as a map, with the
-	 * jobs names being the keys and the combination of Job object and level
-	 * being the values.
+	 * jobs names/UUIDs being the keys and the combination of Job objects and
+	 * levels being the values.
 	 */
 	supplementalRacialJobLevels: [{job: RacialJob, level: number}];
 	adventuringJobLevels: [{job: AdventuringJob, level: number}];
@@ -53,7 +55,7 @@ export class Character implements JsonSerializable {
 	public classSkills: Map<string, number> = new Map();
 
 	// FIXME: This needs to be different than the class skills! We need to store the whole skills here!
-	public genericSkills: Map<string, number> = new Map();
+	public genericSkills: Map<string, GenericSkillItem> = new Map();
 
 	// support for spending level points (calculating costs) and grind points (on skills or stats)?
 
@@ -828,13 +830,23 @@ export class Character implements JsonSerializable {
 
 		json["classSkills"] = SerializationUtil.serializeMap(this.classSkills);
 		// FIXME: This needs to be different than the class skills! We need to store the whole skills here!
-		json["genericSkills"] = SerializationUtil.serializeMap(this.genericSkills);
+		json["genericSkills"] = SerializationUtil.serializeGenericSkillsItemMap(this.genericSkills);
 
 		return json;
 	}
 
 	public deserializeSkillsMap(mapToDeserialize: Map<string, number>) {
 		let returnMap = new Map<string, number>();
+
+		for(let key in mapToDeserialize) {
+			returnMap.set(key, mapToDeserialize[key]);
+		}
+
+		return returnMap;
+	}
+
+	public deserializeGenericSkillsMap(mapToDeserialize: Map<string, GenericSkillItem>) {
+		let returnMap = new Map<string, GenericSkillItem>();
 
 		for(let key in mapToDeserialize) {
 			returnMap.set(key, mapToDeserialize[key]);
@@ -874,7 +886,7 @@ export class Character implements JsonSerializable {
 
 		this.classSkills = this.deserializeSkillsMap(json.classSkills);
 		// FIXME: This needs to be different than the class skills! We need to store the whole skills here!
-		this.genericSkills = this.deserializeSkillsMap(json.genericSkills);
+		this.genericSkills = SerializationUtil.deserializeGenericSkillsItemMap(json.genericSkills);
 
 		this.recalculateAttributes();
 
@@ -897,12 +909,32 @@ export class Character implements JsonSerializable {
 		return this.genericSkills.has(uuid);
 	}
 
-	public getGenericSkillLevel(uuid: string): number {
+	public getGenericSkillItem(uuid: string): GenericSkillItem {
 		return this.genericSkills.get(uuid);
 	}
 
+	public getGenericSkillLevel(uuid: string): number {
+		return this.getGenericSkillItem(uuid).level;
+	}
+
+	public getGenericSkillValue(uuid: string): GenericSkill {
+		return this.getGenericSkillItem(uuid).skill;
+	}
+
+	public addGenericSkillItem(uuid: string, genericSkill: GenericSkill) {
+		return this.genericSkills.set(uuid, new GenericSkillItem(1, genericSkill));
+	}
+
+	public setGenericSkillItem(newSkillItem: GenericSkillItem) {
+		return this.genericSkills.set(uuid, newSkillItem);
+	}
+
 	public setGenericSkillLevel(uuid: string, newLevel: number) {
-		this.genericSkills.set(uuid, newLevel);
+		this.getGenericSkillItem(uuid).level = newLevel;
+	}
+
+	public setGenericSkillValue(uuid: string, newSkill: GenericSkill) {
+		this.genericSkills.get(uuid).skill = newSkill;
 	}
 
 	public deleteGenericSkill(uuid: string): boolean {
