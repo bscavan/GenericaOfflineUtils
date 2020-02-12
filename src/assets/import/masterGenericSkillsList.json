@@ -1,8 +1,242 @@
 [
     {
+		"uuid": "a1dc848c-0682-41d4-be2b-1300488cfaf9",
+		"name": "Archery",
+		"description": "Archery is the skill associated with using bows, crossbows, and similar torsion-based weapons.",
+		"costs": [],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "PASSIVE_CONSTANT",
+			"qualifier": "NONE"
+		},
+		"doesLevel": true,
+		"type": "GENERIC_SKILL"
+	},
+	{
+		"uuid": "caeff70e-a276-4a4b-b5aa-40fc39d9de4f",
+		"name": "Axes and Choppas",
+		"description": "Axes and Choppas is the skill that applies to axes, hatchets, and other such weapons.",
+		"costs": [],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "PASSIVE_CONSTANT",
+			"qualifier": "NONE"
+		},
+		"doesLevel": true,
+		"type": "GENERIC_SKILL"
+	},
+    {
         "uuid": "e58ef0d3-b623-4470-b593-ed05c68b4c7f",
         "name": "Brawling",
         "description": "Brawling is used when you’re fighting unarmed, or using natural weaponry",
+        "costs": [],
+        "duration": {
+            "amount": 1,
+            "timeDenomination": "PASSIVE_CONSTANT",
+            "qualifier": "NONE"
+        },
+        "doesLevel": true,
+        "type": "GENERIC_SKILL"
+    },
+	{
+		"uuid": "01ae6c0f-fcf0-4e91-8745-0542556bb25e",
+		"name": "Climb",
+		"description": "Climb is the skill associated with climbing and navigating treacherous slopes.",
+		"costs": [],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "PASSIVE_CONSTANT",
+			"qualifier": "NONE"
+		},
+		"doesLevel": true,
+		"type": "GENERIC_SKILL"
+	},
+	{
+		"uuid": "d2404113-502d-4b95-8f07-8c3bff31dd6f",
+		"name": "Clubs and Maces",
+		"description": "Clubs and Maces covers most sorts of bashing weaponry, including staves.",
+		"costs": [],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "PASSIVE_CONSTANT",
+			"qualifier": "NONE"
+		},
+		"doesLevel": true,
+		"type": "GENERIC_SKILL"
+	},
+	{
+		"uuid": "dd2544fc-8f52-4d78-bcda-812a70da2e13",
+		"name": "Dagger",
+		"description": "The dagger skill covers the usage of every sort of knife in hand-to-hand combat.",
+		"costs": [],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "PASSIVE_CONSTANT",
+			"qualifier": "NONE"
+		},
+		"doesLevel": true,
+		"type": "GENERIC_SKILL"
+	},
+	{
+		"uuid": "2e7ce41e-0b67-4cec-9b79-a18d827d6b82",
+		"name": "Dodge",
+		"description": "The dodge skill adds to a character’s agility when he uses the full defense option.",
+		"costs": [],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "PASSIVE_CONSTANT",
+			"qualifier": "NONE"
+		},
+		"doesLevel": true,
+		"type": "GENERIC_SKILL"
+	},
+	{
+		"uuid": "3902a47e-6d09-4231-98e7-497ef7226640",
+		"name": "Fishing",
+		"description": "The fishing skill is used when trying to catch fish with a net or pole.",
+		"costs": [],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "PASSIVE_CONSTANT",
+			"qualifier": "NONE"
+		},
+		"doesLevel": true,
+		"type": "GENERIC_SKILL"
+	},
+	{
+		"uuid": "a8ce6450-d121-442d-be08-fe33693c71bd",
+		"name": "Flight",
+		"description": "The flight skill is used when trying to maneuver in midair, or fall without dying.",
+		"costs": [],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "PASSIVE_CONSTANT",
+			"qualifier": "NONE"
+		},
+		"doesLevel": true,
+		"type": "GENERIC_SKILL"
+	},
+	{
+		"uuid": "65743a2d-53e7-48d2-8593-677e046656cc",
+		"name": "Guns",
+		"description": "Guns is the skill associated with gunpowder-based weaponry.",
+		"costs": [],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "PASSIVE_CONSTANT",
+			"qualifier": "NONE"
+		},
+		"doesLevel": true,
+		"type": "GENERIC_SKILL"
+	},
+	{
+		"uuid": "1e6efccf-5cfd-403b-931f-1e87886131b1",
+		"name": "Ride",
+		"description": "The ride skill covers staying mounted and maneuvering your mount. Also used to hang on to unwilling mounts.",
+		"costs": [],
+		"duration": {
+			"amount": 1,
+			"timeDenomination": "PASSIVE_CONSTANT",
+			"qualifier": "NONE"
+		},
+		"doesLevel": true,
+		"type": "GENERIC_SKILL"
+    },
+    {
+        "uuid": "08ed9e7c-2607-4424-b9ee-301c786163f0",
+        "name": "Shields",
+        "description": "The shields skill covers the usage of most shields as weapons, and adds to a user’s armor rating when they use the full defense option.",
+        "costs": [],
+        "duration": {
+            "amount": 1,
+            "timeDenomination": "PASSIVE_CONSTANT",
+            "qualifier": "NONE"
+        },
+        "doesLevel": true,
+        "type": "GENERIC_SKILL"
+    },
+    {
+        "uuid": "43dd4652-ce1f-4f96-8e94-8fda8728297e",
+        "name": "Siege Weapons",
+        "description": "The siege weapon skill is applied when using catapults, trebuchets, ballista, cannon, and other large engines of war.",
+        "costs": [],
+        "duration": {
+            "amount": 1,
+            "timeDenomination": "PASSIVE_CONSTANT",
+            "qualifier": "NONE"
+        },
+        "doesLevel": true,
+        "type": "GENERIC_SKILL"
+    },
+    {
+        "uuid": "862ef845-c766-4c50-8942-e331861b3b94",
+        "name": "Spears and Polearms",
+        "description": "The spears and polearms skill covers most sorts of long-shafted weaponry that has pointy or slashy bits on the end.",
+        "costs": [],
+        "duration": {
+            "amount": 1,
+            "timeDenomination": "PASSIVE_CONSTANT",
+            "qualifier": "NONE"
+        },
+        "doesLevel": true,
+        "type": "GENERIC_SKILL"
+    },
+    {
+        "uuid": "74566906-88ce-4dd0-95cb-d5fc438b7fa3",
+        "name": "Stealth",
+        "description": "The stealth skill is used when trying to hide or sneak past trouble.",
+        "costs": [],
+        "duration": {
+            "amount": 1,
+            "timeDenomination": "PASSIVE_CONSTANT",
+            "qualifier": "NONE"
+        },
+        "doesLevel": true,
+        "type": "GENERIC_SKILL"
+    },
+    {
+        "uuid": "207d46cf-1791-4da1-a95a-81c98042adeb",
+        "name": "Swim",
+        "description": "The swim skill is a factor whenever you’re trying to maneuver through or traverse water.",
+        "costs": [],
+        "duration": {
+            "amount": 1,
+            "timeDenomination": "PASSIVE_CONSTANT",
+            "qualifier": "NONE"
+        },
+        "doesLevel": true,
+        "type": "GENERIC_SKILL"
+    },
+    {
+        "uuid": "f98b6f0d-dff5-42a9-a473-72a3b1ea0ad4",
+        "name": "Swords",
+        "description": "The swords skill covers every kind of sword-based weaponry.",
+        "costs": [],
+        "duration": {
+            "amount": 1,
+            "timeDenomination": "PASSIVE_CONSTANT",
+            "qualifier": "NONE"
+        },
+        "doesLevel": true,
+        "type": "GENERIC_SKILL"
+    },
+    {
+        "uuid": "bf9b8231-04dc-4a7a-823a-50de427e3bc2",
+        "name": "Throwing",
+        "description": "The throwing skill is used whenever a character tries to accurately throw an object, whether an easy toss to a friend, or a hard throw at an enemy.",
+        "costs": [],
+        "duration": {
+            "amount": 1,
+            "timeDenomination": "PASSIVE_CONSTANT",
+            "qualifier": "NONE"
+        },
+        "doesLevel": true,
+        "type": "GENERIC_SKILL"
+    },
+    {
+        "uuid": "17d7cb28-c2da-46a6-a45d-eb2fb838eaf7",
+        "name": "Whips and Flails",
+        "description": "The whips and flails skill covers all sorts of flexible weaponry, including weird things like nets.",
         "costs": [],
         "duration": {
             "amount": 1,
