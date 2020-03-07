@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SkillService } from '../skills/skill-service';
 import { Skill, Duration, Denomination } from '../skills/skill';
 import FileSaver = require('file-saver');
+import { SkillListItem } from './SkillListItem';
 
 @Component({
 	selector: 'app-skill-page',
@@ -11,8 +12,8 @@ import FileSaver = require('file-saver');
 export class SkillPageComponent implements OnInit {
 	public readonly LABEL = Skill.LABEL;
 
-	allClassSkillKeys = [];
-	allGenericSkillKeys = [];
+	allClassSkills: SkillListItem[] = [];
+	allGenericSkills: SkillListItem[] = [];
 	allDurations = Skill.getAllDurations();
 	allQualifiers = Skill.getAllQualifiers();
 	allDenominations = Skill.getAllDenominations();
@@ -25,13 +26,25 @@ export class SkillPageComponent implements OnInit {
 	 * @param skillService 
 	 */
 	constructor(skillService: SkillService) {
-		this.refreshAllClassSkillKeys();
-		this.refreshAllGenericSkillKeys();
+		this.refreshAllClassSkills();
+		this.refreshAllGenericSkills();
+	}
+
+	sortClassSkills() {
+		this.allClassSkills.sort(this.sortSkillItems);
+	}
+
+	sortGenericSkills() {
+		this.allGenericSkills.sort(this.sortSkillItems);
+	}
+
+	sortSkillItems (left: SkillListItem, right: SkillListItem) {
+		if(left.name.toLowerCase() > right.name.toLowerCase()) return 1; else return -1;
 	}
 
 	public skillImportCallback(focus: SkillPageComponent) {
-		focus.refreshAllClassSkillKeys();
-		focus.refreshAllGenericSkillKeys();
+		focus.refreshAllClassSkills();
+		focus.refreshAllGenericSkills();
 	}
 
 	ngOnInit() {}
@@ -68,15 +81,17 @@ export class SkillPageComponent implements OnInit {
 
 	public addNewClassSkill() {
 		SkillService.addBlankClassSkill();
-		this.refreshAllClassSkillKeys();
+		this.refreshAllClassSkills();
 	}
 
-	public refreshAllClassSkillKeys() {
-		this.allClassSkillKeys = [];
+	public refreshAllClassSkills() {
+		this.allClassSkills = [];
 
 		SkillService.allClassSkills.forEach((value: Skill, key: string) => {
-			this.allClassSkillKeys.push(key);
+			this.allClassSkills.push(new SkillListItem(value.uuid, value.name));
 		});
+
+		this.sortClassSkills();
 	}
 
 	public getClassSkill(uuid: string) {
@@ -86,7 +101,7 @@ export class SkillPageComponent implements OnInit {
 	public removeClassSkill(uuid: string) {
 		if(confirm("You are about to delete a class skill. There may be job that provide this skill and characters with progress in it. If so, this may break them. Are you sure you wish to do this?")) {
 			let returnValue = SkillService.removeClassSkill(uuid);
-			this.refreshAllClassSkillKeys();
+			this.refreshAllClassSkills();
 			return returnValue;
 		}
 	}
@@ -102,15 +117,17 @@ export class SkillPageComponent implements OnInit {
 	// TODO: Make an observable that this will respond to. Whenever the original list updates, all references to it need to also update.
 	public addNewGenericSkill() {
 		SkillService.addBlankGenericSkill();
-		this.refreshAllGenericSkillKeys();
+		this.refreshAllGenericSkills();
 	}
 
-	public refreshAllGenericSkillKeys() {
-		this.allGenericSkillKeys = [];
+	public refreshAllGenericSkills() {
+		this.allGenericSkills = [];
 
 		SkillService.allGenericSkills.forEach((value: Skill, key: string) => {
-			this.allGenericSkillKeys.push(key);
+			this.allGenericSkills.push(new SkillListItem(value.uuid, value.name));
 		});
+
+		this.sortGenericSkills();
 	}
 
 	public getGenericSkill(uuid: string) {
@@ -120,7 +137,7 @@ export class SkillPageComponent implements OnInit {
 	public removeGenericSkill(uuid: string) {
 		if(confirm("You are about to delete a general skill. There may be characters with progress in it. If so, this may break them. Are you sure you wish to do this?")) {
 			let returnValue = SkillService.removeGenericSkill(uuid);
-			this.refreshAllGenericSkillKeys();
+			this.refreshAllGenericSkills();
 			return returnValue;
 		}
 	}
