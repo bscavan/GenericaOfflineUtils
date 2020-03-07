@@ -46,6 +46,15 @@ export class SkillPageComponent implements OnInit {
 		this.saveSkill(currentSkill);
 	}
 
+	public saveAllSkills() {
+		let jobJson = JSON.stringify(SkillService.getAllSkillsAsJSONArray());
+		let jobJsonArray = [];
+		jobJsonArray.push(jobJson);
+
+		let blob = new Blob(jobJsonArray, {type: 'text/plain' });
+		FileSaver.saveAs(blob, "allSkillsSave" + ".json");
+	}
+
 	public saveSkill(skillToSave: Skill) {
 		let skillJson = skillToSave.serializeToJSON();
 		skillJson = JSON.stringify(skillJson);

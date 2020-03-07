@@ -6,7 +6,8 @@
 	<button class="nav-link dropdown-toggle" href="#" ngbDropdownToggle
 	container="body" placement="right" ngbTooltip="Job page options">File</button>
 	<div ngbDropdownMenu aria-labelledby="file-menu-btn">
-		<a class="dropdown-item dropdown-item" (click)="this.save()">Download Job</a>
+		<a class="dropdown-item dropdown-item" (click)="this.save()">Download Current Job</a>
+		<a class="dropdown-item dropdown-item" (click)="this.saveAll()">Download All Jobs</a>
 
 		<a class="dropdown-item dropdown-item">
 			<app-import-modal [focus]="this.currentJob"

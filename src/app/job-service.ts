@@ -94,7 +94,7 @@ export class JobService {
 
 	public uploadJobsIntoCollectionFromJSONArray(jsonArray) {
 		if(isNullOrUndefined(jsonArray)) {
-			// TODO: Fail. Loudly.
+			console.error("Cannot upload null or undefined array into Jobs collections.");
 			return null;
 		} else {
 			// TODO: Test this out.
@@ -118,8 +118,13 @@ export class JobService {
 	}
 
 	public deserializeJobFromJSON(json): Job {
-		if(isNullOrUndefined(json.jobType)) {
+		if(isNullOrUndefined(json)) {
 			// TODO: Fail. Loudly.
+			console.error("Cannot deserialize null or undefined JSON into a Job.")
+			return null;
+		} else if(isNullOrUndefined(json.jobType)) {
+			// TODO: Fail. Loudly.
+			console.error("Cannot deserialize JSON that does not have a jobType attribute.")
 			return null;
 		} else {
 			switch(json.jobType) {
@@ -139,5 +144,24 @@ export class JobService {
 					return newRacialJobInProgress;
 			}
 		}
+	}
+
+	// This method is the counterpart to uploadJobsIntoCollectionFromJSONArray(jsonArray)
+	public getAllJobsAsJsonArray(): {}[] {
+		let allJobsArray = [];
+
+		AdventuringJobs.getAllAdventuringJobs().forEach((currentJob) => {
+			allJobsArray.push(currentJob.serializeToJSON());
+		});
+
+		Races.getAllRaces().forEach((currentJob) => {
+			allJobsArray.push(currentJob.serializeToJSON());
+		});
+
+		Professions.getAllCraftingJobs().forEach((currentJob) => {
+			allJobsArray.push(currentJob.serializeToJSON());
+		});
+
+		return allJobsArray;
 	}
 }

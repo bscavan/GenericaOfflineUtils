@@ -21,6 +21,14 @@ function alphabeticCharacterSort(left: Character, right: Character): 1 | -1 {
 @Injectable()
 export class CharacterService {
 	public characterFocus: Character;
+
+	/**
+	 * FIXME: This needs to be routinely sorted (alphabetically by name?)
+	 * FIXME: Rather than allowing other classes and HTML to directly access this,
+	 * they need to maintain their own, local copies that are hooked up to a
+	 * subscription to an observable of this list. Whenever this list's content
+	 * changes, they will need to re-pull and refresh what they are displaying.
+	 */
 	public allKnownCharacters: Character[] = [];
 
 	constructor(configService: ConfigService) {
@@ -86,7 +94,15 @@ export class CharacterService {
 		}
 	}
 
-	public exportCharactersAsJSONArray() {
-		// TODO: Export all of the characters in allKnownCharacters as a JSON array.
+	// Exports all of the characters in allKnownCharacters as a JSON array.
+	// Excludes characterFocus if it has not been saved/uploaded into the collection.
+	public getAllCharactersAsJSONArray(): {}[] {
+		let allCharactersArray = [];
+
+		this.allKnownCharacters.forEach((currentCharacter) => {
+			allCharactersArray.push(currentCharacter.serializeToJSON());
+		});
+
+		return allCharactersArray;
 	}
 }

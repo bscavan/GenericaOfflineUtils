@@ -1,9 +1,14 @@
-<div style="padding-bottom: 2%;">
+<div>
 	<button>
 		<app-import-modal [focus]="this" [label]="LABEL"
 		[importType]="LABEL" [callback]="skillImportCallback">
 			Import skill from JSON
 		</app-import-modal>
+	</button>
+</div>
+<div style="padding-bottom: 2%;">
+	<button>
+		<span (click)="this.saveAllSkills()">Download All Jobs</span>
 	</button>
 </div>
 

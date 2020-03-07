@@ -8,6 +8,13 @@ import { ConfigService } from "../config-service";
 @Injectable()
 export class SkillService {
 	/**
+	 * FIXME: This needs to be routinely sorted (alphabetically by name?)
+	 * FIXME: Rather than allowing other classes and HTML to directly access this,
+	 * they need to maintain their own, local copies that are hooked up to a
+	 * subscription to an observable of this list. Whenever this list's content
+	 * changes, they will need to re-pull and refresh what they are displaying.
+	 */
+	/**
 	 * A Map of all skills assignable to Jobs and accessible to characters with
 	 * levels in those jobs.
 	 * The Keys of this map are the skills uuid values and the Values are the
@@ -15,6 +22,13 @@ export class SkillService {
 	 */
 	static allClassSkills: Map<string, ClassSkill> = new Map<string, Skill>();
 
+	/**
+	 * FIXME: This needs to be routinely sorted (alphabetically by name?)
+	 * FIXME: Rather than allowing other classes and HTML to directly access this,
+	 * they need to maintain their own, local copies that are hooked up to a
+	 * subscription to an observable of this list. Whenever this list's content
+	 * changes, they will need to re-pull and refresh what they are displaying.
+	 */
 	/**
 	 * A Map of all skills assignable directly to characters instead of being
 	 * imparted by levels in jobs.
@@ -210,4 +224,20 @@ export class SkillService {
 	// TODO: Add a means of retrieving skills by name. It isn't foolproof, but it's necessary.
 	// TODO: Add a means of adding skills if they don't exist. One that isn't dependent on uuid,
 	// but on its actual contents.
+
+	// Exports all of the characters in allKnownCharacters as a JSON array.
+	// Excludes characterFocus if it has not been saved/uploaded into the collection.
+	public static getAllSkillsAsJSONArray(): {}[] {
+		let allSkillsArray = [];
+
+		SkillService.allClassSkills.forEach((currentSkill) => {
+			allSkillsArray.push(currentSkill.serializeToJSON());
+		});
+
+		SkillService.allGenericSkills.forEach((currentSkill) => {
+			allSkillsArray.push(currentSkill.serializeToJSON());
+		});
+
+		return allSkillsArray;
+	}
 }

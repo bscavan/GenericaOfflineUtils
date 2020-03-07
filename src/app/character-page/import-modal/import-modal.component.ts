@@ -7,6 +7,7 @@ import { Character } from '../../character/character';
 import { Job } from '../../job';
 import { Skill } from '../../skills/skill';
 import { SkillService } from '../../skills/skill-service';
+import { CharacterService } from '../../character/character-service';
 
 @Component({
 	selector: 'app-import-modal',
@@ -22,7 +23,8 @@ export class ImportModalComponent implements OnInit {
 	//FIXME: Change this from a String to one of several known options.
 	@Input() importType: String;
 
-	constructor(private modalService: NgbModal, private jobService: JobService) { }
+	constructor(private modalService: NgbModal, private jobService: JobService,
+	private characterService: CharacterService) { }
 
 	ngOnInit() {}
 
@@ -49,15 +51,28 @@ export class ImportModalComponent implements OnInit {
 
 				switch(this.importType) {
 					case Character.LABEL:
-						this.focus.deserializeFromJSON(jobFileAsJson);
+						if(Array.isArray(jobFileAsJson)) {
+							this.characterService.importCharactersFromJSONArray(jobFileAsJson);
+						} else {
+							this.focus.deserializeFromJSON(jobFileAsJson);
+							this.characterService.addCharacterToCollectionFromJsonIfMissing(jobFileAsJson);
+						}
 						break;
 
 					case Job.LABEL:
-						this.jobService.uploadJobIntoCollectionFromJSON(jobFileAsJson);
+						if(Array.isArray(jobFileAsJson)) {
+							this.jobService.uploadJobsIntoCollectionFromJSONArray(jobFileAsJson);
+						} else {
+							this.jobService.uploadJobIntoCollectionFromJSON(jobFileAsJson);
+						}
 						break;
 
 					case Skill.LABEL:
-						SkillService.addSkillFromJsonIfMissing(jobFileAsJson);
+						if(Array.isArray(jobFileAsJson)) {
+							SkillService.addSkillsFromJsonArrayIfMissing(jobFileAsJson);
+						} else {
+							SkillService.addSkillFromJsonIfMissing(jobFileAsJson);
+						}
 						break;
 				}
 

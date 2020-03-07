@@ -9,7 +9,23 @@ export class Races {
 	// TODO: Add support for races that have supplemental job slots, but only
 	// allow specific races as options, ex: half-breeds only allow two-skill jobs,
 	// and beastkin are humans with one beast job...
+
+	/**
+	 * FIXME: This needs to be routinely sorted (alphabetically by name?)
+	 * FIXME: Rather than allowing other classes and HTML to directly access this,
+	 * they need to maintain their own, local copies that are hooked up to a
+	 * subscription to an observable of this list. Whenever this list's content
+	 * changes, they will need to re-pull and refresh what they are displaying.
+	 */
 	private static allRaces: RacialJob[] = [];
+
+	/**
+	 * FIXME: This needs to be routinely sorted (alphabetically by name?)
+	 * FIXME: Rather than allowing other classes and HTML to directly access this,
+	 * they need to maintain their own, local copies that are hooked up to a
+	 * subscription to an observable of this list. Whenever this list's content
+	 * changes, they will need to re-pull and refresh what they are displaying.
+	 */
 	private static allSupplementalRaces: RacialJob[] = [];
 
 	// TODO: Refactor this so that the underlying structure of the collection is a map?

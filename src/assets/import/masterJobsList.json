@@ -87,5 +87,99 @@
         "numberOfAdventuringJobSlots": 0,
         "numberOfCraftingJobSlots": 0,
         "canBeSupplementalJob": true
+    },
+    {
+        "uuid": "2d695080-7d1d-4292-9947-d4a43a2d05a1",
+        "name": "Dwarf",
+        "jobType": "Racial",
+        "affectedAttributes": {
+            "STR": 4,
+            "CON": 4,
+            "INT": 2,
+            "WIS": 4,
+            "DEX": 3,
+            "AGL": 2,
+            "CHA": 2,
+            "WILL": 4,
+            "PER": 2,
+            "LUCK": 3
+        },
+        "affectedDefenses": {
+            "ARM": 3,
+            "MFORT": 2,
+            "END": 3,
+            "COOL": 2,
+            "FATE": 0
+        },
+        "basePools": {
+            "HP": 0,
+            "SAN": 0,
+            "STA": 0,
+            "MOX": 0,
+            "FOR": 0
+        },
+        "skills": {
+            "1": [
+                {
+                    "uuid": "c1941011-eb86-4a63-8cbd-84afd7a90c73",
+                    "name": "Sturdy",
+                    "description": "Activate this skill when you would lose more HP than you currently have. Roll constitution plus sturdy. If your roll exceeds the number of HP you would lose, you are restored to 1 HP. You can only use Sturdy once per turn",
+                    "costs": [
+                        {
+                            "costAmount": 20,
+                            "costDenomination": "STA"
+                        }
+                    ],
+                    "duration": {
+                        "amount": 1,
+                        "timeDenomination": "INSTANT",
+                        "qualifier": "NONE"
+                    },
+                    "doesLevel": true,
+                    "type": "CLASS_SKILL"
+                },
+                {
+                    "uuid": "75f1a8d9-d7af-4ca4-be1c-e41a1d7ed55b",
+                    "name": "Stonecrafty",
+                    "description": "Stonecrafty adds its levels to your perception rolls when you examining stone, moving around in a mostly-stone environment, or trying to detect someone standing on a stone surface. This skill is a buff.",
+                    "costs": [
+                        {
+                            "costAmount": 5,
+                            "costDenomination": "FOR"
+                        }
+                    ],
+                    "duration": {
+                        "amount": 1,
+                        "timeDenomination": "TURN",
+                        "qualifier": "PER_JOB_LEVEL"
+                    },
+                    "doesLevel": true,
+                    "type": "CLASS_SKILL"
+                }
+            ]
+        },
+        "baseAttributes": {
+            "STR": 35,
+            "CON": 35,
+            "INT": 15,
+            "WIS": 35,
+            "DEX": 25,
+            "AGL": 15,
+            "CHA": 15,
+            "WILL": 35,
+            "PER": 15,
+            "LUCK": 25
+        },
+        "baseDefenses": {
+            "ARM": 0,
+            "MFORT": 0,
+            "END": 0,
+            "COOL": 0,
+            "FATE": 0
+        },
+        "numberOfsupplementalRacialJobSlots": 0,
+        "numberOfAdventuringJobSlots": 5,
+        "numberOfCraftingJobSlots": 5,
+        "canBeSupplementalJob": true
     }
 ]

@@ -95,6 +95,15 @@ export class CharacterPageComponent implements OnInit {
 	}
 	*/
 
+	public saveAllCharacters() {
+		let jobJson = JSON.stringify(this.characterService.getAllCharactersAsJSONArray());
+		let jobJsonArray = [];
+		jobJsonArray.push(jobJson);
+
+		let blob = new Blob(jobJsonArray, {type: 'text/plain' });
+		FileSaver.saveAs(blob, "allCharactersSave" + ".json");
+	}
+
 	public save() {
 		let filename = "character_" + this.characterService.characterFocus.name + ".save";
 		let characterJson = this.characterService.characterFocus.serializeToJSON();

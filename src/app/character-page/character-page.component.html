@@ -8,6 +8,7 @@
 			whatever's in the third position. Then remove this placeholder. -->
 		<a class="dropdown-item dropdown-item">(placeholder))</a>
 		<a class="dropdown-item dropdown-item" (click)="this.save()">Download character as JSON</a>
+		<a class="dropdown-item dropdown-item" (click)="this.saveAllCharacters()">Download all characters as JSON array</a>
 		<a class="dropdown-item dropdown-item"><app-import-modal [focus]="this.characterService.characterFocus"
 		[label]="LABEL" [importType]="LABEL"></app-import-modal></a>
 		<a class="dropdown-item dropdown-item" (click)="this.characterService.resetCharacterFocus()">Clear</a>

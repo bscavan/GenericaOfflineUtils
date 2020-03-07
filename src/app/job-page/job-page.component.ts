@@ -283,15 +283,34 @@ export class JobPageComponent implements OnInit {
 		this.jobService.deleteJobFromCollection(this.currentJob);
 	}
 
-	public save() {
-		// FIXME: When this method is run without a defined job, it crashes the entire browser...
-		let jobJson = this.currentJob.serializeToJSON();
+	public saveAll() {
+		
+		// if(isNullOrUndefined(jobToSave)) {
+		// 	console.error("Cannot save an undefined job. Define one first before attempting to download it.")
+		// 	return;
+		// }
+
+		let jobJson = JSON.stringify(this.jobService.getAllJobsAsJsonArray());
+		let jobJsonArray = [];
+		jobJsonArray.push(jobJson);
+
+		let blob = new Blob(jobJsonArray, {type: 'text/plain' });
+		FileSaver.saveAs(blob, "allJobsSave" + ".json");
+	}
+
+	public save(jobToSave: Job) {
+		if(isNullOrUndefined(jobToSave)) {
+			console.error("Cannot save an undefined job. Define one first before attempting to download it.")
+			return;
+		}
+
+		let jobJson = jobToSave.serializeToJSON();
 		jobJson = JSON.stringify(jobJson);
 		let jobJsonArray = [];
 		jobJsonArray.push(jobJson);
 
 		let blob = new Blob(jobJsonArray, {type: 'text/plain' });
-		FileSaver.saveAs(blob, this.currentJob.name + ".json");
+		FileSaver.saveAs(blob, jobToSave.name + ".json");
 	}
 
 	public newJob() {
