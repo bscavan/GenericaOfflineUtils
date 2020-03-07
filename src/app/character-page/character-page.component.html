@@ -32,7 +32,8 @@
 <div>
 	<b>name:</b>
 	<input style="width: 200px" type="text"
-	[(ngModel)]="this.characterService.characterFocus.name"/>
+	[(ngModel)]="this.characterService.characterFocus.name"
+	(change)="this.characterService.sortAllKnownCharacters()"/>
 </div>
 <div>
 	<b>title:</b>

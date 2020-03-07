@@ -199,15 +199,36 @@ export class JobPageComponent implements OnInit {
 	resetCurrentJobsList() {
 		switch(this.selectedJobType) {
 			case JobTypes.ADVENTURING_JOB:
+				AdventuringJobs.sortAdventuringJobs();
 				this.currentJobsList = AdventuringJobs.getAllAdventuringJobs();
 				break;
 
 			case JobTypes.CRAFTING_JOB:
+				Professions.sortCraftingJobs();
 				this.currentJobsList = Professions.getAllCraftingJobs();
 				break;
 
 			case JobTypes.RACIAL_JOB:
+				Races.sortRacialJobs();
+				Races.sortSupplementalRacialJobs();
 				this.currentJobsList = Races.getAllRaces();
+				break;
+		}
+	}
+
+	sortCurrentJobsList() {
+		switch(this.selectedJobType) {
+			case JobTypes.ADVENTURING_JOB:
+				AdventuringJobs.sortAdventuringJobs();
+				break;
+
+			case JobTypes.CRAFTING_JOB:
+				Professions.sortCraftingJobs();
+				break;
+
+			case JobTypes.RACIAL_JOB:
+				Races.sortRacialJobs();
+				Races.sortSupplementalRacialJobs();
 				break;
 		}
 	}
@@ -284,12 +305,6 @@ export class JobPageComponent implements OnInit {
 	}
 
 	public saveAll() {
-		
-		// if(isNullOrUndefined(jobToSave)) {
-		// 	console.error("Cannot save an undefined job. Define one first before attempting to download it.")
-		// 	return;
-		// }
-
 		let jobJson = JSON.stringify(this.jobService.getAllJobsAsJsonArray());
 		let jobJsonArray = [];
 		jobJsonArray.push(jobJson);

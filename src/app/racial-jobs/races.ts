@@ -53,9 +53,11 @@ export class Races {
 
 		if(isNull(jobToReturn)) {
 			this.allRaces.push(prospectiveJob);
+			this.sortRacialJobs();
 
 			if(prospectiveJob.canBeSupplementalJob) {
 				this.allSupplementalRaces.push(prospectiveJob);
+				this.sortSupplementalRacialJobs();
 			}
 
 			return prospectiveJob;
@@ -63,6 +65,15 @@ export class Races {
 			return jobToReturn;
 		}
 	}
+
+	public static sortRacialJobs() {
+		this.allRaces.sort(function(a,b){if(a.name.toLowerCase() > b.name.toLowerCase()) return 1; else return -1;});
+	}
+
+	public static sortSupplementalRacialJobs() {
+		this.allSupplementalRaces.sort(function(a,b){if(a.name.toLowerCase() > b.name.toLowerCase()) return 1; else return -1;});
+	}
+
 
 	public static deserializeRacialJob(json): RacialJob {
 		let prospectiveJob = BlankRacialJob.generateBlankRacialJob().deserializeFromJSON(json);

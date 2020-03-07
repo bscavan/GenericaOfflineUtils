@@ -52,8 +52,12 @@ export class CharacterService {
 	public addCharacterToCollection(newCharacter: Character) {
 		if(this.allKnownCharacters.indexOf(newCharacter) < 0) {
 			this.allKnownCharacters.push(newCharacter);
-			this.allKnownCharacters.sort(alphabeticCharacterSort)
+			this.sortAllKnownCharacters();
 		}
+	}
+
+	public sortAllKnownCharacters() {
+		this.allKnownCharacters.sort(alphabeticCharacterSort);
 	}
 
 	public addCharacterToCollectionFromJsonIfMissing(newCharacterJson) {

@@ -82,7 +82,8 @@
 -->
 <div>
 	Name:
-	<input type="text" [(ngModel)]="this.currentJob.name"/>
+	<input type="text" [(ngModel)]="this.currentJob.name"
+	(change)="sortCurrentJobsList()"/>
 </div>
 
 <div *ngIf="currentJobIsARacialJob()">
