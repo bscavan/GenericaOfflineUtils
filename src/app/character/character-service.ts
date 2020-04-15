@@ -92,7 +92,14 @@ export class CharacterService {
 			console.error("The json provided for importing characters was null or undefined.");
 			return null;
 		} else {
-			jsonArray.forEach(characterElement => {
+			let arrayAsJSON = jsonArray.json();
+
+			if(isNullOrUndefined(arrayAsJSON)) {
+				console.error("The value provided for importing characters was not parsable as json.");
+				return null;
+			}
+
+			arrayAsJSON.forEach(characterElement => {
 				this.addCharacterToCollectionFromJsonIfMissing(characterElement);
 			});
 		}

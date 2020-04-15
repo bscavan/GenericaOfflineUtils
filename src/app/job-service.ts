@@ -97,8 +97,15 @@ export class JobService {
 			console.error("Cannot upload null or undefined array into Jobs collections.");
 			return null;
 		} else {
+			let arrayAsJSON = jsonArray.json();
+
+			if(isNullOrUndefined(arrayAsJSON)) {
+				console.error("The value provided for importing characters was not parsable as json.");
+				return null;
+			}
+
 			// TODO: Test this out.
-			jsonArray.forEach(jobElement => {
+			arrayAsJSON.forEach(jobElement => {
 				this.uploadJobIntoCollectionFromJSON(jobElement);
 			});
 		}

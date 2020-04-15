@@ -1,7 +1,6 @@
 import { Injectable, APP_INITIALIZER } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/map'
 
 
 @Injectable()
@@ -21,26 +20,27 @@ export class ConfigService {
 
     constructor(private _http: Http) { }
 
+    
     loadJobsAssetFile() {
         return new Promise((resolve, reject) => {
-            this._http.get(ConfigService.JOBS_JSON_PATH)
-            .map(res => res.json())
-            .subscribe((data) => {
-                // FIXME: Make this _NOT_ break everything on startup if the file can't be found...
-                this._jobsJson = data;
-                resolve(true);
-            },
-            (error: any) => {
-                console.error(error);
-                return Observable.throw(error.json().error || 'Server error');
-            });
+        this._http.get(ConfigService.JOBS_JSON_PATH)
+            .subscribe((data) =>
+            {
+                    // FIXME: Make this _NOT_ break everything on startup if the file can't be found...
+                    this._jobsJson = data;
+                    resolve(true);
+                },
+                (error: any) => {
+                    console.error(error);
+                    return Observable.throw(error.json().error || 'Server error');
+                }
+            );
         });
     }
 
     loadClassSkillsAssetFile() {
         return new Promise((resolve, reject) => {
             this._http.get(ConfigService.CLASS_SKILLS_JSON_PATH)
-            .map(res => res.json())
             .subscribe((data) => {
                 // FIXME: Make this _NOT_ break everything on startup if the file can't be found...
                 this._classSkillsJson = data;
@@ -56,7 +56,6 @@ export class ConfigService {
     loadGenericSkillsAssetFile() {
         return new Promise((resolve, reject) => {
             this._http.get(ConfigService.GENERIC_SKILLS_JSON_PATH)
-            .map(res => res.json())
             .subscribe((data) => {
                 // FIXME: Make this _NOT_ break everything on startup if the file can't be found...
                 this._genericSkillsJson = data;
@@ -72,7 +71,6 @@ export class ConfigService {
     loadCharactersAssetFile() {
         return new Promise((resolve, reject) => {
             this._http.get(ConfigService.Characters_JSON_PATH)
-            .map(res => res.json())
             .subscribe((data) => {
                 // FIXME: Make this _NOT_ break everything on startup if the file can't be found...
                 this._charactersJson = data;

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SkillService } from '../skills/skill-service';
-import { Skill, Duration, Denomination } from '../skills/skill';
-import FileSaver = require('file-saver');
+import { Skill } from '../skills/skill';
+import * as FileSaver from 'file-saver';
 import { SkillListItem } from './SkillListItem';
 
 @Component({

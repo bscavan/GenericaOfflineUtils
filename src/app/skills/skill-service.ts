@@ -118,8 +118,15 @@ export class SkillService {
 			console.error("The json provided for importing skills was null or undefined.");
 			return null;
 		} else {
-			jsonArray.forEach(skillElement => {
-				SkillService.addClassSkillFromJsonIfMissing(skillElement);
+			let arrayAsJSON = jsonArray.json();
+
+			if(isNullOrUndefined(arrayAsJSON)) {
+				console.error("The value provided for importing characters was not parsable as json.");
+				return null;
+			}
+
+			arrayAsJSON.forEach(skillElementJson => {
+				SkillService.addClassSkillFromJsonIfMissing(skillElementJson);
 			});
 		}
 	}
@@ -179,7 +186,14 @@ export class SkillService {
 			console.error("The json provided for importing skills was null or undefined.");
 			return null;
 		} else {
-			jsonArray.forEach(skillElement => {
+			let arrayAsJSON = jsonArray.json();
+
+			if(isNullOrUndefined(arrayAsJSON)) {
+				console.error("The value provided for importing characters was not parsable as json.");
+				return null;
+			}
+
+			arrayAsJSON.forEach(skillElement => {
 				SkillService.addGenericSkillFromJsonIfMissing(skillElement);
 			});
 		}
