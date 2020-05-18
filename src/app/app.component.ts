@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Character } from './character/character';
 import { Jaxby } from './character/jaxby';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { CharacterService } from './character/character-service';
-// import { Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { MessageAction } from './actions/message-action'
 import { delay} from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { fromEvent } from 'rxjs';
+import { ActionUtil } from './action-util';
 
 
 @Component({
@@ -16,23 +17,20 @@ import { fromEvent } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 	title = 'app';
 	public firstCharacter: Character;
 	source$: Observable<Event>;
 
-	// TODO: Export this as a constant.
-	readonly ACTION_KEY = "ACTION_NAME";
-
 	ngOnInit() {
 		this.firstCharacter = new Jaxby();
+		this.initializeActionListener();
 	}
 
 	constructor(private router: Router,
 	private modalService: NgbModal,
 	private characterService: CharacterService,
-	//private store: Store
-	) {
+	private store: Store) {
 	}
 
 	/**
@@ -50,45 +48,31 @@ export class AppComponent {
 		this.characterService.characterFocus.recalculateAttributes()
 	}
 
-	dispatcher(message: string){
-		// if(actionName === STATUS.login){
-		// 	this.status = STATUS.logout;
-		// 	this.store.dispatch(new Login());
-		// } else {
-		// 	this.status = STATUS.login;
-		// 	this.store.dispatch(new Logout());
-		// }
-		// this.store.dispatch(new MessageAction());
-		// localStorage.setItem(this.ACTION_KEY, MessageAction.type);
-		// localStorage.setItem(MessageAction.type, message);
+	dispatchMessage(message: string){
+		this.store.dispatch(new MessageAction());
+		localStorage.setItem(ActionUtil.ACTION_KEY, MessageAction.type);
+		localStorage.setItem(MessageAction.type, message);
 	}
 
 
-		init(){
-			this.source$ = fromEvent(window, 'storage');
-			this.source$.pipe(delay(500)).subscribe(
-				ldata => {
-					let lastActionPerformed = localStorage.getItem(this.ACTION_KEY);
+	initializeActionListener() {
+		this.source$ = fromEvent(window, 'storage');
+		this.source$.pipe(delay(500)).subscribe(
+			ldata => {
+				let lastActionPerformed = localStorage.getItem(ActionUtil.ACTION_KEY);
 
-					if(lastActionPerformed){
-						// if(lastActionPerformed === STATUS.login){
-						// 	this.store.dispatch(new Logout());
-						// 	this.status = STATUS.logout;
-						// } else {
-						// 	this.store.dispatch(new Login());
-						// 	this.status = STATUS.login;
-						// }
-						if(lastActionPerformed === MessageAction.type) {
-							let lastMessageSent = localStorage.getItem(MessageAction.type);
+				if(lastActionPerformed){
+					if(lastActionPerformed === MessageAction.type) {
+						let lastMessageSent = localStorage.getItem(MessageAction.type);
 
-							if(lastMessageSent) {
-								console.log("Received message: [" + lastMessageSent + "];");
-							}
+						if(lastMessageSent) {
+							console.log("Received message: [" + lastMessageSent + "];");
 						}
-					} else {
-						console.log("Nothing added yet");
 					}
+				} else {
+					console.log("Nothing added yet");
 				}
-			);
-		}
+			}
+		);
+	}
 }

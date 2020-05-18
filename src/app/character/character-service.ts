@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Character } from './character';
 import { isNullOrUndefined } from 'util';
 import { ConfigService } from '../config-service';
+import { SkillService } from '../skills/skill-service';
 
 
 function alphabeticCharacterSort(left: Character, right: Character): 1 | -1 {
@@ -31,7 +32,7 @@ export class CharacterService {
 	 */
 	public allKnownCharacters: Character[] = [];
 
-	constructor(configService: ConfigService) {
+	constructor(configService: ConfigService, private skillService: SkillService) {
 		this.characterFocus = Character.generateBlankCharacter();
 
 		// TODO: Confirm this isn't giving us a 404 or anything before plugging it into the upload method...
@@ -52,6 +53,26 @@ export class CharacterService {
 	public addCharacterToCollection(newCharacter: Character) {
 		if(this.allKnownCharacters.indexOf(newCharacter) < 0) {
 			this.allKnownCharacters.push(newCharacter);
+			this.skillService.addSkillsfromJobIfMissing(newCharacter.primaryRacialJob);
+
+			// Iterate over each of the character's jobs and add all newly found skills to the SkillService
+			newCharacter.supplementalRacialJobLevels.forEach((currentSupplementalJobLevelPair) => {
+				this.skillService.addSkillsfromJobIfMissing(currentSupplementalJobLevelPair.job);
+			})
+
+			newCharacter.adventuringJobLevels.forEach((currentAdventuringJobLevelPair) => {
+				this.skillService.addSkillsfromJobIfMissing(currentAdventuringJobLevelPair.job);
+			})
+
+			newCharacter.craftingJobLevels.forEach((currentSupplementalJobLevelPair) => {
+				this.skillService.addSkillsfromJobIfMissing(currentSupplementalJobLevelPair.job);
+			})
+
+			// Iterate over each of the character's generic skills and add all newly found ones to the SkillService
+			newCharacter.genericSkills.forEach((currentSkill) => {
+				this.skillService.addGenericSkillIfMissing(currentSkill.skill);
+			});
+
 			this.sortAllKnownCharacters();
 		}
 	}

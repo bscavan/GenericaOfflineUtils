@@ -83,7 +83,7 @@
 <div>
 	Name:
 	<input type="text" [(ngModel)]="this.currentJob.name"
-	(change)="sortCurrentJobsList()"/>
+	(change)="handleCurrentJobNameChange()"/>
 </div>
 
 <div *ngIf="currentJobIsARacialJob()">
@@ -99,7 +99,8 @@
 	(change)="changeCurrentCraftingJobSlots()">
 
 	<!-- TODO: Make this radioButton a slider -->
-	<!-- TODO: Hook these up to this.currentJob.canBeSupplementalJob -->
+	<!-- TODO: Hook these up to this.currentJob.canBeSupplementalJob
+	Also call this.dispatchRacialJobUpdate(currentJob); after changes. -->
 	<form action="">
 		Can be a supplemental job:
 		<input type="radio" value="true">Yes

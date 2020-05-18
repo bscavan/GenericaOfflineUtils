@@ -24,8 +24,8 @@ export class CharacterPageComponent implements OnInit {
 
 	// This is a limitation on the rules we have, not the software itself.
 	public readonly MAX_LEVEL = 25;
-	allRacialJobs: RacialJob[] = Races.getAllRaces();
-	allSupplementalRacialJobs: RacialJob[] = Races.getAllSupplementalRaces();
+	allRacialJobs: RacialJob[];
+	allSupplementalRacialJobs: RacialJob[];
 	allAdventuringJobs = AdventuringJobs.getAllAdventuringJobs();
 	allCraftingJobs = Professions.getAllCraftingJobs();
 	expanded: boolean = true;
@@ -54,7 +54,11 @@ export class CharacterPageComponent implements OnInit {
 	 * skill json file(s) from the assets directory on startup...
 	 * @param skillService 
 	*/
-	constructor(public characterService: CharacterService, skillService: SkillService, configService: ConfigService) {}
+	constructor(public characterService: CharacterService, public skillService: SkillService,
+	public racesService: Races, configService: ConfigService) {
+		this.allRacialJobs = racesService.getAllRaces();
+		this.allSupplementalRacialJobs = racesService.getAllSupplementalRaces();
+	}
 
 	ngOnInit() { }
 
@@ -65,35 +69,6 @@ export class CharacterPageComponent implements OnInit {
 		}
 		return items;
 	}
-
-	/*
-	// Manual testing code for seriailization.
-	public serialize() {
-		/*
-		// TODO: Put these into a unit-test.
-		let moddedPeskieRace = Peskie.getPeskieRace();
-		moddedPeskieRace.basePools.add({affectedPool: Pools.HP, baseValue: 7});
-		let serializedPeskieJob = moddedPeskieRace.serializeToJSON();
-		console.log(serializedPeskieJob);
-
-		let pesudoPeskieJob: RacialJob = BlankRacialJob.getBlankRacialJob();
-		pesudoPeskieJob.deserializeFromJSON(serializedPeskieJob);
-		*
-		let allRaces = Races.getAllRaces();
-		let serializedJaxby = this.characterFocus.serializeToJSON();
-
-		console.log(serializedJaxby);
-
-		this.characterFocus.deserializeFromJSON(serializedJaxby);
-
-		let job = this.characterFocus.primaryRacialJob;
-		let jobJson = job.serializeToJSON();
-
-		Races.deserializeRacialJob(jobJson);
-
-		let secondLength = Races.getAllRaces().length;
-	}
-	*/
 
 	public saveAllCharacters() {
 		let jobJson = JSON.stringify(this.characterService.getAllCharactersAsJSONArray());
@@ -139,7 +114,7 @@ export class CharacterPageComponent implements OnInit {
 		}
 
 		// Get the actual skill object for this from the skill service and find out if it is level-less
-		let foundSkill = SkillService.allClassSkills.get(uuid);
+		let foundSkill = this.skillService.allClassSkills.get(uuid);
 
 		if(isNull(foundSkill)) {
 			console.error("Cannot set levels in a skill that does not exist.");
@@ -244,7 +219,7 @@ export class CharacterPageComponent implements OnInit {
 		}
 
 		// Get the actual skill object for this from the skill service and find out if it is level-less
-		let foundSkill = SkillService.allGenericSkills.get(uuid);
+		let foundSkill = this.skillService.allGenericSkills.get(uuid);
 
 		if(isNull(foundSkill)) {
 			console.error("Cannot set levels in a skill that does not exist.");
@@ -304,15 +279,15 @@ export class CharacterPageComponent implements OnInit {
 	}
 
 	public getGenericSkill(uuid: string): Skill {
-		return SkillService.getGenericSkill(uuid);
+		return this.skillService.getGenericSkill(uuid);
 	}
 
 	public getAllGenericSkills(): Map<string, GenericSkill> {
-		return SkillService.allGenericSkills;
+		return this.skillService.allGenericSkills;
 	}
 
 	public getAllGenericSkillKeys() {
-		return SkillService.allGenericSkills.keys();
+		return this.skillService.allGenericSkills.keys();
 	}
 
 	public addGenericSkillToCharacter() {
@@ -323,7 +298,7 @@ export class CharacterPageComponent implements OnInit {
 
 		// If the character does not already have ranks in this skill...
 		if(this.characterService.characterFocus.hasGenericSkill(this.genericSkillToAddUUID) == false) {
-			let genericSkill = SkillService.getGenericSkill(this.genericSkillToAddUUID);
+			let genericSkill = this.skillService.getGenericSkill(this.genericSkillToAddUUID);
 			this.characterService.characterFocus.addGenericSkillItem(this.genericSkillToAddUUID, genericSkill);
 		}
 

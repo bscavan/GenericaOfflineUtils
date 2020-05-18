@@ -24,7 +24,7 @@ export class ImportModalComponent implements OnInit {
 	@Input() importType: String;
 
 	constructor(private modalService: NgbModal, private jobService: JobService,
-	private characterService: CharacterService) { }
+	private characterService: CharacterService, private skillService: SkillService) { }
 
 	ngOnInit() {}
 
@@ -69,9 +69,9 @@ export class ImportModalComponent implements OnInit {
 
 					case Skill.LABEL:
 						if(Array.isArray(jobFileAsJson)) {
-							SkillService.addSkillsFromJsonArrayIfMissing(jobFileAsJson);
+							this.skillService.addSkillsFromJsonArrayIfMissing(jobFileAsJson);
 						} else {
-							SkillService.addSkillFromJsonIfMissing(jobFileAsJson);
+							this.skillService.addSkillFromJsonIfMissing(jobFileAsJson);
 						}
 						break;
 				}

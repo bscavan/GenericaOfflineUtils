@@ -66,11 +66,6 @@ export abstract class Job implements JsonSerializable {
 		});
 	}
 
-	public addSkillFromService(levelGained: number, uuid: string) {
-		// TODO: Test this.
-		this.addSkill(levelGained, SkillService.getClassSkill(uuid));
-	}
-
 	/**
 	 * Adds the provided skill to the list of skills this job provides at the
 	 * specified level.
@@ -89,7 +84,6 @@ export abstract class Job implements JsonSerializable {
 
 		skillsAtLevel.add(skillToAdd);
 		this.skills.set(levelGained, skillsAtLevel);
-		SkillService.addClassSkillIfMissing(skillToAdd);
 	}
 
 	public removeSkill(level: number, skillToRemove: Skill) {
@@ -170,7 +164,6 @@ export abstract class Job implements JsonSerializable {
 				let deserializedSkill = Skill.deserializeNewSkillFromJSON(currentSkillSetJson[currentSkillIndex]);
 				deserializedSkill.type = SkillTypes.CLASS_SKILL;
 				currentSkillSet.add(deserializedSkill);
-				SkillService.addClassSkillIfMissing(deserializedSkill);
 			}
 
 			// TODO: Handle improper input.

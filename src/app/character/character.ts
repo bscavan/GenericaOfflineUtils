@@ -756,7 +756,8 @@ export class Character implements JsonSerializable {
 
 		for(let currentIndex in json) {
 			let currentJobJson = json[currentIndex];
-			let currentJob = Races.deserializeRacialJob(currentJobJson.job);
+			let currentJob = BlankRacialJob.generateBlankRacialJob().deserializeFromJSON(currentJobJson.job);
+			// TODO: Add code to characterService to add the Character's jobs to the JobService when it is deserialized
 			jobItemsArray.push({job: currentJob, level: currentJobJson.level});
 		}
 
@@ -864,7 +865,8 @@ export class Character implements JsonSerializable {
 		this.title = json.title;
 		this.bio = json.bio;
 
-		this.primaryRacialJob = Races.deserializeRacialJob(json.primaryRacialJob);
+		this.primaryRacialJob = BlankRacialJob.generateBlankRacialJob().deserializeFromJSON(json.primaryRacialJob);
+		// TODO: Add code to characterService to add the Character's jobs to the JobService when it is deserialized
 		this.primaryRacialJobLevel = json.primaryRacialJobLevel;
 
 		this.supplementalRacialJobLevels = this.deserializeRacialJobItemArray(json.supplementalRacialJobLevels);

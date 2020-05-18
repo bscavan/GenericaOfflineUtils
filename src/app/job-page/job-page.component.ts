@@ -60,7 +60,8 @@ export class JobPageComponent implements OnInit {
 	 * skill json file(s) from the assets directory on startup...
 	 * @param skillService 
 	*/
-	constructor(private jobService: JobService, private characterService: CharacterService, private skillService: SkillService) {
+	constructor(private jobService: JobService, private characterService: CharacterService,
+	private skillService: SkillService, private racialJobService: Races) {
 		JobPageComponent.job_service = jobService;
 	}
 
@@ -77,6 +78,57 @@ export class JobPageComponent implements OnInit {
 	public resetOrderedAttributes() {
 		this.currentJob = this.jobService.getCurrentJob(this.selectedJobType);
 		this.recreateOrderedAttributes();
+	}
+
+	public handleUpdateDispatchNeed() {
+		/**
+		 * FIXME: This isn't making sure things are saved first!
+		 * As a result, when things change they cause an update to fire, but
+		 * the update sends the _saved_ changes, not the things currently
+		 * visible!
+		 */
+		switch(this.selectedJobType) {
+			case JobTypes.ADVENTURING_JOB:
+				// TODO: dispatchAdventuringJobUpdate(this.currentJob);
+				break;
+
+			case JobTypes.CRAFTING_JOB:
+				// TODO: dispatchCraftingJobUpdate(this.currentJob);
+				break;
+
+			case JobTypes.RACIAL_JOB:
+				this.dispatchRacialJobUpdate(this.currentJob as RacialJob);
+				break;
+		}
+	}
+
+	public handleDeleteDispatchNeed() {
+		switch(this.selectedJobType) {
+			case JobTypes.ADVENTURING_JOB:
+				// TODO: dispatchAdventuringJobUpdate(this.currentJob);
+				break;
+
+			case JobTypes.CRAFTING_JOB:
+				// TODO: dispatchCraftingJobUpdate(this.currentJob);
+				break;
+
+			case JobTypes.RACIAL_JOB:
+				this.dispatchRacialJobDelete(this.currentJob.uuid);
+				break;
+		}
+	}
+
+	public handleCurrentJobNameChange() {
+		this.handleUpdateDispatchNeed();
+		this.sortCurrentJobsList();
+	}
+
+	public dispatchRacialJobUpdate(job: RacialJob) {
+		this.racialJobService.dispatchRacialJobUpdate(job);
+	}
+
+	public dispatchRacialJobDelete(uuid: string) {
+		this.racialJobService.dispatchRacialJobDelete(uuid);
 	}
 
 	recreateOrderedAttributes() {
@@ -209,9 +261,9 @@ export class JobPageComponent implements OnInit {
 				break;
 
 			case JobTypes.RACIAL_JOB:
-				Races.sortRacialJobs();
-				Races.sortSupplementalRacialJobs();
-				this.currentJobsList = Races.getAllRaces();
+				this.racialJobService.sortRacialJobs();
+				this.racialJobService.sortSupplementalRacialJobs();
+				this.currentJobsList = this.racialJobService.getAllRaces();
 				break;
 		}
 	}
@@ -227,8 +279,8 @@ export class JobPageComponent implements OnInit {
 				break;
 
 			case JobTypes.RACIAL_JOB:
-				Races.sortRacialJobs();
-				Races.sortSupplementalRacialJobs();
+				this.racialJobService.sortRacialJobs();
+				this.racialJobService.sortSupplementalRacialJobs();
 				break;
 		}
 	}
@@ -256,10 +308,12 @@ export class JobPageComponent implements OnInit {
 
 		let targetJob = this.currentJob as RacialJob;
 		targetJob.addBaseAttributes(attributeItem);
+		//this.handleUpdateDispatchNeed();
 	}
 
 	updateJobAffectedAttributes(attributeItem) {
 		this.currentJob.affectedAttributes.add(attributeItem);
+		//this.handleUpdateDispatchNeed();
 	}
 
 	updateJobBaseDefense(defensesItem) {
@@ -270,23 +324,28 @@ export class JobPageComponent implements OnInit {
 
 		let targetJob = this.currentJob as RacialJob;
 		targetJob.addBaseDefenses(defensesItem);
+		//this.handleUpdateDispatchNeed();
 	}
 
 	updateJobAffectedDefenses(defensesItem) {
 		this.currentJob.affectedDefenses.add(defensesItem);
+		//this.handleUpdateDispatchNeed();
 	}
 
 	updateJobBasePools(poolsItem) {
 		this.currentJob.basePools.add(poolsItem);
+		//this.handleUpdateDispatchNeed();
 	}
 
 	// Currently this won't upload a job if every attribute is zero. Is this wrong?
 	public loadIntoCollection(job: Job) {
 		if(job.name.trim().length < 1) {
 			alert("All jobs must have a name. Please name the job before attempting to upload it.")
-		} else {
-			this.jobService.uploadJobIntoCollection(job);
+			return;
 		}
+
+		this.jobService.uploadJobIntoCollection(job);
+		this.handleUpdateDispatchNeed();
 
 		this.resetCurrentJobsList();
 		this.clearCurrentJob();
@@ -302,6 +361,7 @@ export class JobPageComponent implements OnInit {
 
 	public deleteCurrentJob() {
 		this.jobService.deleteJobFromCollection(this.currentJob);
+		this.handleDeleteDispatchNeed();
 	}
 
 	public saveAll() {
@@ -391,6 +451,7 @@ export class JobPageComponent implements OnInit {
 
 		currentJob.numberOfsupplementalRacialJobSlots = this.supplementalRacialJobSlotsOnDisplay;
 		this.characterService.characterFocus.handlePrimaryRaceChange();
+		this.dispatchRacialJobUpdate(currentJob);
 	}
 
 	public changeCurrentAdventuringJobSlots() {
@@ -410,6 +471,7 @@ export class JobPageComponent implements OnInit {
 
 		currentJob.numberOfAdventuringJobSlots = this.adventuringJobSlotsOnDisplay;
 		this.characterService.characterFocus.handlePrimaryRaceChange();
+		this.dispatchRacialJobUpdate(currentJob);
 	}
 
 	public changeCurrentCraftingJobSlots() {
@@ -429,13 +491,14 @@ export class JobPageComponent implements OnInit {
 
 		currentJob.numberOfCraftingJobSlots = this.craftingJobSlotsOnDisplay;
 		this.characterService.characterFocus.handlePrimaryRaceChange();
+		this.dispatchRacialJobUpdate(currentJob);
 	}
 
 	// TODO: Stop using this method for the *ngFor. It's causing errors in the console log.
 	public getAllSkillKeys() {
 		let allSkillKeys = [];
 
-		SkillService.allClassSkills.forEach((value: Skill, key: string) => {
+		this.skillService.allClassSkills.forEach((value: Skill, key: string) => {
 			allSkillKeys.push(key);
 		});
 
@@ -443,12 +506,15 @@ export class JobPageComponent implements OnInit {
 	}
 
 	public getSkill(uuid: string) {
-		return SkillService.allClassSkills.get(uuid);
+		return this.skillService.allClassSkills.get(uuid);
 	}
 
 	public attemptToAddSkill() {
 		if(this.selectedSkillLevel >= 0 && isNullOrUndefined(this.selectedSkillUUID) == false) {
-			this.currentJob.addSkill(this.selectedSkillLevel, this.getSkill(this.selectedSkillUUID));
+			let skill = this.getSkill(this.selectedSkillUUID);
+			this.currentJob.addSkill(this.selectedSkillLevel, skill);
+			this.skillService.addClassSkillIfMissing(skill);
+			//this.handleUpdateDispatchNeed();
 		}
 
 		this.selectedSkillLevel = 0;
@@ -458,5 +524,6 @@ export class JobPageComponent implements OnInit {
 
 	public removeSkill(level: number, skillToRemove: Skill) {
 		this.currentJob.removeSkill(level, skillToRemove);
+		//this.handleUpdateDispatchNeed();
 	}
 }

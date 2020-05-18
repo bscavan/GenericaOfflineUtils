@@ -19,8 +19,10 @@ import { SkillService } from './skills/skill-service';
 import { SkillItemDisplayComponent } from './job-page/skill-item-display/skill-item-display.component';
 import { ConfigService, JobsConfigModule, ClassSkillsConfigModule, CharactersConfigModule, GenericSkillsConfigModule } from './config-service';
 import { HttpModule } from '@angular/http';
-// import { Store, StateStream } from '@ngxs/store';
-// import { InternalStateOperations } from '@ngxs/store/src/internal/state-operations';
+import { Store, StateStream, NgxsModule } from '@ngxs/store';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { NgxsFormPluginModule } from '@ngxs/form-plugin';
+import { Races } from './racial-jobs/races';
 
 @NgModule({
   declarations: [
@@ -40,20 +42,23 @@ import { HttpModule } from '@angular/http';
 	FormsModule,
 	AppRoutingModule,
 	HttpModule,
+	NgxsModule.forRoot([]),
+	NgxsReduxDevtoolsPluginModule.forRoot(),
+	NgxsFormPluginModule.forRoot(), 
   ],
   providers: [
 	{provide: APP_BASE_HREF, useValue: '/'},
 	CharacterService,
 	JobService,
+	Races,
 	SkillService,
 	ConfigService,
 	JobsConfigModule.init(),
 	ClassSkillsConfigModule.init(),
 	GenericSkillsConfigModule.init(),
 	CharactersConfigModule.init(),
-	// Store,
-	// StateStream,
-	// InternalStateOperations
+	Store,
+	StateStream,
 ],
   bootstrap: [AppComponent]
 })

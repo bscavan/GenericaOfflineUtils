@@ -4,9 +4,18 @@ import { ClassSkill } from "./class-skill";
 import { GenericSkill } from "./generic-skill";
 import { isNullOrUndefined } from "util";
 import { ConfigService } from "../config-service";
+import { Store } from "@ngxs/store";
+import { Observable, fromEvent } from "rxjs";
+import { ActionUtil } from "../action-util";
+import { delay } from "rxjs/operators";
+import { ClassSkillUpdateAction, ClassSkillDeleteAction } from "../actions/class-skill-update-action";
+import { GenericSkillUpdateAction, GenericSkillDeleteAction } from "../actions/generic-skill-update-action";
+import { Job } from "../job";
 
 @Injectable()
 export class SkillService {
+	source$: Observable<Event>;
+
 	/**
 	 * FIXME: This needs to be routinely sorted (alphabetically by name?)
 	 * FIXME: Rather than allowing other classes and HTML to directly access this,
@@ -20,7 +29,7 @@ export class SkillService {
 	 * The Keys of this map are the skills uuid values and the Values are the
 	 * Skills themselves.
 	 */
-	static allClassSkills: Map<string, ClassSkill> = new Map<string, Skill>();
+	allClassSkills: Map<string, ClassSkill> = new Map<string, Skill>();
 
 	/**
 	 * FIXME: This needs to be routinely sorted (alphabetically by name?)
@@ -35,44 +44,49 @@ export class SkillService {
 	 * The Keys of this map are the skills uuid values and the Values are the
 	 * Skills themselves.
 	 */
-	static allGenericSkills: Map<string, GenericSkill> = new Map<string, Skill>();
+	allGenericSkills: Map<string, GenericSkill> = new Map<string, Skill>();
 
-	constructor(configService: ConfigService) {
-		/*
-		// TODO: Remove these skills once we're done testing.
-		// TODO: Make sure the skills in jobs get added when the jobs are created.
-		let challenge = new Skill("Challenge", "Calls out a target to fight you", null, null);
-		challenge.addCost(5, Pools.MOX);
-		challenge.setDuration(5, Duration.MINUTE, Qualifier.NONE);
-		this.addSkill(challenge);
-
-		let parry = new Skill("Parry", "While you have your specialized weapon drawn", null, null);
-		//parry.addCost(5, Pools.MOX);
-		parry.setDuration(1, Duration.PASSIVE_CONSTANT, Qualifier.NONE);
-		this.addSkill(parry);
-
-		let swinger = new Skill("Swinger", " this skill adds its level to agility rolls when you're attempting to swing from ropes and" +
-		"chandeliers and other feats of swashbucklery derring-do", null, null);
-		swinger.addCost(10, Pools.STA);
-		swinger.setDuration(1, Duration.MINUTE, Qualifier.PER_SKILL_LEVEL);
-		this.addSkill(swinger);
-		*/
-
+	constructor(configService: ConfigService, private store: Store) {
 		// FIXME: This is a largely-static class, meaning the constructor is rarely called.
 		// Migrate these method cals into a helper-method that gets called once before any
 		// of the static methods can be called.
 
 		// TODO: Confirm this isn't giving us a 404 or anything before plugging it into the upload method...
 		let foundClassSkillsJson = configService.getClassSkillsJson();
-		SkillService.addClassSkillsFromJsonArrayIfMissing(foundClassSkillsJson);
+		this.addClassSkillsFromJsonArrayIfMissing(foundClassSkillsJson);
 
 		// TODO: Confirm this isn't giving us a 404 or anything before plugging it into the upload method...
 		let foundGenericSkillJson = configService.getGenericSkillsJson();
-		SkillService.addGenericSkillsFromJsonArrayIfMissing(foundGenericSkillJson);
+		this.addGenericSkillsFromJsonArrayIfMissing(foundGenericSkillJson);
+
+		this.initializeActionListener();
 	}
 
-	public static addClassSkill(newSkill: ClassSkill) {
-		SkillService.allClassSkills.set(newSkill.uuid, newSkill);
+	public addSkillsfromJobIfMissing(job: Job){
+		job.skills.forEach((currentSkillSet: Set<Skill>, currentLevel: number) => {
+			currentSkillSet.forEach((currentSkill: Skill) => {
+				this.addClassSkillIfMissing(currentSkill);
+			})
+		});
+	}
+
+	// To be used whenever another class or html alters the skill.
+	// Propigates changes in skills to the LocalStorage.
+	public syncClassSkill(uuid: string) {
+		let skill = this.getClassSkill(uuid);
+
+		if(isNullOrUndefined(skill) == false) {
+			this.dispatchClassSkillUpdate(skill);
+		}
+	}
+
+	public setClassSkill(newSkill: ClassSkill) {
+		this.allClassSkills.set(newSkill.uuid, newSkill);
+		this.dispatchClassSkillUpdate(newSkill);
+	}
+
+	public addClassSkill(newSkill: ClassSkill) {
+		this.setClassSkill(newSkill);
 	}
 
 	/**
@@ -81,9 +95,9 @@ export class SkillService {
 	// FIXME: Handle the null values in this. Either initialize them to default
 	// values or figure out how to handle this in the HTML without it breaking
 	// anything over there.
-	public static addBlankClassSkill() {
+	public addBlankClassSkill() {
 		let newSkill = new ClassSkill("", "", null, null, true);
-		SkillService.allClassSkills.set(newSkill.uuid, newSkill);
+		this.setClassSkill(newSkill);
 	}
 
 	/**
@@ -93,27 +107,27 @@ export class SkillService {
 	 * returned.
 	 * @param newSkill 
 	 */
-	public static addClassSkillIfMissing(newSkill: ClassSkill): boolean {
-		if(SkillService.allClassSkills.has(newSkill.uuid) == false) {
-			SkillService.allClassSkills.set(newSkill.uuid, newSkill);
+	public addClassSkillIfMissing(newSkill: ClassSkill): boolean {
+		if(this.allClassSkills.has(newSkill.uuid) == false) {
+			this.setClassSkill(newSkill);
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public static addClassSkillFromJsonIfMissing(json): boolean {
+	public addClassSkillFromJsonIfMissing(json): boolean {
 		if(isNullOrUndefined(json)) {
 			// TODO: Fail. Loudly.
 			return null;
 		} else {
 			let newSkill = Skill.deserializeNewSkillFromJSON(json);
 			newSkill.type = SkillTypes.CLASS_SKILL;
-			SkillService.addClassSkillIfMissing(newSkill);
+			this.addClassSkillIfMissing(newSkill);
 		}
 	}
 
-	public static addClassSkillsFromJsonArrayIfMissing(jsonArray) {
+	public addClassSkillsFromJsonArrayIfMissing(jsonArray) {
 		if(isNullOrUndefined(jsonArray)) {
 			console.error("The json provided for importing skills was null or undefined.");
 			return null;
@@ -126,21 +140,54 @@ export class SkillService {
 			}
 
 			arrayAsJSON.forEach(skillElementJson => {
-				SkillService.addClassSkillFromJsonIfMissing(skillElementJson);
+				this.addClassSkillFromJsonIfMissing(skillElementJson);
 			});
 		}
 	}
 
-	public static getClassSkill(uuid: string): ClassSkill {
-		return SkillService.allClassSkills.get(uuid);
+	public getClassSkill(uuid: string): ClassSkill {
+		return this.allClassSkills.get(uuid);
 	}
 
-	public static removeClassSkill(uuid: string): boolean {
-		return SkillService.allClassSkills.delete(uuid);
+	public removeClassSkill(uuid: string): boolean {
+		let returnValue = this.allClassSkills.delete(uuid);
+		this.dispatchClassSkillDelete(uuid);
+		return returnValue;
 	}
 
-	public static addGenericSkill(newSkill: GenericSkill) {
-		SkillService.allClassSkills.set(newSkill.uuid, newSkill);
+	public addNewCostToClassSkill(uuid: string) {
+		let skill = this.getClassSkill(uuid);
+
+		if(isNullOrUndefined(skill) == false) {
+			skill.addEmptyCost();
+			this.dispatchClassSkillUpdate(skill);
+		}
+	}
+
+	public removeCostFromClassSkill(uuid: string, index: number) {
+		let skill = this.getClassSkill(uuid);
+
+		if(isNullOrUndefined(skill) == false) {
+			skill.removeCost(index);
+			this.dispatchClassSkillUpdate(skill);
+		}
+	}
+
+	public syncGenericSkill(uuid: string) {
+		let skill = this.getGenericSkill(uuid);
+
+		if(isNullOrUndefined(skill) == false) {
+			this.dispatchGenericSkillUpdate(skill);
+		}
+	}
+
+	public setGenericSkill(newSkill: GenericSkill) {
+		this.allGenericSkills.set(newSkill.uuid, newSkill);
+		this.dispatchGenericSkillUpdate(newSkill);
+	}
+
+	public addGenericSkill(newSkill: GenericSkill) {
+		this.setGenericSkill(newSkill);
 	}
 
 	/**
@@ -149,9 +196,9 @@ export class SkillService {
 	// FIXME: Handle the null values in this. Either initialize them to default
 	// values or figure out how to handle this in the HTML without it breaking
 	// anything over there.
-	public static addBlankGenericSkill() {
+	public addBlankGenericSkill() {
 		let newSkill = new GenericSkill("", "", null, null, true);
-		SkillService.allGenericSkills.set(newSkill.uuid, newSkill);
+		this.setGenericSkill(newSkill);
 	}
 
 	/**
@@ -161,27 +208,27 @@ export class SkillService {
 	 * false is returned.
 	 * @param newSkill 
 	 */
-	public static addGenericSkillIfMissing(newSkill: GenericSkill): boolean {
-		if(SkillService.allGenericSkills.has(newSkill.uuid) == false) {
-			SkillService.allGenericSkills.set(newSkill.uuid, newSkill);
+	public addGenericSkillIfMissing(newSkill: GenericSkill): boolean {
+		if(this.allGenericSkills.has(newSkill.uuid) == false) {
+			this.setGenericSkill(newSkill);
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public static addGenericSkillFromJsonIfMissing(json): boolean {
+	public addGenericSkillFromJsonIfMissing(json): boolean {
 		if(isNullOrUndefined(json)) {
 			// TODO: Fail. Loudly.
 			return null;
 		} else {
 			let newSkill = Skill.deserializeNewSkillFromJSON(json);
 			newSkill.type = SkillTypes.GENERIC_SKILL;
-			SkillService.addGenericSkillIfMissing(newSkill);
+			this.addGenericSkillIfMissing(newSkill);
 		}
 	}
 
-	public static addGenericSkillsFromJsonArrayIfMissing(jsonArray) {
+	public addGenericSkillsFromJsonArrayIfMissing(jsonArray) {
 		if(isNullOrUndefined(jsonArray)) {
 			console.error("The json provided for importing skills was null or undefined.");
 			return null;
@@ -194,20 +241,40 @@ export class SkillService {
 			}
 
 			arrayAsJSON.forEach(skillElement => {
-				SkillService.addGenericSkillFromJsonIfMissing(skillElement);
+				this.addGenericSkillFromJsonIfMissing(skillElement);
 			});
 		}
 	}
 
-	public static getGenericSkill(uuid: string): GenericSkill {
-		return SkillService.allGenericSkills.get(uuid);
+	public getGenericSkill(uuid: string): GenericSkill {
+		return this.allGenericSkills.get(uuid);
 	}
 
-	public static removeGenericSkill(uuid: string): boolean {
-		return SkillService.allGenericSkills.delete(uuid);
+	public removeGenericSkill(uuid: string): boolean {
+		let returnValue = this.allGenericSkills.delete(uuid);
+		this.dispatchGenericSkillDelete(uuid);
+		return returnValue;
 	}
 
-	public static addSkillsFromJsonArrayIfMissing(jsonArray) {
+	public addNewCostToGenericSkill(uuid: string) {
+		let skill = this.getGenericSkill(uuid);
+
+		if(isNullOrUndefined(skill) == false) {
+			skill.addEmptyCost();
+			this.dispatchGenericSkillUpdate(skill);
+		}
+	}
+
+	public removeCostFromGenericSkill(uuid: string, index: number) {
+		let skill = this.getGenericSkill(uuid);
+
+		if(isNullOrUndefined(skill) == false) {
+			skill.removeCost(index);
+			this.dispatchGenericSkillUpdate(skill);
+		}
+	}
+
+	public addSkillsFromJsonArrayIfMissing(jsonArray) {
 		if(isNullOrUndefined(jsonArray)) {
 			console.error("The json provided for importing skills was null or undefined.");
 			return null;
@@ -218,7 +285,7 @@ export class SkillService {
 		}
 	}
 
-	public static addSkillFromJsonIfMissing(json): boolean {
+	public addSkillFromJsonIfMissing(json): boolean {
 		if(isNullOrUndefined(json)) {
 			// TODO: Fail. Loudly.
 			return null;
@@ -226,11 +293,11 @@ export class SkillService {
 			let newSkill = Skill.deserializeNewSkillFromJSON(json);
 
 			if(newSkill.type === SkillTypes.CLASS_SKILL) {
-				SkillService.addClassSkillIfMissing(newSkill);
+				this.addClassSkillIfMissing(newSkill);
 			} else {
 				// We are defaulting to generic skills...
 				// TODO: Add a means of converting a generic skill to a class skill?
-				SkillService.addGenericSkillIfMissing(newSkill);
+				this.addGenericSkillIfMissing(newSkill);
 			}
 		}
 	}
@@ -241,17 +308,114 @@ export class SkillService {
 
 	// Exports all of the characters in allKnownCharacters as a JSON array.
 	// Excludes characterFocus if it has not been saved/uploaded into the collection.
-	public static getAllSkillsAsJSONArray(): {}[] {
+	public getAllSkillsAsJSONArray(): {}[] {
 		let allSkillsArray = [];
 
-		SkillService.allClassSkills.forEach((currentSkill) => {
+		this.allClassSkills.forEach((currentSkill) => {
 			allSkillsArray.push(currentSkill.serializeToJSON());
 		});
 
-		SkillService.allGenericSkills.forEach((currentSkill) => {
+		this.allGenericSkills.forEach((currentSkill) => {
 			allSkillsArray.push(currentSkill.serializeToJSON());
 		});
 
 		return allSkillsArray;
+	}
+
+	// Only run this if the skill has changed.
+	private dispatchClassSkillUpdate(skill: ClassSkill){
+		this.store.dispatch(new ClassSkillUpdateAction());
+		localStorage.setItem(ActionUtil.ACTION_KEY, ClassSkillUpdateAction.type);
+		localStorage.setItem(ClassSkillUpdateAction.type, skill.uuid);
+		let skillAsJson = JSON.stringify(skill.serializeToJSON());
+		localStorage.setItem(skill.uuid, skillAsJson);
+	}
+
+	// Only run this if the skill has been deleted.
+	private dispatchClassSkillDelete(uuid: string){
+		this.store.dispatch(new ClassSkillDeleteAction());
+		localStorage.setItem(ActionUtil.ACTION_KEY, ClassSkillDeleteAction.type);
+		localStorage.setItem(ClassSkillDeleteAction.type, uuid);
+		localStorage.setItem(uuid, null);
+	}
+
+	// Only run this if the skill has changed.
+	private dispatchGenericSkillUpdate(skill: GenericSkill){
+		this.store.dispatch(new GenericSkillUpdateAction());
+		localStorage.setItem(ActionUtil.ACTION_KEY, GenericSkillUpdateAction.type);
+		localStorage.setItem(GenericSkillUpdateAction.type, skill.uuid);
+		let skillAsJson = JSON.stringify(skill.serializeToJSON());
+		localStorage.setItem(skill.uuid, skillAsJson);
+	}
+
+	// Only run this if the skill has deleted.
+	private dispatchGenericSkillDelete(uuid: string){
+		this.store.dispatch(new GenericSkillDeleteAction());
+		localStorage.setItem(ActionUtil.ACTION_KEY, GenericSkillDeleteAction.type);
+		localStorage.setItem(GenericSkillDeleteAction.type, uuid);
+		localStorage.setItem(uuid, null);
+	}
+
+	private initializeActionListener() {
+		this.source$ = fromEvent(window, 'storage');
+		this.source$.pipe(delay(500)).subscribe(
+			ldata => {
+				let lastActionPerformed = localStorage.getItem(ActionUtil.ACTION_KEY);
+
+				
+								/**
+When we get an update in races, we need to check the current job in progress. If that job is the currently selected one, we need to reload it?
+	At least signal to the user that it has changes that haven't been loaded?
+	Also, when the racial job updates, the character-page decides that it has an out-of-date version of the job (and rightly so, since we _REPLACED_ it rather than altering it) so it doesn't appear in the dropdown.
+		Therefore, the solution is to _NOT_ replace it. We need to iterate over every value in the job and change the old job to match the new one without replacing it. That will preserve the references to it.
+								 */
+				if(lastActionPerformed) {
+					if(lastActionPerformed === ClassSkillUpdateAction.type) {
+						let uuidOfUpdatedSkill = localStorage.getItem(ClassSkillUpdateAction.type);
+
+						if(uuidOfUpdatedSkill) {
+							let jsonOfUpdatedSkill = localStorage.getItem(uuidOfUpdatedSkill);
+
+							if(jsonOfUpdatedSkill) {
+								// TODO: Error handling on this method
+								let parsed = JSON.parse(jsonOfUpdatedSkill);
+								
+								// let updatedSkill: ClassSkill = ClassSkill.deserializeNewSkillFromJSON(parsed);
+								// this.allClassSkills.set(uuidOfUpdatedSkill, updatedSkill);
+
+								// TODO: What do I do if this doesn't exist?
+								this.allClassSkills.get(uuidOfUpdatedSkill).deserializeFromJSON(parsed);
+							}
+						}
+					} else if(lastActionPerformed === ClassSkillDeleteAction.type) {
+						let uuidOfUpdatedSkill = localStorage.getItem(ClassSkillDeleteAction.type);
+
+						if(uuidOfUpdatedSkill) {
+							this.allClassSkills.delete(uuidOfUpdatedSkill);
+						}
+					} else if(lastActionPerformed === GenericSkillUpdateAction.type) {
+						let uuidOfUpdatedSkill = localStorage.getItem(GenericSkillUpdateAction.type);
+
+						if(uuidOfUpdatedSkill) {
+							let jsonOfUpdatedSkill = localStorage.getItem(uuidOfUpdatedSkill);
+
+							if(jsonOfUpdatedSkill) {
+								// TODO: Error handling on this method
+								let parsed = JSON.parse(jsonOfUpdatedSkill);
+								// let updatedSkill: GenericSkill = GenericSkill.deserializeNewSkillFromJSON(parsed);
+								// this.allGenericSkills.set(uuidOfUpdatedSkill, updatedSkill);
+								this.allGenericSkills.get(uuidOfUpdatedSkill).deserializeFromJSON(parsed);
+							}
+						}
+					} else if(lastActionPerformed === GenericSkillDeleteAction.type) {
+						let uuidOfUpdatedSkill = localStorage.getItem(GenericSkillDeleteAction.type);
+
+						if(uuidOfUpdatedSkill) {
+							this.allGenericSkills.delete(uuidOfUpdatedSkill);
+						}
+					}
+				}
+			}
+		);
 	}
 }
